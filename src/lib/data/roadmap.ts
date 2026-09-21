@@ -56,6 +56,13 @@ export const roadmapData: RoadmapItem[] = [
     icon: "mdiContentSaveCheckOutline",
   },
   {
+    id: "flow-based-market-coupling",
+    title: "Flow-based market coupling",
+    description:
+      "Model zonal electricity markets with flow-based domains, as used in European market coupling.",
+    icon: "mdiTransitConnectionHorizontal",
+  },
+  {
     id: "recourse-investments",
     title: "Recourse investments",
     description:

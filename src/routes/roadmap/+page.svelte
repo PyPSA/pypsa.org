@@ -22,6 +22,7 @@
     mdiEngineOutline,
     mdiChartScatterPlot,
     mdiViewDashboardOutline,
+    mdiTransitConnectionHorizontal,
     // historical (shipped) milestone icons
     mdiSpeedometer,
     mdiTransitConnectionVariant,
@@ -110,6 +111,7 @@
     mdiEngineOutline,
     mdiChartScatterPlot,
     mdiViewDashboardOutline,
+    mdiTransitConnectionHorizontal,
     // historical (shipped) milestones
     mdiSpeedometer,
     mdiTransitConnectionVariant,
