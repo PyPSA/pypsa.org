@@ -8,4 +8,6 @@
     "binding": "ASSETS",
     "directory": ".svelte-kit/cloudflare",
   },
+  // Required by `wrangler preview` (per-branch previews in Workers Builds).
+  "previews": {},
 }
