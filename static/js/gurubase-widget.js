@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+function inject() {
   const guruScript = document.createElement("script");
   guruScript.src = "https://widget.gurubase.io/widget.latest.min.js";
   guruScript.defer = true;
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "data-light-mode": "auto",
     "data-name": "PyPSA",
     "data-icon-url":
-      "https://raw.githubusercontent.com/PyPSA/PyPSA/master/docs/assets/logo/logo.svg",
+      "/favicon.svg",
     "data-bg-color": "#D10A49",
     "data-overlap-content": "true",
     "data-tooltip":
@@ -24,4 +24,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.body.appendChild(guruScript);
-});
+}
+
+function scheduleInject() {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(inject, { timeout: 4000 });
+  } else {
+    setTimeout(inject, 2000);
+  }
+}
+
+if (document.readyState === "complete") scheduleInject();
+else window.addEventListener("load", scheduleInject);

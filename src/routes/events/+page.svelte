@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Seo from "$lib/components/Seo.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import {
@@ -9,7 +10,6 @@
     TableHeader,
     TableRow,
   } from "$lib/components/ui/table";
-  import { siteConfig } from "$lib/config/meta";
   import { eventsData } from "$lib/data/events";
   import { goto } from "$app/navigation";
 
@@ -37,87 +37,75 @@
   const past = $derived(
     eventsData.filter((e) => e.status === "past").sort((a, b) => b.date.localeCompare(a.date))
   );
-
-  const pageTitle = "Events — " + siteConfig.name;
-  const pageDescription = "Upcoming and past PyPSA user meetings and events.";
 </script>
 
-<svelte:head>
-  <title>{pageTitle}</title>
-  <meta name="description" content={pageDescription} />
-  <meta property="og:title" content={pageTitle} />
-  <meta property="og:description" content={pageDescription} />
-  <meta property="og:image" content={siteConfig.ogImage} />
-  <meta property="og:url" content={siteConfig.url + "/events"} />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta property="twitter:title" content={pageTitle} />
-  <meta property="twitter:description" content={pageDescription} />
-  <meta property="twitter:image" content={siteConfig.ogImage} />
-</svelte:head>
+<Seo path="/events" />
 
 <Navbar />
 
-<section class="container py-24 sm:py-32">
-  <h2 class="text-lg text-primary text-center mb-2 tracking-wider">Get involved</h2>
-  <h2 class="text-3xl md:text-4xl text-center font-bold mb-16">Events</h2>
+<main>
+  <section class="container py-24 sm:py-32">
+    <h2 class="text-lg text-primary text-center mb-2 tracking-wider">Get involved</h2>
+    <h2 class="text-3xl md:text-4xl text-center font-bold mb-16">Events</h2>
 
-  {#snippet eventTable(list: typeof eventsData, isPast: boolean)}
-    <Table class={isPast ? "opacity-90" : ""}>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Event</TableHead>
-          <TableHead>Date</TableHead>
-          <TableHead>Time</TableHead>
-          <TableHead>Location</TableHead>
-          <TableHead>Register</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {#each list as e (e.slug)}
-          <TableRow class="cursor-pointer" onclick={() => goto(`/events/${e.slug}`)}>
-            <TableCell class="font-medium">
-              <a href="/events/{e.slug}" class="hover:underline">{e.title}</a>
-            </TableCell>
-            <TableCell class="text-muted-foreground whitespace-nowrap"
-              >{e.endDate ? formatDateRange(e.date, e.endDate) : formatDate(e.date)}</TableCell
-            >
-            <TableCell class="text-muted-foreground whitespace-nowrap">{e.time}</TableCell>
-            <TableCell class="text-muted-foreground">{e.location}</TableCell>
-            <TableCell class="whitespace-nowrap">
-              <!-- ponytail: "Invite only" derived from "no registration link"; add an explicit flag if a public event ever lacks a link -->
-              {#if e.registrationUrl && e.status === "upcoming"}
-                <a
-                  href={e.registrationUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onclick={(ev) => ev.stopPropagation()}
-                  class="font-medium text-primary hover:underline">Register</a
-                >
-              {:else if e.status === "upcoming"}
-                <span class="text-muted-foreground">Invite only</span>
-              {/if}
-            </TableCell>
+    {#snippet eventTable(list: typeof eventsData, isPast: boolean)}
+      <Table class={isPast ? "opacity-90" : ""}>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Event</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Time</TableHead>
+            <TableHead>Location</TableHead>
+            <TableHead>Register</TableHead>
           </TableRow>
-        {/each}
-      </TableBody>
-    </Table>
-  {/snippet}
+        </TableHeader>
+        <TableBody>
+          {#each list as e (e.slug)}
+            <TableRow class="cursor-pointer" onclick={() => goto(`/events/${e.slug}`)}>
+              <TableCell class="font-medium">
+                <a href="/events/{e.slug}" class="hover:underline">{e.title}</a>
+              </TableCell>
+              <TableCell class="text-muted-foreground whitespace-nowrap"
+                >{e.endDate ? formatDateRange(e.date, e.endDate) : formatDate(e.date)}</TableCell
+              >
+              <TableCell class="text-muted-foreground whitespace-nowrap">{e.time}</TableCell>
+              <TableCell class="text-muted-foreground">{e.location}</TableCell>
+              <TableCell class="whitespace-nowrap">
+                <!-- Invite only is inferred from a missing registration link. -->
+                {#if e.registrationUrl && e.status === "upcoming"}
+                  <a
+                    href={e.registrationUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onclick={(ev) => ev.stopPropagation()}
+                    class="font-medium text-primary underline underline-offset-2">Register</a
+                  >
+                {:else if e.status === "upcoming"}
+                  <span class="text-muted-foreground">Invite only</span>
+                {/if}
+              </TableCell>
+            </TableRow>
+          {/each}
+        </TableBody>
+      </Table>
+    {/snippet}
 
-  <div class="mx-auto max-w-3xl space-y-10">
-    {#if upcoming.length}
-      <div class="space-y-3">
-        <h3 class="text-xl font-semibold">Upcoming</h3>
-        {@render eventTable(upcoming, false)}
-      </div>
-    {/if}
+    <div class="mx-auto max-w-3xl space-y-10">
+      {#if upcoming.length}
+        <div class="space-y-3">
+          <h3 class="text-xl font-semibold">Upcoming</h3>
+          {@render eventTable(upcoming, false)}
+        </div>
+      {/if}
 
-    {#if past.length}
-      <div class="space-y-3">
-        <h3 class="text-xl font-semibold">Past events</h3>
-        {@render eventTable(past, true)}
-      </div>
-    {/if}
-  </div>
-</section>
+      {#if past.length}
+        <div class="space-y-3">
+          <h3 class="text-xl font-semibold">Past events</h3>
+          {@render eventTable(past, true)}
+        </div>
+      {/if}
+    </div>
+  </section>
+</main>
 
 <Footer />

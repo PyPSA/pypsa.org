@@ -13,6 +13,8 @@ const config = {
     adapter: adapter(),
     paths: {
       base: process.env.BASE_PATH || "",
+      // Root-absolute asset URLs, so the prerendered 404.html works at any missed depth.
+      relative: false,
     },
     prerender: {
       handleHttpError: ({ path, message }) => {

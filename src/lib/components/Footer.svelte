@@ -3,6 +3,7 @@
   import GithubIcon from "$lib/icons/GithubIcon.svelte";
   import LinkedInIcon from "$lib/icons/LinkedInIcon.svelte";
   import BlueskyIcon from "$lib/icons/BlueskyIcon.svelte";
+  import { siteConfig } from "$lib/config/meta";
   import MdiIcon from "$lib/components/MdiIcon.svelte";
   import { mdiYoutube, mdiMastodon } from "@mdi/js";
 </script>
@@ -14,8 +15,12 @@
       <div class="flex flex-col items-center md:items-start">
         <a href="/" class="flex font-bold items-center mb-4">
           <img
-            src="https://raw.githubusercontent.com/PyPSA/PyPSA/master/docs/assets/logo/logo.svg"
+            src="/img/pypsa-logo.svg"
             alt="PyPSA Logo"
+            width="36"
+            height="36"
+            loading="lazy"
+            decoding="async"
             class="w-9 h-9 mr-2"
           />
           <h3 class="text-2xl">PyPSA</h3>
@@ -30,7 +35,7 @@
       <div class="flex flex-col items-center md:items-end gap-4">
         <div class="flex items-center gap-4">
           <a
-            href="https://github.com/pypsa"
+            href={siteConfig.social.github}
             target="_blank"
             rel="noreferrer"
             class="opacity-60 hover:opacity-100 transition-opacity"
@@ -39,7 +44,7 @@
             <GithubIcon class_="size-5" />
           </a>
           <a
-            href="https://discord.gg/AnuJBk23FU"
+            href={siteConfig.social.discord}
             target="_blank"
             rel="noreferrer"
             class="opacity-60 hover:opacity-100 transition-opacity"
@@ -52,7 +57,7 @@
             </svg>
           </a>
           <a
-            href="https://www.youtube.com/@pypsa-official"
+            href={siteConfig.social.youtube}
             target="_blank"
             rel="noreferrer"
             class="opacity-60 hover:opacity-100 transition-opacity"
@@ -61,7 +66,7 @@
             <MdiIcon path={mdiYoutube} class="size-5" />
           </a>
           <a
-            href="https://www.linkedin.com/company/pypsa"
+            href={siteConfig.social.linkedin}
             target="_blank"
             rel="noreferrer"
             class="opacity-60 hover:opacity-100 transition-opacity"
@@ -70,7 +75,7 @@
             <LinkedInIcon />
           </a>
           <a
-            href="https://mastodon.social/@pypsa"
+            href={siteConfig.social.mastodon}
             target="_blank"
             rel="noreferrer"
             class="opacity-60 hover:opacity-100 transition-opacity"
@@ -79,7 +84,7 @@
             <MdiIcon path={mdiMastodon} class="size-5" />
           </a>
           <a
-            href="https://bsky.app/profile/pypsa-org.bsky.social"
+            href={siteConfig.social.bluesky}
             target="_blank"
             rel="noreferrer"
             class="opacity-60 hover:opacity-100 transition-opacity"
@@ -94,18 +99,15 @@
     <Separator class="my-6" />
 
     <div
-      class="flex flex-col md:flex-row justify-between items-center gap-4 text-muted-foreground text-sm"
+      class="flex flex-col md:flex-row md:justify-end items-center gap-4 text-muted-foreground text-sm"
     >
-      <div class="text-center md:text-left">
-        <p>Department of Digital Transformation in Energy Systems, Technische Universität Berlin</p>
-        <p>
-          Einsteinufer 25, 10587 Berlin, Germany ·
-          <a href="mailto:contact@pypsa.org" class="hover:text-primary transition-colors"
-            >contact@pypsa.org</a
-          >
-        </p>
+      <div class="flex flex-col items-center md:items-end gap-2">
+        <nav class="flex gap-4" aria-label="Site information">
+          <a href="/contact" class="hover:text-primary transition-colors">Contact</a>
+          <a href="/privacy" class="hover:text-primary transition-colors">Privacy &amp; Legal</a>
+        </nav>
+        <p>&copy; 2015-2026 PyPSA Contributors</p>
       </div>
-      <p>&copy; 2015-2026 PyPSA Contributors</p>
     </div>
   </div>
 </footer>

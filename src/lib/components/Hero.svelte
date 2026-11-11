@@ -1,62 +1,65 @@
 <script lang="ts">
   import { Badge } from "$lib/components/ui/badge";
   import { Button } from "$lib/components/ui/button";
-  import { ArrowRight } from "lucide-svelte";
+  import Icon from "$lib/components/Icon.svelte";
   import GithubIcon from "$lib/icons/GithubIcon.svelte";
-  import { DOCS_BASE_URL } from "$lib/config";
+  import { hero } from "$lib/data/home/hero";
 </script>
 
 <section class="container">
   <div class="grid place-items-center lg:max-w-screen-xl gap-8 mx-auto py-20 md:py-32">
     <div class="text-center space-y-8">
-      <a href="/events/4th-user-meeting" class="no-underline">
+      <a href={hero.event.href} class="no-underline">
         <Badge
           variant="outline"
           class="text-sm py-2 cursor-pointer hover:bg-muted/50 transition-colors"
         >
           <span class="mr-2">
-            <Badge class="pointer-events-none bg-[#c30944] text-white">Event</Badge>
+            <Badge class="pointer-events-none bg-[#c30944] text-white">{hero.event.label}</Badge>
           </span>
-          <span>PyPSA User Meeting on 29 June 2026</span>
-          <ArrowRight class="size-4 ml-2" />
+          <span>{hero.event.text}</span>
+          <Icon name="arrow-right" class="size-4 ml-2" />
         </Badge>
       </a>
 
       <div class="max-w-screen-md mx-auto text-center text-4xl sm:text-5xl md:text-6xl font-bold">
         <h1>
-          Welcome to the<br />
+          {hero.headline.before}<br />
           <span class="text-transparent bg-gradient-to-r from-[#D247BF] to-primary bg-clip-text">
-            PyPSA
+            {hero.headline.highlight}
           </span>
-          Community!
+          {hero.headline.after}
         </h1>
       </div>
 
       <p class="max-w-screen-sm mx-auto text-xl text-muted-foreground">
-        PyPSA stands for Python for Power System Analysis.<br />
-        Free. Open-Source. Batteries included.
+        {hero.lead.line1}<br />
+        {hero.lead.line2}
       </p>
 
       <div class="flex flex-col md:flex-row items-center gap-4 md:gap-4 md:justify-center">
         <Button
-          href="{DOCS_BASE_URL}/examples/example-1/"
+          href={hero.primaryCta.href}
           target="_blank"
           rel="noreferrer"
           class="w-full md:w-auto font-bold group/arrow bg-[#098754] hover:bg-[#087047] text-white"
         >
-          Get Started
-          <ArrowRight class="size-5 ml-2 group-hover/arrow:translate-x-1 transition-transform" />
+          {hero.primaryCta.label}
+          <Icon
+            name="arrow-right"
+            class="size-5 ml-2 group-hover/arrow:translate-x-1 transition-transform"
+          />
         </Button>
 
         <Button
-          href="https://github.com/PyPSA/PyPSA"
+          href={hero.secondaryCta.href}
           target="_blank"
           rel="noreferrer"
           variant="secondary"
           class="w-full md:w-auto font-bold transition-colors hover:bg-[#098754] hover:text-white !flex items-center justify-center gap-2"
         >
           <GithubIcon class_="size-5" />
-          GitHub Repository
+          {hero.secondaryCta.label}
         </Button>
       </div>
     </div>

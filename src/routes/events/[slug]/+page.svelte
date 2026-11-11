@@ -1,8 +1,9 @@
 <script lang="ts">
+  import Seo from "$lib/components/Seo.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import { base } from "$app/paths";
-  import { siteConfig } from "$lib/config/meta";
+  import { avatarSrc, AVATAR_SIZE, imageSize, YOUTUBE_THUMB } from "$lib/images";
   import { Button } from "$lib/components/ui/button";
   import { Badge } from "$lib/components/ui/badge";
   import { Card, CardContent } from "$lib/components/ui/card";
@@ -32,18 +33,6 @@
 
   const eventDate = new Date(event.date + "T00:00:00");
   const endDateObj = event.endDate ? new Date(event.endDate + "T00:00:00") : null;
-  const formattedDate = endDateObj
-    ? // e.g. "6–8 July 2026" (assumes same month/year)
-      `${eventDate.getDate()}–${endDateObj.getDate()} ${new Intl.DateTimeFormat("en-GB", {
-        month: "long",
-        year: "numeric",
-      }).format(endDateObj)}`
-    : new Intl.DateTimeFormat("en-GB", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }).format(eventDate);
 
   const timeMatch = event.time.match(
     /(\d{1,2}):(\d{2})\s*(am|pm)\s*[–-]\s*(\d{1,2}):(\d{2})\s*(am|pm)\s*\((\w+)\)/i
@@ -118,18 +107,7 @@
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 </script>
 
-<svelte:head>
-  <title>{event.title} — PyPSA</title>
-  <meta name="description" content="{event.title} on {formattedDate}, {formattedTime}." />
-  <meta property="og:title" content="{event.title} — PyPSA" />
-  <meta property="og:description" content="{event.title} on {formattedDate}, {formattedTime}." />
-  <meta property="og:type" content="website" />
-  <meta
-    property="og:image"
-    content={event.bannerImage ? siteConfig.url + event.bannerImage : siteConfig.ogImage}
-  />
-  <meta name="twitter:card" content="summary_large_image" />
-</svelte:head>
+<Seo path="/events/{event.slug}" />
 
 <Navbar />
 
@@ -143,7 +121,15 @@
 
   <!-- Banner -->
   {#if event.bannerImage}
-    <img src="{base}{event.bannerImage}" alt={event.title} class="w-full rounded-lg" />
+    <img
+      src="{base}{event.bannerImage}"
+      alt={event.title}
+      width={imageSize(event.bannerImage).width}
+      height={imageSize(event.bannerImage).height}
+      loading="eager"
+      decoding="async"
+      class="h-auto w-full rounded-lg"
+    />
   {/if}
 
   <!-- Hero -->
@@ -179,7 +165,15 @@
                   class="inline-flex items-center gap-1 align-middle hover:opacity-80"
                 >
                   {#if org.logo}
-                    <img src="{base}{org.logo}" alt={org.name} class="h-4" />
+                    <img
+                      src="{base}{org.logo}"
+                      alt={org.name}
+                      width={imageSize(org.logo).width}
+                      height={imageSize(org.logo).height}
+                      loading="lazy"
+                      decoding="async"
+                      class="h-4 w-auto"
+                    />
                   {/if}
                   <span>{org.name}</span>
                 </a>
@@ -195,7 +189,15 @@
               rel="noopener noreferrer"
               class="inline-flex items-center gap-1 align-middle hover:opacity-80"
             >
-              <img src="{base}/img/institutions/tu-berlin.svg" alt="TU Berlin" class="h-4" />
+              <img
+                src="{base}/img/institutions/tu-berlin.svg"
+                alt="TU Berlin"
+                width={imageSize("/img/institutions/tu-berlin.svg").width}
+                height={imageSize("/img/institutions/tu-berlin.svg").height}
+                loading="lazy"
+                decoding="async"
+                class="h-4 w-auto"
+              />
               <span>TU Berlin</span>
             </a>
             &
@@ -208,7 +210,11 @@
               <img
                 src="{base}/img/institutions/pypsa-meets-earth.webp"
                 alt="PyPSA meets Earth"
-                class="h-4"
+                width={imageSize("/img/institutions/pypsa-meets-earth.webp").width}
+                height={imageSize("/img/institutions/pypsa-meets-earth.webp").height}
+                loading="lazy"
+                decoding="async"
+                class="h-4 w-auto"
               />
               <span>PyPSA meets Earth Initiative</span>
             </a>
@@ -389,7 +395,10 @@
                               <img
                                 src="https://img.youtube.com/vi/{item.videoId}/mqdefault.jpg"
                                 alt=""
+                                width={YOUTUBE_THUMB.width}
+                                height={YOUTUBE_THUMB.height}
                                 loading="lazy"
+                                decoding="async"
                                 class="h-full w-full object-cover transition group-hover:opacity-80"
                               />
                               <span class="absolute inset-0 flex items-center justify-center">
@@ -445,7 +454,10 @@
                             <img
                               src="{base}{item.image}"
                               alt={item.speaker}
+                              width={imageSize(item.image).width}
+                              height={imageSize(item.image).height}
                               loading="lazy"
+                              decoding="async"
                               class="size-10 sm:size-16 rounded-full object-cover"
                             />
                           {:else}
@@ -527,9 +539,12 @@
             class="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
           >
             <img
-              src={person.imageUrl}
+              src={avatarSrc(person.imageUrl)}
               alt={person.name}
+              width={AVATAR_SIZE}
+              height={AVATAR_SIZE}
               loading="lazy"
+              decoding="async"
               class="size-6 rounded-full object-cover"
             />
             <span class="text-sm">{person.name}</span>
@@ -561,8 +576,11 @@
                     <img
                       src="https://img.youtube.com/vi/{video.videoId}/mqdefault.jpg"
                       alt={video.title}
+                      width={YOUTUBE_THUMB.width}
+                      height={YOUTUBE_THUMB.height}
                       class="w-full h-full object-cover"
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <CardContent class="p-3">

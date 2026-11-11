@@ -2,7 +2,11 @@
   import Community from "$lib/components/Community.svelte";
 </script>
 
-<div class="embed-container">
+<svelte:head>
+  <meta name="robots" content="noindex" />
+</svelte:head>
+
+<main class="embed-container">
   <Community
     showDiscord={false}
     showHeader={false}
@@ -11,7 +15,7 @@
     colorfulImages={true}
     embedMode={true}
   />
-</div>
+</main>
 
 <style>
   :global(body) {

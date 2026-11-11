@@ -1,11 +1,13 @@
 <script lang="ts">
+  import { communitySection } from "$lib/data/home/community";
   import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "$lib/components/ui/card";
   import { Button } from "$lib/components/ui/button";
   import * as Tooltip from "$lib/components/ui/tooltip";
   import { onMount } from "svelte";
+  import { avatarSrc, AVATAR_SIZE } from "$lib/images";
 
   import DiscordIcon from "$lib/icons/DiscordIcon.svelte";
-  import { BarChart3 } from "lucide-svelte";
+  import Icon from "$lib/components/Icon.svelte";
 
   import { contributorsData, dataTimestamp } from "$lib/data/contributors";
   import { browser } from "$app/environment";
@@ -118,10 +120,10 @@
   // Filter expansion state
   let frameworkExpanded = $state(false);
   let modelsExpanded = $state(false);
-  let selectedRepo = $state(null); // null means "All Projects"
+  let selectedRepo = $state<string | null>(null); // null means all projects
 
   // Repository mapping - maps display name to repo path in data
-  const repoMap = {
+  const repoMap: Record<string, string> = {
     PyPSA: "PyPSA/PyPSA",
     atlite: "PyPSA/atlite",
     linopy: "PyPSA/linopy",
@@ -143,7 +145,7 @@
     frameworkExpanded = false;
   }
 
-  function selectRepo(repoName) {
+  function selectRepo(repoName: string) {
     selectedRepo = repoName;
     currentPage = 0; // Reset to first page when filtering
     // Don't close the expanded category when selecting a sub-option
@@ -159,15 +161,20 @@
     selectedRepo
       ? contributorsData
           .filter((c) => {
-            const repoPath = repoMap[selectedRepo];
-            return c.repoContributions && c.repoContributions[repoPath] > 0;
+            const repoPath = repoMap[selectedRepo as string];
+            return (
+              c.repoContributions &&
+              (c.repoContributions as Record<string, number | undefined>)[repoPath]! > 0
+            );
           })
           .map((c) => {
-            const repoPath = repoMap[selectedRepo];
-            const repoContribs = c.repoContributions[repoPath] || 0;
-            const repoPrs = c.repoPrs?.[repoPath] || 0;
-            const repoIssues = c.repoIssues?.[repoPath] || 0;
-            const repoRevs = c.repoReviews?.[repoPath] || 0;
+            const repoPath = repoMap[selectedRepo as string];
+            const repoContribs =
+              (c.repoContributions as Record<string, number | undefined>)[repoPath] || 0;
+            const repoPrs = (c.repoPrs as Record<string, number> | undefined)?.[repoPath] || 0;
+            const repoIssues =
+              (c.repoIssues as Record<string, number> | undefined)?.[repoPath] || 0;
+            const repoRevs = (c.repoReviews as Record<string, number> | undefined)?.[repoPath] || 0;
             return {
               ...c,
               // Override stats with repo-specific data
@@ -225,12 +232,14 @@
   >
     <div class="text-center mb-12">
       {#if showHeader}
-        <h2 class="text-lg text-primary text-center mb-3 tracking-wider">Contributors</h2>
+        <h2 class="text-lg text-primary text-center mb-3 tracking-wider">
+          {communitySection.eyebrow}
+        </h2>
 
-        <h2 class="text-3xl md:text-4xl text-center font-bold">Community</h2>
+        <h2 class="text-3xl md:text-4xl text-center font-bold">{communitySection.heading}</h2>
 
         <p class="md:w-1/2 mx-auto text-xl text-center text-muted-foreground mt-2">
-          The people who power PyPSA
+          {communitySection.lead}
         </p>
       {/if}
 
@@ -246,7 +255,6 @@
                 null
                   ? 'bg-primary text-primary-foreground border-primary'
                   : 'border-border/50 hover:border-primary hover:bg-primary/10 hover:text-primary'}"
-                aria-label="Show all contributors"
               >
                 All Projects
               </button>
@@ -258,10 +266,9 @@
                 type="button"
                 on:click={toggleFrameworkExpanded}
                 class="px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2 {frameworkExpanded
-                  ? 'border-[#098754] bg-[#098754]/10 text-[#098754]'
-                  : 'border-border/50 hover:border-[#098754] hover:bg-[#098754]/10 hover:text-[#098754]'}"
+                  ? 'border-[#098754] bg-[#098754]/10 text-[color:var(--brand-green-text)]'
+                  : 'border-border/50 hover:border-[#098754] hover:bg-[#098754]/10 hover:text-[color:var(--brand-green-text)]'}"
                 style="transition: all 0.2s ease;"
-                aria-label="Framework category"
               >
                 Framework {frameworkExpanded ? "▴" : "▾"}
               </button>
@@ -272,7 +279,7 @@
               <button
                 type="button"
                 on:click={() => selectRepo("PyPSA")}
-                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#098754]/50 hover:bg-[#098754]/10 hover:text-[#098754] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
+                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#098754]/50 hover:bg-[#098754]/10 hover:text-[color:var(--brand-green-text)] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
                 'PyPSA'
                   ? 'bg-[#098754]/20'
                   : ''}"
@@ -283,7 +290,7 @@
               <button
                 type="button"
                 on:click={() => selectRepo("atlite")}
-                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#098754]/50 hover:bg-[#098754]/10 hover:text-[#098754] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
+                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#098754]/50 hover:bg-[#098754]/10 hover:text-[color:var(--brand-green-text)] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
                 'atlite'
                   ? 'bg-[#098754]/20'
                   : ''}"
@@ -295,7 +302,7 @@
               <button
                 type="button"
                 on:click={() => selectRepo("linopy")}
-                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#098754]/50 hover:bg-[#098754]/10 hover:text-[#098754] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
+                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#098754]/50 hover:bg-[#098754]/10 hover:text-[color:var(--brand-green-text)] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
                 'linopy'
                   ? 'bg-[#098754]/20'
                   : ''}"
@@ -307,7 +314,7 @@
               <button
                 type="button"
                 on:click={() => selectRepo("powerplantmatching")}
-                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#098754]/50 hover:bg-[#098754]/10 hover:text-[#098754] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
+                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#098754]/50 hover:bg-[#098754]/10 hover:text-[color:var(--brand-green-text)] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
                 'powerplantmatching'
                   ? 'bg-[#098754]/20'
                   : ''}"
@@ -319,7 +326,7 @@
               <button
                 type="button"
                 on:click={() => selectRepo("technology-data")}
-                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#098754]/50 hover:bg-[#098754]/10 hover:text-[#098754] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
+                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#098754]/50 hover:bg-[#098754]/10 hover:text-[color:var(--brand-green-text)] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
                 'technology-data'
                   ? 'bg-[#098754]/20'
                   : ''}"
@@ -336,10 +343,9 @@
                 type="button"
                 on:click={toggleModelsExpanded}
                 class="px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2 {modelsExpanded
-                  ? 'border-[#2993B5] bg-[#2993B5]/10 text-[#2993B5]'
-                  : 'border-border/50 hover:border-[#2993B5] hover:bg-[#2993B5]/10 hover:text-[#2993B5]'}"
+                  ? 'border-[#2993B5] bg-[#2993B5]/10 text-[color:var(--brand-blue-text)]'
+                  : 'border-border/50 hover:border-[#2993B5] hover:bg-[#2993B5]/10 hover:text-[color:var(--brand-blue-text)]'}"
                 style="transition: all 0.2s ease;"
-                aria-label="Models category"
               >
                 Models {modelsExpanded ? "▴" : "▾"}
               </button>
@@ -350,7 +356,7 @@
               <button
                 type="button"
                 on:click={() => selectRepo("PyPSA-Eur")}
-                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#2993B5]/50 hover:bg-[#2993B5]/10 hover:text-[#2993B5] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
+                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#2993B5]/50 hover:bg-[#2993B5]/10 hover:text-[color:var(--brand-blue-text)] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
                 'PyPSA-Eur'
                   ? 'bg-[#2993B5]/20'
                   : ''}"
@@ -361,7 +367,7 @@
               <button
                 type="button"
                 on:click={() => selectRepo("PyPSA-Earth")}
-                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#2993B5]/50 hover:bg-[#2993B5]/10 hover:text-[#2993B5] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
+                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#2993B5]/50 hover:bg-[#2993B5]/10 hover:text-[color:var(--brand-blue-text)] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
                 'PyPSA-Earth'
                   ? 'bg-[#2993B5]/20'
                   : ''}"
@@ -373,7 +379,7 @@
               <button
                 type="button"
                 on:click={() => selectRepo("PyPSA-USA")}
-                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#2993B5]/50 hover:bg-[#2993B5]/10 hover:text-[#2993B5] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
+                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#2993B5]/50 hover:bg-[#2993B5]/10 hover:text-[color:var(--brand-blue-text)] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
                 'PyPSA-USA'
                   ? 'bg-[#2993B5]/20'
                   : ''}"
@@ -385,7 +391,7 @@
               <button
                 type="button"
                 on:click={() => selectRepo("PyPSA-DE")}
-                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#2993B5]/50 hover:bg-[#2993B5]/10 hover:text-[#2993B5] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
+                class="px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap border border-[#2993B5]/50 hover:bg-[#2993B5]/10 hover:text-[color:var(--brand-blue-text)] animate-in fade-in slide-in-from-left-2 duration-200 {selectedRepo ===
                 'PyPSA-DE'
                   ? 'bg-[#2993B5]/20'
                   : ''}"
@@ -409,31 +415,24 @@
           {#each currentContributors as { imageUrl, firstName, lastName, socialNetworks, totalContributions, totalMergedPrs, totalIssuesCreated, totalReviews, topRepos }, index (firstName + "-" + lastName)}
             {@const delay = index * 50}
             <div
-              class="carousel-item relative group/card isolate hover:z-[60]"
+              class="carousel-item contributor-item group/card"
               style="animation-delay: {delay}ms"
             >
-              <a
-                href={socialNetworks[0]?.url}
-                target="_blank"
-                class="block h-full relative z-0 group-hover/card:z-[60]"
-                aria-label="Visit {firstName} {lastName}'s GitHub profile"
-              >
-                <Card
-                  class="bg-muted/60 dark:bg-card flex flex-col h-full group/hoverimg cursor-pointer transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:-translate-y-1 relative rounded-lg"
-                >
-                  <CardHeader class="p-0 gap-0">
-                    <div class="h-full overflow-hidden rounded-t-lg">
+              <a href={socialNetworks[0]?.url} target="_blank" class="contributor-link">
+                <div class="contributor-card group/hoverimg">
+                  <div class="contributor-header">
+                    <div class="contributor-img-wrap">
                       <img
-                        src={imageUrl}
-                        alt={`${firstName} {lastName}`}
-                        class="w-full aspect-square object-cover {colorfulImages
-                          ? 'saturate-100'
-                          : 'saturate-0 group-hover/hoverimg:saturate-100'} transition-all duration-300 ease-in-out group-hover/hoverimg:scale-110"
+                        src={avatarSrc(imageUrl)}
+                        alt=""
+                        width={AVATAR_SIZE}
+                        height={AVATAR_SIZE}
+                        loading="lazy"
+                        decoding="async"
+                        class="contributor-img {colorfulImages ? 'saturate-100' : ''}"
                       />
                     </div>
-                    <CardTitle
-                      class="px-3 py-2 text-sm flex items-center justify-between min-h-[3rem]"
-                    >
+                    <div role="heading" aria-level="3" class="contributor-title">
                       <span
                         class="leading-tight"
                         class:text-xs={(firstName + " " + lastName).length > 20}
@@ -444,21 +443,17 @@
                       {#if totalContributions}
                         <Tooltip.Root>
                           <Tooltip.Trigger
-                            class="ml-2 inline-flex items-center justify-center text-primary cursor-help transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded-full p-1 info-badge-trigger"
+                            class="contributor-badge info-badge-trigger"
                             id={`badge-${index}`}
                             aria-label={`${totalContributions} total contributions`}
                           >
-                            <span
-                              class="relative inline-flex items-center justify-center w-6 h-6 flex-none"
-                            >
-                              <span
-                                class="absolute inline-flex h-full w-full items-center justify-center hover-ping"
-                                aria-hidden="true"
-                              >
-                                <BarChart3 class="w-4 h-4" aria-hidden="true" />
+                            <span class="contributor-badge-icon">
+                              <span class="contributor-badge-ping hover-ping" aria-hidden="true">
+                                <Icon name="chart-column" class="w-4 h-4" aria-hidden="true" />
                               </span>
-                              <BarChart3
-                                class="w-4 h-4 relative z-10 transition-colors duration-300"
+                              <Icon
+                                name="chart-column"
+                                class="contributor-badge-glyph"
                                 aria-hidden="true"
                               />
                             </span>
@@ -586,9 +581,9 @@
                                         rel="noopener noreferrer"
                                         class="px-2 py-0.5 rounded text-xs font-medium hover:opacity-80 transition-opacity"
                                         style={isFrameworkRepo
-                                          ? "background-color: rgba(9, 135, 84, 0.2); color: #098754;"
+                                          ? "background-color: rgba(9, 135, 84, 0.2); color: var(--brand-green-text);"
                                           : isModelRepo
-                                            ? "background-color: rgba(41, 147, 181, 0.2); color: #2993B5;"
+                                            ? "background-color: rgba(41, 147, 181, 0.2); color: var(--brand-blue-text);"
                                             : "background-color: rgba(255, 192, 0, 0.2); color: #FFC000;"}
                                         on:click|stopPropagation
                                       >
@@ -602,9 +597,9 @@
                           </Tooltip.Content>
                         </Tooltip.Root>
                       {/if}
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
+                    </div>
+                  </div>
+                </div>
               </a>
             </div>
           {/each}

@@ -1,20 +1,41 @@
 <script lang="ts">
+  import { referencesSection } from "$lib/data/home/references";
   import { Card, CardContent } from "$lib/components/ui/card";
   import { onMount } from "svelte";
-  import { referencesData, dataTimestamp } from "$lib/data/references";
+  import {
+    loadAllReferences,
+    sortReferences,
+    type Reference,
+    type SortMode,
+  } from "$lib/references";
 
-  type SortMode = "citations" | "latest";
+  export let references: { initial: Reference[]; total: number; dataTimestamp: string };
+
+  const { dataTimestamp } = references;
+
   let sortMode: SortMode = "citations";
+  let loaded: Reference[] | null = null;
 
-  // Sort publications based on selected mode
-  $: sortedPublications = [...referencesData].sort((a, b) => {
-    if (sortMode === "citations") {
-      return b.citations - a.citations;
-    } else {
-      // Sort by year (latest first)
-      return b.year - a.year;
+  // The full list loads on the first sort click or page change; until then show the initial entries.
+  $: sortedPublications = sortReferences(loaded ?? references.initial, sortMode);
+  $: totalPublications = loaded ? loaded.length : references.total;
+
+  // Returns false when the full list is unavailable; callers then leave page and sort unchanged.
+  async function ensureLoaded(): Promise<boolean> {
+    if (loaded) return true;
+    try {
+      loaded = await loadAllReferences();
+      return true;
+    } catch (err) {
+      console.error("Failed to load references", err);
+      return false;
     }
-  });
+  }
+
+  async function setSort(mode: SortMode) {
+    if (!(await ensureLoaded())) return;
+    sortMode = mode;
+  }
 
   // Responsive publications per page
   let windowWidth = typeof window !== "undefined" ? window.innerWidth : 1024;
@@ -43,7 +64,7 @@
     return () => window.removeEventListener("resize", updatePublicationsPerPage);
   });
 
-  $: totalPages = Math.ceil(sortedPublications.length / publicationsPerPage);
+  $: totalPages = Math.ceil(totalPublications / publicationsPerPage);
 
   let currentPage = 0;
 
@@ -60,32 +81,35 @@
     (currentPage + 1) * publicationsPerPage
   );
 
-  function nextPage() {
+  async function nextPage() {
+    if (!(await ensureLoaded())) return;
     currentPage = (currentPage + 1) % totalPages;
   }
 
-  function prevPage() {
+  async function prevPage() {
+    if (!(await ensureLoaded())) return;
     currentPage = (currentPage - 1 + totalPages) % totalPages;
   }
 </script>
 
 <section id="references" class="container max-w-7xl mx-auto px-4 py-16 sm:py-24 lg:py-32">
   <div class="text-center mb-12">
-    <h2 class="text-lg text-center mb-3 tracking-wider" style="color: #098754;">References</h2>
+    <h2 class="text-lg text-center mb-3 tracking-wider" style="color: var(--brand-green-text);">
+      {referencesSection.eyebrow}
+    </h2>
 
-    <h2 class="text-3xl md:text-4xl text-center font-bold">Related Research</h2>
+    <h2 class="text-3xl md:text-4xl text-center font-bold">{referencesSection.heading}</h2>
 
     <p class="text-muted-foreground mt-4 max-w-3xl mx-auto">
-      Numerous research publications are built on the PyPSA environment. Here we highlight some of
-      them. For an extended list, have a look at the up-to-date
+      {referencesSection.leadBefore}
       <a
-        href="https://scholar.google.com/scholar?q=pypsa"
+        href={referencesSection.scholarHref}
         target="_blank"
         rel="noreferrer"
-        class="hover:underline"
-        style="color: #098754;"
+        class="underline underline-offset-2"
+        style="color: var(--brand-green-text);"
       >
-        Google Scholar query
+        {referencesSection.scholarLabel}
       </a>.
     </p>
   </div>
@@ -94,7 +118,7 @@
     <!-- Sort buttons -->
     <div class="flex justify-center mb-6 gap-2">
       <button
-        on:click={() => (sortMode = "citations")}
+        on:click={() => setSort("citations")}
         class="px-4 py-2 rounded-lg text-sm font-medium transition-all border"
         class:bg-primary={sortMode === "citations"}
         class:text-primary-foreground={sortMode === "citations"}
@@ -105,7 +129,7 @@
         on:mouseenter={(e) => {
           if (sortMode !== "citations") {
             e.currentTarget.style.borderColor = "#098754";
-            e.currentTarget.style.color = "#098754";
+            e.currentTarget.style.color = "var(--brand-green-text)";
           }
         }}
         on:mouseleave={(e) => {
@@ -118,7 +142,7 @@
         Most Cited
       </button>
       <button
-        on:click={() => (sortMode = "latest")}
+        on:click={() => setSort("latest")}
         class="px-4 py-2 rounded-lg text-sm font-medium transition-all border"
         class:bg-primary={sortMode === "latest"}
         class:text-primary-foreground={sortMode === "latest"}
@@ -129,7 +153,7 @@
         on:mouseenter={(e) => {
           if (sortMode !== "latest") {
             e.currentTarget.style.borderColor = "#098754";
-            e.currentTarget.style.color = "#098754";
+            e.currentTarget.style.color = "var(--brand-green-text)";
           }
         }}
         on:mouseleave={(e) => {
@@ -154,7 +178,7 @@
           >
             <CardContent class="p-4">
               <div class="flex items-start gap-4">
-                <span class="text-lg font-bold text-muted-foreground/50 mt-0.5 min-w-[2rem]">
+                <span class="text-lg font-bold text-muted-foreground mt-0.5 min-w-[2rem]">
                   {String(currentPage * publicationsPerPage + index + 1).padStart(2, "0")}
                 </span>
                 <div class="flex-1">
@@ -164,8 +188,9 @@
                       target="_blank"
                       rel="noreferrer"
                       class="text-foreground transition-colors"
-                      on:mouseenter={(e) => (e.target.style.color = "#098754")}
-                      on:mouseleave={(e) => (e.target.style.color = "")}
+                      on:mouseenter={(e) =>
+                        (e.currentTarget.style.color = "var(--brand-green-text)")}
+                      on:mouseleave={(e) => (e.currentTarget.style.color = "")}
                     >
                       <h3 class="font-semibold text-sm mb-1.5 hover:underline">
                         {pub.title}
@@ -196,8 +221,8 @@
         <button
           on:click={prevPage}
           class="p-2 rounded-full bg-background border border-border hover:text-white transition-colors"
-          on:mouseenter={(e) => (e.target.style.backgroundColor = "#098754")}
-          on:mouseleave={(e) => (e.target.style.backgroundColor = "")}
+          on:mouseenter={(e) => (e.currentTarget.style.backgroundColor = "#098754")}
+          on:mouseleave={(e) => (e.currentTarget.style.backgroundColor = "")}
           aria-label="Previous page"
         >
           <svg
@@ -222,8 +247,8 @@
         <button
           on:click={nextPage}
           class="p-2 rounded-full bg-background border border-border hover:text-white transition-colors"
-          on:mouseenter={(e) => (e.target.style.backgroundColor = "#098754")}
-          on:mouseleave={(e) => (e.target.style.backgroundColor = "")}
+          on:mouseenter={(e) => (e.currentTarget.style.backgroundColor = "#098754")}
+          on:mouseleave={(e) => (e.currentTarget.style.backgroundColor = "")}
           aria-label="Next page"
         >
           <svg

@@ -1,127 +1,26 @@
 <script lang="ts">
   import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
   import { Button } from "$lib/components/ui/button";
-  import { BookOpen, ArrowRight, ArrowLeft, Globe } from "lucide-svelte";
+  import Icon from "$lib/components/Icon.svelte";
   import GithubIcon from "$lib/icons/GithubIcon.svelte";
   import { base } from "$app/paths";
+  import { imageSize } from "$lib/images";
   import { onMount, onDestroy } from "svelte";
+  import { ecosystemProjects, ecosystemSection } from "$lib/data/home/ecosystem";
 
-  interface ProjectProps {
-    name: string;
-    description: string;
-    image: string;
-    githubUrl: string;
-    docsUrl?: string;
-    websiteUrl?: string;
-    institutions?: Array<{
-      name: string;
-      logo: string;
-      url: string;
-    }>;
-  }
-
-  const projects: ProjectProps[] = [
-    {
-      name: "Atlite",
-      description:
-        "A Lightweight Python Package for Calculating Renewable Power Potentials and Time Series",
-      image: `${base}/img/projects/atlite.webp`,
-      githubUrl: "https://github.com/PyPSA/atlite",
-      docsUrl: "https://atlite.readthedocs.io/",
-      institutions: [
-        {
-          name: "TU Berlin",
-          logo: `${base}/img/institutions/tu-berlin.svg`,
-          url: "https://www.tu.berlin/en/ensys",
-        },
-      ],
-    },
-    {
-      name: "PyPSA",
-      description:
-        "Python for Power System Analysis - the core framework for simulating and optimising modern power systems",
-      image: `${base}/img/projects/pypsa-logo.svg`,
-      githubUrl: "https://github.com/PyPSA/PyPSA",
-      docsUrl: "https://pypsa.readthedocs.io/",
-      institutions: [
-        {
-          name: "TU Berlin",
-          logo: `${base}/img/institutions/tu-berlin.svg`,
-          url: "https://www.tu.berlin/en/ensys",
-        },
-      ],
-    },
-    {
-      name: "Linopy",
-      description: "Linear optimization interface for N-D labeled variables",
-      image: `${base}/img/projects/linopy.webp`,
-      githubUrl: "https://github.com/PyPSA/linopy",
-      docsUrl: "https://linopy.readthedocs.io/",
-      institutions: [
-        {
-          name: "OET",
-          logo: `${base}/img/institutions/oet.svg`,
-          url: "https://openenergytransition.org/",
-        },
-        {
-          name: "TU Berlin",
-          logo: `${base}/img/institutions/tu-berlin.svg`,
-          url: "https://www.tu.berlin/en/ensys",
-        },
-      ],
-    },
-    {
-      name: "Map Your Grid",
-      description:
-        "Community-driven initiative mapping the world's electrical grids to accelerate the energy transition worldwide",
-      image: `${base}/img/projects/mapyourgrid.webp`,
-      githubUrl: "https://mapyourgrid.org/",
-      websiteUrl: "https://mapyourgrid.org/",
-      institutions: [
-        {
-          name: "OET",
-          logo: `${base}/img/institutions/oet.svg`,
-          url: "https://openenergytransition.org/",
-        },
-      ],
-    },
-    {
-      name: "Powerplantmatching",
-      description:
-        "A toolset for cleaning, standardizing and combining multiple power plant databases",
-      image: `${base}/img/projects/powerplantmatching.webp`,
-      githubUrl: "https://github.com/PyPSA/powerplantmatching",
-      docsUrl: "https://powerplantmatching.readthedocs.io/",
-      institutions: [
-        {
-          name: "TU Berlin",
-          logo: `${base}/img/institutions/tu-berlin.svg`,
-          url: "https://www.tu.berlin/en/ensys",
-        },
-      ],
-    },
-    {
-      name: "Technology Data",
-      description: "Compile assumptions on energy system technologies for various years",
-      image: `${base}/img/projects/technology-data.webp`,
-      githubUrl: "https://github.com/PyPSA/technology-data",
-      docsUrl: "https://technology-data.readthedocs.io/en/latest/",
-      institutions: [
-        {
-          name: "OET",
-          logo: `${base}/img/institutions/oet.svg`,
-          url: "https://openenergytransition.org/",
-        },
-        {
-          name: "TU Berlin",
-          logo: `${base}/img/institutions/tu-berlin.svg`,
-          url: "https://www.tu.berlin/en/ensys",
-        },
-      ],
-    },
-  ];
+  const projects = ecosystemProjects.map((p) => ({
+    ...p,
+    image: `${base}${p.image}`,
+    imageSize: imageSize(p.image),
+    institutions: p.institutions?.map((i) => ({
+      ...i,
+      logo: `${base}${i.logo}`,
+      logoSize: imageSize(i.logo),
+    })),
+  }));
 
   const accentColor = "#098754";
+  const accentTextColor = "var(--brand-green-text)";
   const accentHoverColor = "#076b43";
 
   let carouselIndex = 0; // Start with Atlite (index 0) on left, PyPSA (index 1) in middle, Linopy (index 2) on right
@@ -257,14 +156,14 @@
 <section id="frameworks" class="container py-24 sm:py-32">
   <div>
     <div id="frameworks" class="relative -top-32"></div>
-    <h2 class="text-lg text-center mb-2 tracking-wider" style={`color: ${accentColor};`}>
-      Ecosystem
+    <h2 class="text-lg text-center mb-2 tracking-wider" style={`color: ${accentTextColor};`}>
+      {ecosystemSection.eyebrow}
     </h2>
 
-    <h2 class="text-3xl md:text-4xl text-center font-bold mb-4">Framework and Tools</h2>
+    <h2 class="text-3xl md:text-4xl text-center font-bold mb-4">{ecosystemSection.heading}</h2>
 
     <h3 class="md:w-1/2 mx-auto text-xl text-center text-muted-foreground mb-8">
-      PyPSA and its complementary tools and initiatives
+      {ecosystemSection.lead}
     </h3>
 
     <div class="relative py-8 overflow-x-hidden overflow-y-visible" bind:this={carouselElement}>
@@ -278,16 +177,18 @@
         {#each [...projects, ...projects] as project, idx (project.name + "-" + idx)}
           <div class="carousel-item" style="width: {100 / visibleCount}%">
             <Card
-              class="h-full bg-muted/50 dark:bg-card border border-border/50 shadow-lg shadow-black/10 dark:shadow-white/10 rounded-2xl relative overflow-hidden mx-3"
+              class="bg-muted/50 shadow-lg shadow-black/10 dark:shadow-white/10 rounded-2xl project-card"
             >
               <CardHeader class="flex justify-center items-center pb-4">
-                <div
-                  class="w-full h-48 mb-4 rounded-lg overflow-hidden flex items-center justify-center relative"
-                >
+                <div class="project-image">
                   <img
                     src={project.image}
                     alt={project.name}
-                    class="max-w-full max-h-full object-contain transition-all duration-300"
+                    width={project.imageSize.width}
+                    height={project.imageSize.height}
+                    loading="lazy"
+                    decoding="async"
+                    class="h-auto w-auto max-w-full max-h-full object-contain transition-all duration-300"
                   />
                 </div>
                 <CardTitle class="text-xl mb-2 text-center">{project.name}</CardTitle>
@@ -311,7 +212,7 @@
                         rel="noopener noreferrer"
                         class="flex items-center gap-2 w-full h-full"
                       >
-                        <BookOpen class="size-4" />
+                        <Icon name="book-open" class="size-4" />
                         Docs
                       </a>
                     </Button>
@@ -348,7 +249,7 @@
                         rel="noopener noreferrer"
                         class="flex items-center gap-2 w-full h-full"
                       >
-                        <Globe class="size-4" />
+                        <Icon name="globe" class="size-4" />
                         Website
                       </a>
                     </Button>
@@ -357,26 +258,28 @@
 
                 {#if project.institutions && project.institutions.length > 0}
                   <div class="flex justify-center mt-2">
-                    <div
-                      class="inline-flex items-center gap-1 px-2 py-0 bg-muted/50 border border-border/50 rounded-lg"
-                    >
+                    <div class="project-badge">
                       <span class="text-xs text-muted-foreground">Led by</span>
                       {#each project.institutions as institution, idx (idx)}
                         <a
                           href={institution.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="flex items-center gap-2 transition-opacity hover:opacity-70"
+                          class="project-link"
                           title={institution.name}
                         >
                           <span class="text-xs text-muted-foreground">{institution.name}</span>
                           <img
                             src={institution.logo}
                             alt={institution.name}
+                            width={institution.logoSize.width}
+                            height={institution.logoSize.height}
+                            loading="lazy"
+                            decoding="async"
                             class="w-8 h-8 object-contain"
                             on:error={(e) => {
                               console.error("Institution logo failed to load:", institution.logo);
-                              e.target.style.display = "none";
+                              (e.currentTarget as HTMLElement).style.display = "none";
                             }}
                           />
                         </a>
@@ -396,7 +299,7 @@
 
     {#if projects.length > visibleCount}
       <!-- Indicator Dots -->
-      <div class="flex justify-center gap-2 mt-2">
+      <div class="flex justify-center mt-0">
         {#each projects as project, index (project.name)}
           {@const normalizedIndex = carouselIndex % projects.length}
           {@const isInRange = index >= normalizedIndex && index < normalizedIndex + visibleCount}
@@ -410,10 +313,14 @@
               stopAutoPlay();
               carouselIndex = index;
             }}
-            class="w-2 h-2 rounded-full transition-all duration-300"
-            style="background-color: {isVisible ? accentColor : '#cbd5e1'}"
+            class="w-6 h-6 flex items-center justify-center"
             aria-label="Go to {project.name}"
-          />
+          >
+            <span
+              class="w-2 h-2 rounded-full transition-all duration-300"
+              style="background-color: {isVisible ? accentColor : '#cbd5e1'}"
+            ></span>
+          </button>
         {/each}
       </div>
 
@@ -427,15 +334,15 @@
           }}
           aria-label="Previous tool"
           on:mouseenter={(e) => {
-            e.target.style.backgroundColor = accentColor;
-            e.target.style.borderColor = accentColor;
+            e.currentTarget.style.backgroundColor = accentColor;
+            e.currentTarget.style.borderColor = accentColor;
           }}
           on:mouseleave={(e) => {
-            e.target.style.backgroundColor = "";
-            e.target.style.borderColor = "";
+            e.currentTarget.style.backgroundColor = "";
+            e.currentTarget.style.borderColor = "";
           }}
         >
-          <ArrowLeft class="size-4" />
+          <Icon name="arrow-left" class="size-4" />
         </button>
 
         <button
@@ -447,15 +354,15 @@
           }}
           aria-label="Next tool"
           on:mouseenter={(e) => {
-            e.target.style.backgroundColor = accentColor;
-            e.target.style.borderColor = accentColor;
+            e.currentTarget.style.backgroundColor = accentColor;
+            e.currentTarget.style.borderColor = accentColor;
           }}
           on:mouseleave={(e) => {
-            e.target.style.backgroundColor = "";
-            e.target.style.borderColor = "";
+            e.currentTarget.style.backgroundColor = "";
+            e.currentTarget.style.borderColor = "";
           }}
         >
-          <ArrowRight class="size-4" />
+          <Icon name="arrow-right" class="size-4" />
         </button>
       </div>
     {/if}
