@@ -1,0 +1,114 @@
+{
+  "/img/4th-user-meeting-banner.jpg": {
+    "width": 3200,
+    "height": 800
+  },
+  "/img/4th-user-meeting-card.jpg": {
+    "width": 2400,
+    "height": 1260
+  },
+  "/img/institutions/oet.svg": {
+    "width": 589,
+    "height": 178
+  },
+  "/img/institutions/pypsa-meets-earth.webp": {
+    "width": 1280,
+    "height": 640
+  },
+  "/img/institutions/stanford-university-seeklogo.svg": {
+    "width": 652,
+    "height": 652
+  },
+  "/img/institutions/tu-berlin.svg": {
+    "width": 252,
+    "height": 141
+  },
+  "/img/og-card.png": {
+    "width": 1200,
+    "height": 630
+  },
+  "/img/og-card.svg": {
+    "width": 1200,
+    "height": 630
+  },
+  "/img/projects/atlite.webp": {
+    "width": 286,
+    "height": 286
+  },
+  "/img/projects/linopy.webp": {
+    "width": 800,
+    "height": 238
+  },
+  "/img/projects/mapyourgrid.webp": {
+    "width": 786,
+    "height": 819
+  },
+  "/img/projects/powerplantmatching.webp": {
+    "width": 325,
+    "height": 245
+  },
+  "/img/projects/pypsa-de.webp": {
+    "width": 759,
+    "height": 844
+  },
+  "/img/projects/pypsa-earth.webp": {
+    "width": 800,
+    "height": 745
+  },
+  "/img/projects/pypsa-eur.webp": {
+    "width": 800,
+    "height": 577
+  },
+  "/img/projects/pypsa-logo.svg": {
+    "width": 450,
+    "height": 450
+  },
+  "/img/projects/pypsa-usa.webp": {
+    "width": 800,
+    "height": 392
+  },
+  "/img/projects/technology-data.webp": {
+    "width": 800,
+    "height": 800
+  },
+  "/img/pypsa-logo.svg": {
+    "width": 450,
+    "height": 450
+  },
+  "/img/speakers/aleksander-grochowicz.jpg": {
+    "width": 256,
+    "height": 256
+  },
+  "/img/speakers/alicia-mortera-canga.jpg": {
+    "width": 256,
+    "height": 256
+  },
+  "/img/speakers/christian-doh-dinga.jpg": {
+    "width": 300,
+    "height": 400
+  },
+  "/img/speakers/edward-terpilowski-gill.jpg": {
+    "width": 256,
+    "height": 256
+  },
+  "/img/speakers/koen-van-greevenbroek.jpg": {
+    "width": 256,
+    "height": 256
+  },
+  "/img/speakers/measrainsey-meng.jpg": {
+    "width": 256,
+    "height": 256
+  },
+  "/img/speakers/nathan-de-matos.jpg": {
+    "width": 256,
+    "height": 256
+  },
+  "/img/speakers/priyesh-gosai.jpg": {
+    "width": 256,
+    "height": 256
+  },
+  "/img/speakers/trevor-barnes.jpg": {
+    "width": 256,
+    "height": 256
+  }
+}

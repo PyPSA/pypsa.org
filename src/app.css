@@ -5,6 +5,8 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
+    --brand-green-text: #076b43;
+    --brand-blue-text: #237a92;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -36,6 +38,8 @@
 
   .dark {
     --background: 0 0% 3.9%;
+    --brand-green-text: #10b981;
+    --brand-blue-text: #2993b5;
     --foreground: 0 0% 98%;
     --card: 0 0% 7.8%;
     --card-foreground: 0 0% 98%;
@@ -91,4 +95,83 @@ html {
 /* Only override foreground for light mode */
 :root:not(.dark) {
   --foreground: 0 0% 3.9% !important;
+}
+
+/*
+ * Utilities that override a ui component base class (twMerge) must stay in the markup, because `utilities` outranks `components`.
+ */
+@layer components {
+  .btn-base {
+    @apply ring-offset-background focus-visible:ring-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0;
+  }
+
+  .contributor-item {
+    @apply relative isolate hover:z-[60];
+  }
+  .contributor-link {
+    @apply relative z-0 block h-full group-hover/card:z-[60];
+  }
+  .contributor-card {
+    @apply bg-muted/60 text-card-foreground dark:bg-card rounded-lg border shadow-sm hover:shadow-xl relative flex h-full cursor-pointer flex-col transition-transform duration-300 hover:-translate-y-1 focus-visible:-translate-y-1;
+  }
+  .contributor-img-wrap {
+    @apply h-full overflow-hidden rounded-t-lg;
+  }
+  .contributor-img {
+    @apply aspect-square h-auto w-full saturate-0 group-hover/hoverimg:saturate-100 object-cover transition-all duration-300 ease-in-out group-hover/hoverimg:scale-110;
+  }
+  .contributor-header {
+    @apply flex flex-col space-y-1.5;
+  }
+  .contributor-title {
+    @apply font-semibold tracking-tight text-sm flex min-h-[3rem] items-center justify-between px-3 py-2;
+  }
+  .contributor-badge {
+    @apply ml-2 inline-flex cursor-help items-center justify-center rounded-full p-1 text-primary transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+  }
+  .contributor-badge-icon {
+    @apply relative inline-flex h-6 w-6 flex-none items-center justify-center;
+  }
+  .contributor-badge-glyph {
+    @apply relative z-10 h-4 w-4 transition-colors duration-300;
+  }
+  .contributor-badge-ping {
+    @apply absolute inline-flex h-full w-full items-center justify-center;
+  }
+
+  .feature-item {
+    @apply transition-transform duration-300;
+  }
+  .feature-item-link {
+    @apply cursor-pointer hover:-translate-y-1 focus-visible:-translate-y-1;
+  }
+  .feature-card {
+    @apply dark:bg-card relative flex h-full flex-col overflow-hidden border-border/50 transition-all duration-300;
+  }
+  .feature-icon {
+    @apply flex-shrink-0 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 p-3;
+  }
+  .feature-body {
+    @apply flex flex-grow flex-col justify-between text-center text-muted-foreground;
+  }
+
+  .btn-outline {
+    @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+  }
+  .btn-sm {
+    @apply h-9 rounded-md px-3;
+  }
+
+  .project-card {
+    @apply relative mx-3 h-full overflow-hidden border border-border/50 dark:bg-card;
+  }
+  .project-image {
+    @apply relative mb-4 flex h-48 w-full items-center justify-center overflow-hidden rounded-lg;
+  }
+  .project-badge {
+    @apply inline-flex items-center gap-1 rounded-lg border border-border/50 bg-muted/50 px-2 py-0;
+  }
+  .project-link {
+    @apply flex items-center gap-2 transition-opacity hover:opacity-70;
+  }
 }

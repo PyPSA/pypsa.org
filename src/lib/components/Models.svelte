@@ -1,93 +1,32 @@
 <script lang="ts">
   import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
   import { Button } from "$lib/components/ui/button";
-  import { BookOpen, ArrowRight, ArrowLeft, Map } from "lucide-svelte";
+  import Icon from "$lib/components/Icon.svelte";
   import GithubIcon from "$lib/icons/GithubIcon.svelte";
   import { onMount, onDestroy } from "svelte";
   import { base } from "$app/paths";
+  import { imageSize } from "$lib/images";
   import { DOCS_BASE_URL } from "$lib/config";
+  import { modelProjects, modelsSection } from "$lib/data/home/models";
 
   let isDark = false;
   let darkModeObserver: MutationObserver | null = null;
 
-  interface ProjectProps {
-    name: string;
-    description: string;
-    image: string;
-    githubUrl: string;
-    docsUrl?: string;
-    websiteUrl?: string;
-    exploreUrl?: string;
-    exploreUrlDark?: string;
-    institutions?: Array<{
-      name: string;
-      logo: string;
-      url: string;
-    }>;
-  }
-
-  const projects: ProjectProps[] = [
-    {
-      name: "PyPSA-Earth",
-      description:
-        "A flexible Python-based open optimisation model to study energy system futures around the world",
-      image: `${base}/img/projects/pypsa-earth.webp`,
-      githubUrl: "https://github.com/pypsa-meets-earth/pypsa-earth",
-      docsUrl: "https://pypsa-earth.readthedocs.io/en/latest/",
-      institutions: [
-        {
-          name: "PyPSA meets Earth",
-          logo: `${base}/img/institutions/pypsa-meets-earth.webp`,
-          url: "https://pypsa-meets-earth.github.io/",
-        },
-      ],
-    },
-    {
-      name: "PyPSA-Eur",
-      description: "A Sector-Coupled Open Optimisation Model of the European Energy System",
-      image: `${base}/img/projects/pypsa-eur.webp`,
-      githubUrl: "https://github.com/PyPSA/pypsa-eur",
-      docsUrl: "https://pypsa-eur.readthedocs.io/",
-      exploreUrl: `${base}/explore/europe-light.html`,
-      exploreUrlDark: `${base}/explore/europe-dark.html`,
-      institutions: [
-        {
-          name: "TU Berlin",
-          logo: `${base}/img/institutions/tu-berlin.svg`,
-          url: "https://www.tu.berlin/en/ensys",
-        },
-      ],
-    },
-    {
-      name: "PyPSA-USA",
-      description: "An Open-Source Energy System Optimization Model for the United States",
-      image: `${base}/img/projects/pypsa-usa.webp`,
-      githubUrl: "https://github.com/PyPSA/pypsa-usa",
-      docsUrl: "https://pypsa-usa.readthedocs.io/en/latest/",
-      institutions: [
-        {
-          name: "Stanford University",
-          logo: `${base}/img/institutions/stanford-university-seeklogo.svg`,
-          url: "https://ines.stanford.edu/",
-        },
-      ],
-    },
-    {
-      name: "PyPSA-DE",
-      description: "High resolution, sector-coupled model of the German Energy System",
-      image: `${base}/img/projects/pypsa-de.webp`,
-      githubUrl: "https://github.com/PyPSA/pypsa-de",
-      institutions: [
-        {
-          name: "TU Berlin",
-          logo: `${base}/img/institutions/tu-berlin.svg`,
-          url: "https://www.tu.berlin/en/ensys",
-        },
-      ],
-    },
-  ];
+  const projects = modelProjects.map((p) => ({
+    ...p,
+    image: `${base}${p.image}`,
+    imageSize: imageSize(p.image),
+    exploreUrl: p.exploreUrl && `${base}${p.exploreUrl}`,
+    exploreUrlDark: p.exploreUrlDark && `${base}${p.exploreUrlDark}`,
+    institutions: p.institutions?.map((i) => ({
+      ...i,
+      logo: `${base}${i.logo}`,
+      logoSize: imageSize(i.logo),
+    })),
+  }));
 
   const accentColor = "#2993B5";
+  const accentTextColor = "var(--brand-blue-text)";
   const accentHoverColor = "#237a92";
 
   let carouselIndex = 0;
@@ -261,14 +200,14 @@
 <section id="implementations" class="container py-24 sm:py-32" bind:this={sectionElement}>
   <div>
     <div id="implementations" class="relative -top-32"></div>
-    <h2 class="text-lg text-center mb-2 tracking-wider" style={`color: ${accentColor};`}>
-      Implementations
+    <h2 class="text-lg text-center mb-2 tracking-wider" style={`color: ${accentTextColor};`}>
+      {modelsSection.eyebrow}
     </h2>
 
-    <h2 class="text-3xl md:text-4xl text-center font-bold mb-4">PyPSA Models</h2>
+    <h2 class="text-3xl md:text-4xl text-center font-bold mb-4">{modelsSection.heading}</h2>
 
     <h3 class="md:w-1/2 mx-auto text-xl text-center text-muted-foreground mb-8">
-      Open Energy System Models built with PyPSA
+      {modelsSection.lead}
     </h3>
 
     <div class="relative py-8 overflow-x-hidden overflow-y-visible" bind:this={carouselElement}>
@@ -283,7 +222,7 @@
           {#each [...projects, ...projects] as project, idx (project.name + "-" + idx)}
             <div class="carousel-item" style="width: {100 / visibleCount}%">
               <Card
-                class="h-full bg-muted/50 dark:bg-card border border-border/50 shadow-lg shadow-black/10 dark:shadow-white/10 rounded-2xl relative overflow-hidden mx-3"
+                class="bg-muted/50 shadow-lg shadow-black/10 dark:shadow-white/10 rounded-2xl project-card"
               >
                 {#if project.exploreUrl}
                   <button
@@ -291,11 +230,13 @@
                     class="absolute bottom-3 right-3 p-2 rounded-full transition-all duration-300 opacity-60 hover:opacity-100 z-10 explore-button"
                     on:mouseenter={(e) => {
                       const mapIcons = e.currentTarget.querySelectorAll(".map-icon");
-                      mapIcons.forEach((icon) => (icon.style.color = accentColor));
+                      mapIcons.forEach(
+                        (icon) => ((icon as HTMLElement).style.color = accentTextColor)
+                      );
                     }}
                     on:mouseleave={(e) => {
                       const mapIcons = e.currentTarget.querySelectorAll(".map-icon");
-                      mapIcons.forEach((icon) => (icon.style.color = ""));
+                      mapIcons.forEach((icon) => ((icon as HTMLElement).style.color = ""));
                     }}
                     on:click={(e) => {
                       e.preventDefault();
@@ -303,23 +244,29 @@
                       toggleExpand(project.name);
                     }}
                     title="Explore {project.name}"
+                    aria-label="Explore {project.name}"
                   >
                     <span class="relative inline-flex">
                       <span class="absolute inline-flex h-full w-full hover-ping">
-                        <Map class="size-6 map-icon" />
+                        <Icon name="map" class="size-6 map-icon" />
                       </span>
-                      <Map class="size-6 relative map-icon transition-colors duration-300" />
+                      <Icon
+                        name="map"
+                        class="size-6 relative map-icon transition-colors duration-300"
+                      />
                     </span>
                   </button>
                 {/if}
                 <CardHeader class="flex justify-center items-center pb-4">
-                  <div
-                    class="w-full h-48 mb-4 rounded-lg overflow-hidden flex items-center justify-center relative"
-                  >
+                  <div class="project-image">
                     <img
                       src={project.image}
                       alt={project.name}
-                      class="max-w-full max-h-full object-contain transition-all duration-300"
+                      width={project.imageSize.width}
+                      height={project.imageSize.height}
+                      loading="lazy"
+                      decoding="async"
+                      class="h-auto w-auto max-w-full max-h-full object-contain transition-all duration-300"
                     />
                   </div>
                   <CardTitle class="text-xl mb-2 text-center">{project.name}</CardTitle>
@@ -343,7 +290,7 @@
                           rel="noopener noreferrer"
                           class="flex items-center gap-2 w-full h-full"
                         >
-                          <BookOpen class="size-4" />
+                          <Icon name="book-open" class="size-4" />
                           Docs
                         </a>
                       </Button>
@@ -389,26 +336,28 @@
 
                   {#if project.institutions && project.institutions.length > 0}
                     <div class="flex justify-center mt-2">
-                      <div
-                        class="inline-flex items-center gap-1 px-2 py-0 bg-muted/50 border border-border/50 rounded-lg"
-                      >
+                      <div class="project-badge">
                         <span class="text-xs text-muted-foreground">Led by</span>
                         {#each project.institutions as institution, idx (idx)}
                           <a
                             href={institution.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="flex items-center gap-2 transition-opacity hover:opacity-70"
+                            class="project-link"
                             title={institution.name}
                           >
                             <span class="text-xs text-muted-foreground">{institution.name}</span>
                             <img
                               src={institution.logo}
                               alt={institution.name}
+                              width={institution.logoSize.width}
+                              height={institution.logoSize.height}
+                              loading="lazy"
+                              decoding="async"
                               class="w-8 h-8 object-contain"
                               on:error={(e) => {
                                 console.error("Institution logo failed to load:", institution.logo);
-                                e.target.style.display = "none";
+                                (e.currentTarget as HTMLElement).style.display = "none";
                               }}
                             />
                           </a>
@@ -448,7 +397,7 @@
                       toggleExpand(project.name);
                     }}
                   >
-                    <ArrowLeft class="size-4" />
+                    <Icon name="arrow-left" class="size-4" />
                     Back
                   </button>
                 </div>
@@ -469,7 +418,7 @@
 
     {#if projects.length > visibleCount && expandedProject === null}
       <!-- Indicator Dots -->
-      <div class="flex justify-center gap-2 mt-2">
+      <div class="flex justify-center mt-0">
         {#each projects as project, index (project.name)}
           {@const normalizedIndex = carouselIndex % projects.length}
           {@const isInRange = index >= normalizedIndex && index < normalizedIndex + visibleCount}
@@ -483,10 +432,14 @@
               stopAutoPlay();
               carouselIndex = index;
             }}
-            class="w-2 h-2 rounded-full transition-all duration-300"
-            style="background-color: {isVisible ? accentColor : '#cbd5e1'}"
+            class="w-6 h-6 flex items-center justify-center"
             aria-label="Go to {project.name}"
-          />
+          >
+            <span
+              class="w-2 h-2 rounded-full transition-all duration-300"
+              style="background-color: {isVisible ? accentColor : '#cbd5e1'}"
+            ></span>
+          </button>
         {/each}
       </div>
       <div class="mt-4 flex justify-center gap-4">
@@ -499,15 +452,15 @@
           }}
           aria-label="Previous model"
           on:mouseenter={(e) => {
-            e.target.style.backgroundColor = accentColor;
-            e.target.style.borderColor = accentColor;
+            e.currentTarget.style.backgroundColor = accentColor;
+            e.currentTarget.style.borderColor = accentColor;
           }}
           on:mouseleave={(e) => {
-            e.target.style.backgroundColor = "";
-            e.target.style.borderColor = "";
+            e.currentTarget.style.backgroundColor = "";
+            e.currentTarget.style.borderColor = "";
           }}
         >
-          <ArrowLeft class="size-4" />
+          <Icon name="arrow-left" class="size-4" />
         </button>
 
         <button
@@ -519,15 +472,15 @@
           }}
           aria-label="Next model"
           on:mouseenter={(e) => {
-            e.target.style.backgroundColor = accentColor;
-            e.target.style.borderColor = accentColor;
+            e.currentTarget.style.backgroundColor = accentColor;
+            e.currentTarget.style.borderColor = accentColor;
           }}
           on:mouseleave={(e) => {
-            e.target.style.backgroundColor = "";
-            e.target.style.borderColor = "";
+            e.currentTarget.style.backgroundColor = "";
+            e.currentTarget.style.borderColor = "";
           }}
         >
-          <ArrowRight class="size-4" />
+          <Icon name="arrow-right" class="size-4" />
         </button>
       </div>
     {/if}
@@ -541,7 +494,8 @@
           class="h-12 px-8 bg-[#2993B5] hover:bg-[#237a92] text-white font-medium rounded-full group/arrow transition-colors duration-300"
         >
           Find More Models
-          <ArrowRight
+          <Icon
+            name="arrow-right"
             class="ml-2 group-hover/arrow:translate-x-1 transition-transform duration-300"
             style="width: 1rem; height: 1rem;"
           />
