@@ -47,6 +47,12 @@ describe("privacy", () => {
     expect(root.querySelector("#hosting")?.text).toContain("Cloudflare");
     expect(root.querySelector("#github-avatars")?.text).toContain("avatars");
   });
+
+  it("names Cloudflare as processor under Art. 28 GDPR", () => {
+    const hosting = parse(html).querySelector("#hosting")!.text;
+    expect(hosting).toContain("processor");
+    expect(hosting).toContain("Art. 28");
+  });
 });
 
 describe("404.html", () => {

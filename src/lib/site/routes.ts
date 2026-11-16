@@ -2,6 +2,7 @@ import { eventsData } from "$lib/data/events";
 import { roadmapData } from "$lib/data/roadmap";
 import { siteConfig } from "$lib/config/meta";
 import { dateRange } from "./dates";
+import { mdPathOf } from "./md-path";
 
 /**
  * The single source for every public, indexable route. Sitemap, llms.txt and
@@ -21,8 +22,6 @@ export interface RouteEntry {
 }
 
 const buildDate = new Date().toISOString().slice(0, 10);
-
-const mdPathOf = (path: string) => (path === "/" ? "/index.md" : `${path}.md`);
 
 const newestRoadmapDate = roadmapData
   .map((i) => i.date)

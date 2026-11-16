@@ -1,4 +1,4 @@
-import adapter from "@sveltejs/adapter-cloudflare";
+import adapter from "@sveltejs/adapter-static";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -8,9 +8,8 @@ const config = {
   preprocess: vitePreprocess(),
 
   kit: {
-    // Cloudflare Workers: every route is prerendered and shipped as a static
-    // asset via the ASSETS binding. The worker only serves those assets.
-    adapter: adapter(),
+    // Every route is prerendered, Cloudflare serves build/ as static assets.
+    adapter: adapter({ pages: "build", assets: "build", strict: true }),
     paths: {
       base: process.env.BASE_PATH || "",
       // Root-absolute asset URLs, so the prerendered 404.html works at any missed depth.
