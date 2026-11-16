@@ -70,7 +70,7 @@ describe("footer on /", () => {
     const hrefs = parse(readBuilt("index.html"))
       .querySelectorAll("footer a")
       .map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(expect.arrayContaining(["/contact", "/privacy", "https://pypsalabs.org/legal"]));
+    expect(hrefs).toEqual(expect.arrayContaining(["/contact", "/privacy", "/legal"]));
   });
 });
 

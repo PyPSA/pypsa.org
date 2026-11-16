@@ -12,7 +12,7 @@ const canonicalOf = (path: string) => (path === "/" ? `${ORIGIN}/` : ORIGIN + pa
 describe("route registry", () => {
   it("covers the top-level pages and every event", () => {
     const paths = routes.map((r) => r.path);
-    for (const p of ["/", "/roadmap", "/events", "/contact", "/privacy"]) expect(paths).toContain(p);
+    for (const p of ["/", "/roadmap", "/events", "/contact", "/privacy", "/legal"]) expect(paths).toContain(p);
     for (const e of eventsData) expect(paths).toContain(`/events/${e.slug}`);
     expect(paths.some((p) => p.startsWith("/embed") || p === "/404")).toBe(false);
   });

@@ -69,6 +69,12 @@ const base: Base[] = [
     description: "How pypsa.org handles personal data, third-party services and cookies.",
     lastmod: buildDate,
   },
+  {
+    path: "/legal",
+    title: "Legal Notice — " + siteConfig.name,
+    description: "Legal notice (Impressum) for pypsa.org, operated by PyPSA Labs gGmbH.",
+    lastmod: buildDate,
+  },
 ];
 
 export const routes: RouteEntry[] = base.map((r) => ({

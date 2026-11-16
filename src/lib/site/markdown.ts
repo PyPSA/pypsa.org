@@ -12,6 +12,7 @@ import { communitySection } from "$lib/data/home/community";
 import { referencesSection } from "$lib/data/home/references";
 import { contactPage } from "$lib/data/pages/contact";
 import { privacyPage } from "$lib/data/pages/privacy";
+import { legalPage } from "$lib/data/pages/legal";
 import { notFoundPage } from "$lib/data/pages/notFound";
 import type { Inline, PageData } from "$lib/data/pages/types";
 import { dateRange } from "./dates";
@@ -314,6 +315,7 @@ export function markdownFor(path: string): string {
   if (path === "/events") return eventsIndexMarkdown();
   if (path === "/contact") return pageMarkdown(contactPage, path);
   if (path === "/privacy") return pageMarkdown(privacyPage, path);
+  if (path === "/legal") return pageMarkdown(legalPage, path);
   const event = eventsData.find((e) => `/events/${e.slug}` === path);
   if (!event) throw new Error(`No Markdown mirror for ${path}`);
   return eventMarkdown(event);
