@@ -7,6 +7,9 @@ export const AVATAR_SIZE = 240;
 /** Intrinsic size of YouTube `mqdefault.jpg` thumbnails. */
 export const YOUTUBE_THUMB = { width: 320, height: 180 };
 
+/** Local build-time WebP of a YouTube `mqdefault.jpg` thumbnail. */
+export const youtubeThumbSrc = (videoId: string) => `${base}/img/youtube/${videoId}.webp`;
+
 const AVATAR_URL = /^https:\/\/avatars\.githubusercontent\.com\/u\/(\d+)(?:\?.*)?$/;
 
 /** Local build-time WebP for a GitHub avatar URL. */

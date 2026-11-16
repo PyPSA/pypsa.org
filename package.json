@@ -13,9 +13,10 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "images:avatars": "node scripts/images.mjs avatars",
+    "images:thumbs": "node scripts/images.mjs thumbs",
     "images:projects": "node scripts/images.mjs projects",
     "images:sizes": "node scripts/images.mjs sizes",
-    "prebuild": "npm run images:avatars",
+    "prebuild": "npm run images:avatars && npm run images:thumbs",
     "test": "npm run build && vitest run",
     "test:built": "vitest run"
   },

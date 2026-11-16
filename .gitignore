@@ -26,5 +26,6 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-# Generated at build time by `npm run images:avatars`
+# Generated at build time by `npm run images:avatars` and `images:thumbs`
 /static/img/avatars/
+/static/img/youtube/

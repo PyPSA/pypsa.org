@@ -104,7 +104,10 @@
       <div class="flex flex-col items-center md:items-end gap-2">
         <nav class="flex gap-4" aria-label="Site information">
           <a href="/contact" class="hover:text-primary transition-colors">Contact</a>
-          <a href="/privacy" class="hover:text-primary transition-colors">Privacy &amp; Legal</a>
+          <a href="/privacy" class="hover:text-primary transition-colors">Privacy Policy</a>
+          <a href="https://pypsalabs.org/legal" class="hover:text-primary transition-colors"
+            >Legal Notice</a
+          >
         </nav>
         <p>&copy; 2015-2026 PyPSA Contributors</p>
       </div>

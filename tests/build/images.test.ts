@@ -24,9 +24,9 @@ describe("image pipeline", () => {
     expect(missing).toEqual([]);
   });
 
-  it("references no GitHub avatar host in built HTML", () => {
+  it("references no GitHub avatar or YouTube thumbnail host in built HTML", () => {
     const offenders = builtHtmlFiles().filter((f) =>
-      readBuilt(f).includes("avatars.githubusercontent.com"),
+      /avatars\.githubusercontent\.com|img\.youtube\.com/.test(readBuilt(f)),
     );
     expect(offenders).toEqual([]);
   });

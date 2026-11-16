@@ -58,14 +58,14 @@ const base: Base[] = [
   })),
   {
     path: "/contact",
-    title: "Get in touch — " + siteConfig.name,
+    title: "Contact — " + siteConfig.name,
     description:
-      "How to reach the PyPSA community: Discord, GitHub Discussions and Issues, the mailing list and social media.",
+      "How to reach the PyPSA community and developers: Discord, the GitHub issue tracker and social media.",
     lastmod: buildDate,
   },
   {
     path: "/privacy",
-    title: "Privacy & Legal Notice — " + siteConfig.name,
+    title: "Privacy Policy — " + siteConfig.name,
     description: "How pypsa.org handles personal data, third-party services and cookies.",
     lastmod: buildDate,
   },

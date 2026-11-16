@@ -20,12 +20,11 @@ describe("contact", () => {
       .map((a) => a.getAttribute("href"));
     for (const h of [
       "https://discord.gg/AnuJBk23FU",
-      "https://github.com/PyPSA/PyPSA/discussions",
       "https://github.com/PyPSA/PyPSA/issues",
-      "https://groups.google.com/g/pypsa",
       "https://mastodon.social/@pypsa",
       "https://bsky.app/profile/pypsa-org.bsky.social",
       "https://www.linkedin.com/company/pypsa",
+      "mailto:contact@pypsa.org",
     ])
       expect(hrefs).toContain(h);
   });
@@ -34,22 +33,18 @@ describe("contact", () => {
 describe("privacy", () => {
   const html = readBuilt("privacy.html");
 
-  it("never mentions pypsalabs.org", () => {
-    expect(html).not.toContain("pypsalabs.org");
-  });
-
-  it("names PyPSA Labs only in the operator, controller and DDG blocks", () => {
+  it("names PyPSA Labs only in the operator and controller blocks", () => {
     const root = parse(html);
     const article = root.querySelector("article")!;
     expect(visibleText(parse(article.outerHTML))).toContain("PyPSA Labs gGmbH");
     const rest = parse(article.outerHTML);
-    rest.querySelectorAll("[data-lead], #controller, #legal-notice").forEach((n) => n.remove());
+    rest.querySelectorAll("[data-lead], #controller").forEach((n) => n.remove());
     expect(visibleText(rest)).not.toMatch(/PyPSA Labs/i);
   });
 
   it("keeps hosting and avatars in their own sections", () => {
     const root = parse(html);
-    expect(root.querySelector("#hosting")?.text).toContain("GitHub Pages");
+    expect(root.querySelector("#hosting")?.text).toContain("Cloudflare");
     expect(root.querySelector("#github-avatars")?.text).toContain("avatars");
   });
 });
@@ -71,11 +66,11 @@ describe("404.html", () => {
 });
 
 describe("footer on /", () => {
-  it("links /contact and /privacy", () => {
+  it("links /contact, /privacy and the legal notice", () => {
     const hrefs = parse(readBuilt("index.html"))
       .querySelectorAll("footer a")
       .map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(expect.arrayContaining(["/contact", "/privacy"]));
+    expect(hrefs).toEqual(expect.arrayContaining(["/contact", "/privacy", "https://pypsalabs.org/legal"]));
   });
 });
 

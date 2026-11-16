@@ -3,7 +3,7 @@
   import Navbar from "$lib/components/Navbar.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import { base } from "$app/paths";
-  import { avatarSrc, AVATAR_SIZE, imageSize, YOUTUBE_THUMB } from "$lib/images";
+  import { avatarSrc, AVATAR_SIZE, imageSize, YOUTUBE_THUMB, youtubeThumbSrc } from "$lib/images";
   import { Button } from "$lib/components/ui/button";
   import { Badge } from "$lib/components/ui/badge";
   import { Card, CardContent } from "$lib/components/ui/card";
@@ -393,7 +393,7 @@
                               class="group relative mb-3 block aspect-video w-full overflow-hidden rounded-lg border border-border/60 bg-muted ring-primary ring-offset-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 sm:w-56"
                             >
                               <img
-                                src="https://img.youtube.com/vi/{item.videoId}/mqdefault.jpg"
+                                src={youtubeThumbSrc(item.videoId)}
                                 alt=""
                                 width={YOUTUBE_THUMB.width}
                                 height={YOUTUBE_THUMB.height}
@@ -574,7 +574,7 @@
                 <Card class="overflow-hidden transition-all duration-200 hover:shadow-md">
                   <div class="relative aspect-video bg-muted">
                     <img
-                      src="https://img.youtube.com/vi/{video.videoId}/mqdefault.jpg"
+                      src={youtubeThumbSrc(video.videoId)}
                       alt={video.title}
                       width={YOUTUBE_THUMB.width}
                       height={YOUTUBE_THUMB.height}

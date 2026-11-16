@@ -1,52 +1,54 @@
 import { siteConfig } from "$lib/config/meta";
-import { DOCS_BASE_URL } from "../../config";
 import type { PageData } from "./types";
 
 export const contactPage: PageData = {
   eyebrow: "Community",
-  title: "Get in touch",
-  lead: [
-    "PyPSA is developed in the open by a community of researchers, engineers and users. Pick the channel that fits your question.",
-  ],
+  title: "Contact",
+  lead: ["Please consider the following ways to reach out to the community and the developers."],
   sections: [
     {
-      id: "help",
-      heading: "Questions and bug reports",
+      id: "support",
+      heading: "Support",
       items: [
         [
-          { label: "Discord", href: siteConfig.social.discord },
-          ": quick questions and chat with other PyPSA users.",
+          "To discuss with other PyPSA users, organise projects, share news, and get in touch with the community you can use the ",
+          { label: "Discord server", href: siteConfig.social.discord },
+          ".",
         ],
         [
-          { label: "GitHub Discussions", href: "https://github.com/PyPSA/PyPSA/discussions" },
-          ": usage questions and ideas.",
+          "For bugs and feature requests, please use the ",
+          { label: "issue tracker", href: "https://github.com/PyPSA/PyPSA/issues" },
+          ".",
         ],
         [
-          { label: "GitHub Issues", href: "https://github.com/PyPSA/PyPSA/issues" },
-          ": bug reports and feature requests.",
+          "We strongly welcome anyone interested in contributing to the project. If you have ideas or suggestions, feel invited to file issues or make pull requests on ",
+          { label: "GitHub", href: "https://github.com/PyPSA" },
+          ".",
         ],
       ],
     },
     {
       id: "news",
-      heading: "News and announcements",
-      items: [
+      heading: "News",
+      paragraphs: [
         [
-          { label: "Mailing list", href: "https://groups.google.com/g/pypsa" },
-          ": announcements about releases and events.",
+          "Releases and events are announced on ",
+          { label: "Mastodon", href: siteConfig.social.mastodon },
+          ", ",
+          { label: "Bluesky", href: siteConfig.social.bluesky },
+          " and ",
+          { label: "LinkedIn", href: siteConfig.social.linkedin },
+          ".",
         ],
-        [{ label: "Mastodon", href: siteConfig.social.mastodon }, ": project news."],
-        [{ label: "Bluesky", href: siteConfig.social.bluesky }, ": project news."],
-        [{ label: "LinkedIn", href: siteConfig.social.linkedin }, ": project news."],
       ],
     },
     {
-      id: "docs",
-      heading: "Looking for documentation?",
+      id: "email",
+      heading: "Email",
       paragraphs: [
         [
-          "Tutorials, examples and the API reference live in the ",
-          { label: "PyPSA documentation", href: DOCS_BASE_URL },
+          "For anything else, you can reach us at ",
+          { label: "contact@pypsa.org", href: "mailto:contact@pypsa.org" },
           ".",
         ],
       ],
