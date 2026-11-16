@@ -9,7 +9,7 @@
   } from "$lib/components/ui/sheet";
   import { Button, buttonVariants } from "$lib/components/ui/button";
   import { Separator } from "$lib/components/ui/separator";
-  import { Menu, ExternalLink } from "lucide-svelte";
+  import Icon from "$lib/components/Icon.svelte";
   import GithubIcon from "$lib/icons/GithubIcon.svelte";
   import DiscordIcon from "$lib/icons/DiscordIcon.svelte";
   import ToggleTheme from "$lib/components/ToggleTheme.svelte";
@@ -81,8 +81,12 @@
 >
   <a href="/" class="font-bold text-lg flex items-center">
     <img
-      src="https://raw.githubusercontent.com/PyPSA/PyPSA/master/docs/assets/logo/logo.svg"
+      src="/img/pypsa-logo.svg"
       alt="PyPSA Logo"
+      width="36"
+      height="36"
+      loading="eager"
+      decoding="async"
       class="w-9 h-9 mr-2"
     />
     PyPSA
@@ -91,8 +95,8 @@
   <!-- Mobile -->
   <div class="flex items-center lg:hidden">
     <Sheet bind:open={isOpen}>
-      <SheetTrigger>
-        <Menu on:click={() => (isOpen = true)} class="cursor-pointer" />
+      <SheetTrigger aria-label="Open menu">
+        <Icon name="menu" class="cursor-pointer" />
       </SheetTrigger>
 
       <SheetContent
@@ -104,8 +108,12 @@
             <SheetTitle class="flex items-center">
               <a href="/" class="flex items-center">
                 <img
-                  src="https://raw.githubusercontent.com/PyPSA/PyPSA/master/docs/assets/logo/logo.svg"
+                  src="/img/pypsa-logo.svg"
                   alt="PyPSA Logo"
+                  width="36"
+                  height="36"
+                  loading="lazy"
+                  decoding="async"
                   class="size-9 mr-2"
                 />
                 PyPSA
@@ -121,7 +129,7 @@
                   variant="ghost"
                   class="justify-start text-base w-full transition-all duration-300 hover:bg-primary hover:text-primary-foreground {activeSection ===
                   sectionId
-                    ? 'bg-primary/10 text-primary border border-primary/20'
+                    ? 'bg-primary/10 text-primary dark:text-foreground border border-primary/20'
                     : ''}"
                 >
                   {label}
@@ -137,7 +145,7 @@
                   variant="ghost"
                   class="justify-start text-base w-full transition-all duration-300 hover:bg-primary hover:text-primary-foreground {pathname ===
                   href
-                    ? 'bg-primary/10 text-primary border border-primary/20'
+                    ? 'bg-primary/10 text-primary dark:text-foreground border border-primary/20'
                     : ''}"
                 >
                   {label}
@@ -156,7 +164,7 @@
                 class="justify-start text-base w-full transition-all duration-300 hover:bg-[#098754] hover:text-white"
               >
                 {docsLink.label}
-                <ExternalLink class="ml-1 size-3" />
+                <Icon name="external-link" class="ml-1 size-3" />
               </Button>
             </a>
           </div>
@@ -179,7 +187,7 @@
           variant: 'ghost',
           size: 'default',
         })} transition-all duration-300 {activeSection === sectionId
-          ? 'bg-primary/10 text-primary border border-primary/20'
+          ? 'bg-primary/10 text-primary dark:text-foreground border border-primary/20'
           : ''}"
       >
         {label}
@@ -196,7 +204,7 @@
         variant: 'ghost',
         size: 'default',
       })} transition-all duration-300 {onRoadmap
-        ? 'bg-primary/10 text-primary border border-primary/20'
+        ? 'bg-primary/10 text-primary dark:text-foreground border border-primary/20'
         : ''}"
     >
       {roadmapLink.label}
@@ -209,7 +217,7 @@
         variant: 'ghost',
         size: 'default',
       })} transition-all duration-300 {onEvent
-        ? 'bg-primary/10 text-primary border border-primary/20'
+        ? 'bg-primary/10 text-primary dark:text-foreground border border-primary/20'
         : ''}"
     >
       {eventsLink.label}
@@ -235,7 +243,7 @@
       )}
     >
       {docsLink.label}
-      <ExternalLink class="ml-1 size-3" />
+      <Icon name="external-link" class="ml-1 size-3" />
     </a>
   </div>
 
