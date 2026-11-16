@@ -106,7 +106,8 @@ html {
   }
 
   .contributor-item {
-    @apply relative isolate hover:z-[60];
+    /* Below the sticky navbar (z-40) so a hovered card never covers it. */
+    @apply relative isolate hover:z-30;
   }
   .contributor-link {
     @apply relative z-0 block h-full group-hover/card:z-[60];

@@ -18,7 +18,8 @@
     "images:sizes": "node scripts/images.mjs sizes",
     "prebuild": "npm run images:avatars && npm run images:thumbs",
     "test": "npm run build && vitest run",
-    "test:built": "vitest run"
+    "test:built": "vitest run",
+    "test:stacking": "node --test tests/*.test.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
