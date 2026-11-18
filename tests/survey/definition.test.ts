@@ -91,13 +91,13 @@ describe("definition lint", () => {
   it("sets the survey settings the spec lists", () => {
     expect(def.survey).toMatchObject({
       firstPageIsStartPage: false,
-      showTOC: true,
-      tocLocation: "left",
       showQuestionNumbers: "off",
       questionErrorLocation: "bottom",
-      showProgressBar: "top",
       completeText: "Submit",
     });
+    // The page renders its own section list and progress strip.
+    expect(def.survey).not.toHaveProperty("showTOC");
+    expect(def.survey).not.toHaveProperty("showProgressBar");
     expect(byName("q3_7").maxSelectedChoices).toBe(3);
     expect(byName("q2_1").choicesOrder).toBe("random");
     expect(byName("q2_9").rowOrder).toBe("random");

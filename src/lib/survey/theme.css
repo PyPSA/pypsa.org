@@ -127,7 +127,7 @@
   color: var(--sv-muted-foreground);
 }
 
-/* Stronger control borders so unselected boxes, inputs and progress dots stay visible, most of all in dark. */
+/* Stronger control borders so unselected boxes and inputs stay visible, most of all in dark. */
 .survey-host {
   --survey-control-border: color-mix(in oklab, var(--sv-muted-foreground) 70%, transparent);
 }
@@ -144,26 +144,6 @@
 }
 .survey-host .sd-item--error .sd-item__control-label {
   color: var(--sv-foreground);
-}
-.survey-host .sd-progress-buttons__dot {
-  background-color: var(--sv-muted-foreground);
-}
-.survey-host .sd-progress-buttons__list li::before,
-.survey-host .sd-progress-buttons__list li::after {
-  background-color: var(--survey-control-border);
-}
-
-/* Fit the ten progress dots to the column instead of the adapter's 96 px minimum per step. */
-.survey-host .sd-progress-buttons__list li {
-  min-width: 0;
-}
-/* Keeps the mobile dots clear of the floating section-list toggle. */
-.survey-host .sd-root-modern--mobile .sd-progress-buttons__container-center {
-  padding-left: 1rem;
-  padding-right: 5.5rem;
-}
-.survey-host .sv_progress-toc--mobile {
-  padding: 10px;
 }
 
 /* The empty content-top slot adds a second 40 px flex gap above the page title. */

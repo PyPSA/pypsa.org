@@ -120,11 +120,8 @@
     "title": "PyPSA User Survey 2026",
     "showTitle": false,
     "firstPageIsStartPage": false,
-    "showTOC": true,
-    "tocLocation": "left",
     "showQuestionNumbers": "off",
     "questionErrorLocation": "bottom",
-    "showProgressBar": "top",
     "completeText": "Submit",
     "pages": [
       {

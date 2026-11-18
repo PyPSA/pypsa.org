@@ -8,7 +8,10 @@
   import { surveyWave } from "$lib/survey/current";
   import { formatDay as day } from "$lib/survey/format";
   import { hasSavedProgress, resetProgress } from "$lib/survey/progress";
-  import type { MountedSurvey, SubmitState } from "$lib/survey/mount";
+  import type { MountedSurvey, NavState, SubmitState } from "$lib/survey/mount";
+  import { outline } from "$lib/survey/outline";
+  import SurveyNav from "$lib/components/SurveyNav.svelte";
+  import SurveyStrip from "$lib/components/SurveyStrip.svelte";
 
   const def = surveyWave;
   const w = def.welcome;
@@ -31,6 +34,20 @@
   let mounted: MountedSurvey | undefined;
   // Insets of the survey's question column, so the submit status below lines up with it.
   let inset = $state({ left: 0, right: 0 });
+  // Left inset of the page title, so the Part 3 header above it lines up with it.
+  let titleLeft = $state(0);
+  let nav = $state<NavState>();
+  let top = $state<HTMLElement>();
+  const parts = $derived(nav ? outline(def, nav.titles) : []);
+  // Part 3's pages carry no Part in their titles, so the page names it and the first one shows its intro.
+  const multi = $derived(
+    parts.find((p) => p.pages.length > 1 && p.pages.some((q) => q.index === nav?.current))
+  );
+
+  function goTo(index: number) {
+    mounted?.goTo(index);
+    top?.scrollIntoView({ block: "start" });
+  }
 
   function measureInset() {
     const content = container?.querySelector<HTMLElement>(".sd-page__content");
@@ -42,7 +59,17 @@
       left: box.left - host.left + parseFloat(cs.paddingLeft),
       right: host.right - box.right + parseFloat(cs.paddingRight),
     };
+    const title = container.querySelector<HTMLElement>(".sd-page__title");
+    titleLeft = title ? title.getBoundingClientRect().left - host.left : inset.left;
   }
+
+  // SurveyJS switches to its mobile layout after the first render, which moves the columns.
+  $effect(() => {
+    if (!container) return;
+    const ro = new ResizeObserver(measureInset);
+    ro.observe(container);
+    return () => ro.disconnect();
+  });
 
   let lastFresh = false;
 
@@ -73,6 +100,11 @@
           phase = "completed";
         },
         onSaveError: () => (saveFailed = true),
+        onNav: async (s) => {
+          nav = s;
+          await tick();
+          measureInset();
+        },
       },
       { fresh }
     );
@@ -186,29 +218,54 @@
             will be lost.
           </p>
         {/if}
-        <div class="survey-host" bind:this={container}></div>
-        {#if submit.kind === "retry" || submit.kind === "rejected"}
-          <div
-            style:margin-left="{inset.left}px"
-            style:margin-right="{inset.right}px"
-            role="alert"
-            class="mt-4 flex flex-wrap items-center gap-3 rounded-md border border-destructive p-3"
-            data-survey-submit-error
-          >
-            <span>{submit.message}</span>
-            {#if submit.kind === "retry"}
-              <Button class="h-11" onclick={() => mounted?.retry()}>Retry</Button>
+        <div bind:this={top} class="scroll-mt-28 mb-6">
+          {#if nav}
+            <SurveyStrip {parts} current={nav.current} reached={nav.reached} />
+          {/if}
+        </div>
+        <div class="lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start lg:gap-8">
+          {#if nav}
+            <SurveyNav {parts} current={nav.current} reached={nav.reached} onGo={goTo} />
+          {/if}
+          <div>
+            {#if multi}
+              <div style:margin-left="{titleLeft}px" style:margin-right="{inset.right}px">
+                <p class="text-sm uppercase tracking-wider text-primary">
+                  Part {multi.n} · {multi.title}
+                </p>
+                {#if multi.pages[0].index === nav?.current}
+                  <div class="mt-3 rounded-lg border bg-muted/50 p-4" data-survey-part-intro>
+                    <p>{def.part3.intro}</p>
+                    <p class="mt-2 text-muted-foreground">{def.part3.howItWorks}</p>
+                  </div>
+                {/if}
+              </div>
+            {/if}
+            <div class="survey-host" bind:this={container}></div>
+            {#if submit.kind === "retry" || submit.kind === "rejected"}
+              <div
+                style:margin-left="{inset.left}px"
+                style:margin-right="{inset.right}px"
+                role="alert"
+                class="mt-4 flex flex-wrap items-center gap-3 rounded-md border border-destructive p-3"
+                data-survey-submit-error
+              >
+                <span>{submit.message}</span>
+                {#if submit.kind === "retry"}
+                  <Button class="h-11" onclick={() => mounted?.retry()}>Retry</Button>
+                {/if}
+              </div>
+            {:else if submit.kind === "sending"}
+              <p
+                style:margin-left="{inset.left}px"
+                class="mt-4 text-sm text-muted-foreground"
+                role="status"
+              >
+                Sending your answers…
+              </p>
             {/if}
           </div>
-        {:else if submit.kind === "sending"}
-          <p
-            style:margin-left="{inset.left}px"
-            class="mt-4 text-sm text-muted-foreground"
-            role="status"
-          >
-            Sending your answers…
-          </p>
-        {/if}
+        </div>
       </div>
     {:else}
       <div class="mx-auto max-w-3xl" data-survey-state={phase}>
