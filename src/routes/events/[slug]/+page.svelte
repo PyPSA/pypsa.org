@@ -19,6 +19,7 @@
   import LinkedInIcon from "$lib/icons/LinkedInIcon.svelte";
   import Autoplay from "embla-carousel-autoplay";
   import { slide } from "svelte/transition";
+  import { formatEventTime } from "$lib/events/time";
 
   const { data } = $props();
   const event = data.event;
@@ -31,67 +32,7 @@
 
   const autoplayPlugin = Autoplay({ delay: 4000, stopOnInteraction: true });
 
-  const eventDate = new Date(event.date + "T00:00:00");
-  const endDateObj = event.endDate ? new Date(event.endDate + "T00:00:00") : null;
-
-  const timeMatch = event.time.match(
-    /(\d{1,2}):(\d{2})\s*(am|pm)\s*[–-]\s*(\d{1,2}):(\d{2})\s*(am|pm)\s*\((\w+)\)/i
-  );
-  const timeFmt = new Intl.DateTimeFormat("en-GB", { hour: "numeric", minute: "2-digit" });
-  const formattedTime = timeMatch
-    ? (() => {
-        let sh = parseInt(timeMatch[1]);
-        const sm = parseInt(timeMatch[2]);
-        if (timeMatch[3].toLowerCase() === "pm" && sh !== 12) sh += 12;
-        if (timeMatch[3].toLowerCase() === "am" && sh === 12) sh = 0;
-        let eh = parseInt(timeMatch[4]);
-        const em = parseInt(timeMatch[5]);
-        if (timeMatch[6].toLowerCase() === "pm" && eh !== 12) eh += 12;
-        if (timeMatch[6].toLowerCase() === "am" && eh === 12) eh = 0;
-        // eslint-disable-next-line svelte/prefer-svelte-reactivity
-        const ds = new Date(eventDate);
-        ds.setHours(sh, sm);
-        // eslint-disable-next-line svelte/prefer-svelte-reactivity
-        const de = new Date(eventDate);
-        de.setHours(eh, em);
-        return `${timeFmt.format(ds)} – ${timeFmt.format(de)} (${timeMatch[7]})`;
-      })()
-    : event.time;
-
-  function parseUtcOffset(tz: string): number {
-    const match = tz.match(/UTC([+-]?\d+\.?\d*)/);
-    return match ? parseFloat(match[1]) : 0;
-  }
-
-  function parseTime(t: string): { hours: number; minutes: number } {
-    const [h, m] = t.split(":").map(Number);
-    return { hours: h, minutes: m };
-  }
-
-  const berlinTz = event.timezones.find((tz) => tz.city === "Berlin");
-  const berlinOffset = berlinTz ? parseUtcOffset(berlinTz.timezone) : 2;
-  const eventStart = berlinTz ? parseTime(berlinTz.localTime) : { hours: 16, minutes: 0 };
-
-  function formatLocalizedTime(hours: number, minutes: number): string {
-    // eslint-disable-next-line svelte/prefer-svelte-reactivity
-    const d = new Date(eventDate);
-    d.setHours(((hours % 24) + 24) % 24, minutes);
-    return timeFmt.format(d);
-  }
-
-  const heroRefCities = ["New York", "New Delhi"];
-  const heroTimezones = heroRefCities
-    .map((city) => {
-      const tz = event.timezones.find((t) => t.city === city);
-      if (!tz) return null;
-      const diff = parseUtcOffset(tz.timezone) - berlinOffset;
-      const sMin = eventStart.hours * 60 + eventStart.minutes + diff * 60;
-      return {
-        label: tz.city,
-        time: formatLocalizedTime(Math.floor(sMin / 60), sMin % 60),
-      };
-    })
-    .filter(Boolean) as { label: string; time: string }[];
+  const { formattedDate, formattedTime, heroTimezones, calendar } = formatEventTime(event);
 
   const daysUntilDeadline = event.talkProposalDeadline
     ? Math.ceil(
@@ -228,20 +169,13 @@
           class="flex flex-col items-center justify-center border rounded-xl bg-muted/30 px-6 py-4 min-w-[140px]"
         >
           <span class="text-sm font-medium uppercase tracking-wider text-[#c30944]">
-            {new Intl.DateTimeFormat("en", { month: "short" }).format(eventDate)}
+            {calendar.month}
           </span>
-          {#if endDateObj}
-            <span class="text-4xl font-bold leading-tight">
-              {eventDate.getDate()}–{endDateObj.getDate()}
-            </span>
-            <span class="text-sm text-muted-foreground">{eventDate.getFullYear()}</span>
-          {:else}
-            <span class="text-4xl font-bold leading-tight">{eventDate.getDate()}</span>
-            <span class="text-sm text-muted-foreground">
-              {new Intl.DateTimeFormat("en", { weekday: "long" }).format(eventDate)}
-            </span>
-            <span class="text-sm text-muted-foreground">{eventDate.getFullYear()}</span>
+          <span class="text-4xl font-bold leading-tight">{calendar.days}</span>
+          {#if calendar.weekday !== null}
+            <span class="text-sm text-muted-foreground">{calendar.weekday}</span>
           {/if}
+          <span class="text-sm text-muted-foreground">{calendar.year}</span>
           <div class="mt-3 border-t pt-3 text-center">
             <span class="text-sm font-medium">{formattedTime}</span>
             {#if heroTimezones.length > 0}
