@@ -1,0 +1,12 @@
+# Applies only to files served without the Worker, see src/worker-headers.ts.
+
+/_app/immutable/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://gurubase.io https://*.gurubase.io https://api.tiles.mapbox.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://gurubase.io https://*.gurubase.io https://api.tiles.mapbox.com https://cdn.jsdelivr.net https://maxcdn.bootstrapcdn.com; font-src 'self' data: https://gurubase.io https://*.gurubase.io https://maxcdn.bootstrapcdn.com; img-src 'self' data: blob: https://gurubase.io https://*.gurubase.io https://basemaps.cartocdn.com https://*.basemaps.cartocdn.com https://avatars.githubusercontent.com; connect-src 'self' https://gurubase.io https://*.gurubase.io https://api.tiles.mapbox.com https://basemaps.cartocdn.com https://*.basemaps.cartocdn.com; frame-src 'self' https://www.youtube-nocookie.com https://gurubase.io https://*.gurubase.io; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000
+  X-Frame-Options: SAMEORIGIN

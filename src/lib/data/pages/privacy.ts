@@ -37,7 +37,7 @@ export const privacyPage: PageData = {
       heading: "Hosting",
       paragraphs: [
         [
-          "This site is hosted on Cloudflare Workers, a service of Cloudflare, Inc. (101 Townsend St, San Francisco, CA 94107, USA). When you open a page, Cloudflare receives your IP address and the usual request data (browser, time, requested file) to deliver the page and protect the site against attacks. We do not keep access logs ourselves. The legal basis is our legitimate interest in delivering the site securely and reliably (Art. 6(1)(f) GDPR). Cloudflare may transfer data to the USA and is certified under the EU-US Data Privacy Framework.",
+          "This site is hosted on Cloudflare Workers, a service of Cloudflare, Inc. (101 Townsend St, San Francisco, CA 94107, USA). When you open a page, Cloudflare receives your IP address and the usual request data (browser, time, requested file) to deliver the page and protect the site against attacks. We do not keep access logs ourselves. Cloudflare processes this data on our behalf as a processor under a data processing agreement (Art. 28 GDPR). The legal basis is our legitimate interest in delivering the site securely and reliably (Art. 6(1)(f) GDPR). Cloudflare may transfer data to the USA and is certified under the EU-US Data Privacy Framework.",
         ],
       ],
     },
