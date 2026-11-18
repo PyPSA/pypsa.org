@@ -176,3 +176,18 @@ html {
     @apply flex items-center gap-2 transition-opacity hover:opacity-70;
   }
 }
+
+/* Survey entry points, toggled by html attributes the pre-paint script sets. */
+.survey-banner,
+.survey-pill {
+  display: none;
+}
+html[data-survey-open="true"] .survey-pill {
+  display: inline;
+}
+html[data-survey-open="true"] .event-pill {
+  display: none;
+}
+html[data-survey-open="true"][data-survey-dismissed="false"] .survey-banner {
+  display: block;
+}

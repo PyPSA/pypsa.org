@@ -1,4 +1,5 @@
 import type { PageData } from "./types";
+import { surveyWave } from "../../survey/current";
 
 const email = { label: "contact@pypsa.org", href: "mailto:contact@pypsa.org" };
 
@@ -25,10 +26,13 @@ export const privacyPage: PageData = {
       heading: "What this site collects",
       paragraphs: [
         [
-          "This site does not use analytics, advertising or tracking cookies, and it does not ask you to create an account. There is no contact form or newsletter. Pages are static files, so we do not store personal data about your visit ourselves, beyond what the hosting provider and the services below process technically.",
+          "This site does not use analytics, advertising or tracking cookies, and it does not ask you to create an account. There is no newsletter. The only form is the optional user survey, described below. Pages are static files, so we do not store personal data about your visit ourselves, beyond what the hosting provider and the services below process technically.",
         ],
         [
           "If you switch between light and dark mode, your choice is saved in your browser's local storage. It never leaves your device, and you can remove it by clearing your browser's site data.",
+        ],
+        [
+          "If you start the user survey, your progress is saved in your browser's local storage so you can continue later. If you dismiss the survey banner, that choice is saved there too. Neither is sent to us, and you can remove both by clearing your browser's site data.",
         ],
       ],
     },
@@ -39,6 +43,30 @@ export const privacyPage: PageData = {
         [
           "This site is hosted on Cloudflare Workers, a service of Cloudflare, Inc. (101 Townsend St, San Francisco, CA 94107, USA). When you open a page, Cloudflare receives your IP address and the usual request data (browser, time, requested file) to deliver the page and protect the site against attacks. We do not keep access logs ourselves. Cloudflare processes this data on our behalf as a processor under a data processing agreement (Art. 28 GDPR). The legal basis is our legitimate interest in delivering the site securely and reliably (Art. 6(1)(f) GDPR). Cloudflare may transfer data to the USA and is certified under the EU-US Data Privacy Framework.",
         ],
+      ],
+    },
+    {
+      id: "user-survey",
+      heading: "User survey",
+      paragraphs: [
+        [
+          { strong: "Purpose:" },
+          " the PyPSA User Survey helps us prioritise development. Taking part is voluntary, and you can skip any question.",
+        ],
+        [
+          { strong: "What is collected:" },
+          " your answers, and optionally your organisation and links you choose to share. We do not ask for your name, and we do not store IP addresses with your answers.",
+        ],
+        [
+          { strong: "Where it is stored:" },
+          " answers are stored in Cloudflare D1, with EU jurisdiction. Cloudflare processes them on our behalf as a processor.",
+        ],
+        [{ strong: "Retention:" }, ` ${surveyWave.retention}`],
+        [
+          { strong: "Publication:" },
+          " we publish results only in aggregate, never individual responses.",
+        ],
+        [{ strong: "Contact:" }, " ", { label: surveyWave.contact, href: `mailto:${surveyWave.contact}` }, "."],
       ],
     },
     {

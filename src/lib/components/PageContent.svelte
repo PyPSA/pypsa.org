@@ -11,6 +11,8 @@
   {#each parts as part, i (i)}
     {#if typeof part === "string"}
       {part}
+    {:else if "strong" in part}
+      <strong class="font-semibold text-foreground">{part.strong}</strong>
     {:else}
       <a
         href={part.href}

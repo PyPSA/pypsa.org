@@ -9,18 +9,32 @@
 <section class="container">
   <div class="grid place-items-center lg:max-w-screen-xl gap-8 mx-auto py-20 md:py-32">
     <div class="text-center space-y-8">
-      <a href={hero.event.href} class="no-underline">
-        <Badge
-          variant="outline"
-          class="text-sm py-2 cursor-pointer hover:bg-muted/50 transition-colors"
-        >
-          <span class="mr-2">
-            <Badge class="pointer-events-none bg-[#c30944] text-white">{hero.event.label}</Badge>
-          </span>
-          <span>{hero.event.text}</span>
-          <Icon name="arrow-right" class="size-4 ml-2" />
-        </Badge>
-      </a>
+      <div>
+        <a href={hero.survey.href} class="no-underline survey-pill" data-survey-pill>
+          <Badge
+            variant="outline"
+            class="text-sm py-2 cursor-pointer hover:bg-muted/50 transition-colors"
+          >
+            <span class="mr-2">
+              <Badge class="pointer-events-none bg-[#c30944] text-white">{hero.survey.label}</Badge>
+            </span>
+            <span class="text-left">{hero.survey.text}</span>
+            <Icon name="arrow-right" class="size-4 ml-2 shrink-0" />
+          </Badge>
+        </a>
+        <a href={hero.event.href} class="no-underline event-pill" data-event-pill>
+          <Badge
+            variant="outline"
+            class="text-sm py-2 cursor-pointer hover:bg-muted/50 transition-colors"
+          >
+            <span class="mr-2">
+              <Badge class="pointer-events-none bg-[#c30944] text-white">{hero.event.label}</Badge>
+            </span>
+            <span class="text-left">{hero.event.text}</span>
+            <Icon name="arrow-right" class="size-4 ml-2 shrink-0" />
+          </Badge>
+        </a>
+      </div>
 
       <div class="max-w-screen-md mx-auto text-center text-4xl sm:text-5xl md:text-6xl font-bold">
         <h1>

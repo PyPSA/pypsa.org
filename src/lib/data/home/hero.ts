@@ -6,6 +6,11 @@ export const hero = {
     text: "PyPSA User Meeting on 29 June 2026",
     href: "/events/4th-user-meeting",
   },
+  survey: {
+    label: "Survey",
+    text: "PyPSA User Survey 2026: 10 minutes to shape our roadmap",
+    href: "/survey",
+  },
   headline: {
     before: "Welcome to the",
     highlight: "PyPSA",

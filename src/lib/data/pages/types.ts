@@ -4,8 +4,13 @@ export interface PageLink {
   href: string;
 }
 
-/** One line of text: plain strings and links, in reading order. */
-export type Inline = (string | PageLink)[];
+/** A bold run of text, for labels at the start of a paragraph. */
+export interface PageStrong {
+  strong: string;
+}
+
+/** One line of text: plain strings, bold runs and links, in reading order. */
+export type Inline = (string | PageLink | PageStrong)[];
 
 export interface PageSection {
   /** Anchor id. */
