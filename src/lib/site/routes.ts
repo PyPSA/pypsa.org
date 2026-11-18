@@ -56,6 +56,13 @@ const base: Base[] = [
     lastmod: e.date,
   })),
   {
+    path: "/survey",
+    title: "PyPSA User Survey 2026 — " + siteConfig.name,
+    description:
+      "Tell us how you use PyPSA and which features matter most to you. The survey takes 10 to 15 minutes.",
+    lastmod: buildDate,
+  },
+  {
     path: "/contact",
     title: "Contact — " + siteConfig.name,
     description:

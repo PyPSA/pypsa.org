@@ -1,0 +1,2368 @@
+{
+  "wave": "2026-h2",
+  "version": 1,
+  "opens": "2026-11-18T00:00:00+01:00",
+  "closes": "2026-12-14T00:00:00+01:00",
+  "contact": "contact@pypsa.org",
+  "retention": "Raw responses are deleted 12 months after the survey closes; aggregated results are kept.",
+  "placeholders": ["opens", "retention"],
+  "welcome": {
+    "title": "Help shape the next year of PyPSA",
+    "intro": [
+      "PyPSA is developed by a small team and a wide community. We want to spend our development time on what helps you most. With this survey we want to learn how you use PyPSA, which features you would like to see and where we can make your experience with PyPSA more productive."
+    ],
+    "bullets": [
+      [
+        {
+          "text": "How long the survey takes: 10 to 15 minutes. You can skip any question and any feature section that is not relevant to you."
+        }
+      ],
+      [
+        {
+          "text": "What do we use the results for? We publish the results on pypsa.org and use them to set the development priorities for the next year. We repeat the survey every six months, so you can see what changed."
+        }
+      ],
+      [
+        {
+          "text": "We do not ask for your name. Organisation and links are optional and never published with your answers. We publish results only in aggregate."
+        }
+      ],
+      [
+        {
+          "text": "Your answers are stored in the EU. Details are on our "
+        },
+        {
+          "text": "privacy page",
+          "href": "/privacy#user-survey"
+        },
+        {
+          "text": "."
+        }
+      ],
+      [
+        {
+          "text": "The survey closes on 13 December 2026."
+        }
+      ]
+    ],
+    "support": "Resources for conducting this survey and for implementing its findings are supported by Breakthrough Energy GRIDS.",
+    "contactLine": "Questions about the survey:",
+    "startLabel": "Start the survey"
+  },
+  "part3": {
+    "title": "Part 3: Rate the roadmap",
+    "intro": "The PyPSA maintainers have collected candidate features for the next year across different areas. They come from the public roadmap, from feature requests on GitHub and from a comparison with commercial planning tools. They are candidates, not promises. Your ratings decide which ones we build first.",
+    "howItWorks": "How it works. For each feature, tell us how important it is for your work in the next year. Each feature has a one-sentence explanation under its name. Skip anything you have no view on, a blank counts as no answer.",
+    "scaleQuestion": "How important is this for your work in the next year?"
+  },
+  "nonUser": {
+    "q2_1Title": "What would you use PyPSA for?"
+  },
+  "thankYou": {
+    "text": "Thank you for your time. We will publish the results on pypsa.org soon and announce them on the mailing list, Discord and GitHub. The ratings feed directly into the next round of prioritisation.",
+    "shareLabel": "Share the survey:",
+    "shareUrl": "https://pypsa.org/survey",
+    "copyLabel": "Copy survey link"
+  },
+  "sections": [
+    {
+      "id": "investment",
+      "page": "p3_1",
+      "title": "Investment and pathway planning"
+    },
+    {
+      "id": "operations",
+      "page": "p3_2",
+      "title": "Operations, reliability and markets"
+    },
+    {
+      "id": "grid",
+      "page": "p3_3",
+      "title": "Grid physics and sector networks"
+    },
+    {
+      "id": "analysis",
+      "page": "p3_4",
+      "title": "Analysing and presenting results"
+    },
+    {
+      "id": "data",
+      "page": "p3_5",
+      "title": "Data, input and output"
+    },
+    {
+      "id": "scale",
+      "page": "p3_6",
+      "title": "Speed and scale"
+    }
+  ],
+  "sliders": {
+    "q2_6_snapshots": {
+      "min": 1,
+      "max": 100000,
+      "scale": "log",
+      "orMore": true
+    },
+    "q2_6_buses": {
+      "min": 1,
+      "max": 10000,
+      "scale": "log",
+      "orMore": true
+    },
+    "q2_6_components": {
+      "min": 10,
+      "max": 1000000,
+      "scale": "log",
+      "orMore": true
+    }
+  },
+  "survey": {
+    "title": "PyPSA User Survey 2026",
+    "showTitle": false,
+    "firstPageIsStartPage": false,
+    "showTOC": true,
+    "tocLocation": "left",
+    "showQuestionNumbers": "off",
+    "questionErrorLocation": "bottom",
+    "showProgressBar": "top",
+    "completeText": "Submit",
+    "pages": [
+      {
+        "name": "part1",
+        "title": "Part 1: About you",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q1_1",
+            "title": "In which sector do you mainly work?",
+            "isRequired": true,
+            "showOtherItem": true,
+            "otherText": "Other:",
+            "choices": [
+              {
+                "value": "university",
+                "text": "University"
+              },
+              {
+                "value": "research_institute",
+                "text": "Research institute"
+              },
+              {
+                "value": "intergovernmental",
+                "text": "Intergovernmental organisation, for example IEA, IRENA, JRC"
+              },
+              {
+                "value": "system_operator",
+                "text": "Transmission or distribution system operator"
+              },
+              {
+                "value": "utility",
+                "text": "Utility or generation company"
+              },
+              {
+                "value": "trading",
+                "text": "Energy trading company"
+              },
+              {
+                "value": "project_developer",
+                "text": "Project developer"
+              },
+              {
+                "value": "government",
+                "text": "Government agency"
+              },
+              {
+                "value": "regulator",
+                "text": "Regulator"
+              },
+              {
+                "value": "consultancy",
+                "text": "Consultancy"
+              },
+              {
+                "value": "ngo",
+                "text": "NGO, think tank or foundation"
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "name": "q1_2",
+            "title": "In which country are you based?",
+            "isRequired": true,
+            "choices": [
+              {
+                "value": "af",
+                "text": "Afghanistan"
+              },
+              {
+                "value": "ax",
+                "text": "Åland Islands"
+              },
+              {
+                "value": "al",
+                "text": "Albania"
+              },
+              {
+                "value": "dz",
+                "text": "Algeria"
+              },
+              {
+                "value": "as",
+                "text": "American Samoa"
+              },
+              {
+                "value": "ad",
+                "text": "Andorra"
+              },
+              {
+                "value": "ao",
+                "text": "Angola"
+              },
+              {
+                "value": "ai",
+                "text": "Anguilla"
+              },
+              {
+                "value": "aq",
+                "text": "Antarctica"
+              },
+              {
+                "value": "ag",
+                "text": "Antigua & Barbuda"
+              },
+              {
+                "value": "ar",
+                "text": "Argentina"
+              },
+              {
+                "value": "am",
+                "text": "Armenia"
+              },
+              {
+                "value": "aw",
+                "text": "Aruba"
+              },
+              {
+                "value": "au",
+                "text": "Australia"
+              },
+              {
+                "value": "at",
+                "text": "Austria"
+              },
+              {
+                "value": "az",
+                "text": "Azerbaijan"
+              },
+              {
+                "value": "bs",
+                "text": "Bahamas"
+              },
+              {
+                "value": "bh",
+                "text": "Bahrain"
+              },
+              {
+                "value": "bd",
+                "text": "Bangladesh"
+              },
+              {
+                "value": "bb",
+                "text": "Barbados"
+              },
+              {
+                "value": "by",
+                "text": "Belarus"
+              },
+              {
+                "value": "be",
+                "text": "Belgium"
+              },
+              {
+                "value": "bz",
+                "text": "Belize"
+              },
+              {
+                "value": "bj",
+                "text": "Benin"
+              },
+              {
+                "value": "bm",
+                "text": "Bermuda"
+              },
+              {
+                "value": "bt",
+                "text": "Bhutan"
+              },
+              {
+                "value": "bo",
+                "text": "Bolivia"
+              },
+              {
+                "value": "ba",
+                "text": "Bosnia & Herzegovina"
+              },
+              {
+                "value": "bw",
+                "text": "Botswana"
+              },
+              {
+                "value": "bv",
+                "text": "Bouvet Island"
+              },
+              {
+                "value": "br",
+                "text": "Brazil"
+              },
+              {
+                "value": "io",
+                "text": "British Indian Ocean Territory"
+              },
+              {
+                "value": "vg",
+                "text": "British Virgin Islands"
+              },
+              {
+                "value": "bn",
+                "text": "Brunei"
+              },
+              {
+                "value": "bg",
+                "text": "Bulgaria"
+              },
+              {
+                "value": "bf",
+                "text": "Burkina Faso"
+              },
+              {
+                "value": "bi",
+                "text": "Burundi"
+              },
+              {
+                "value": "kh",
+                "text": "Cambodia"
+              },
+              {
+                "value": "cm",
+                "text": "Cameroon"
+              },
+              {
+                "value": "ca",
+                "text": "Canada"
+              },
+              {
+                "value": "cv",
+                "text": "Cape Verde"
+              },
+              {
+                "value": "bq",
+                "text": "Caribbean Netherlands"
+              },
+              {
+                "value": "ky",
+                "text": "Cayman Islands"
+              },
+              {
+                "value": "cf",
+                "text": "Central African Republic"
+              },
+              {
+                "value": "td",
+                "text": "Chad"
+              },
+              {
+                "value": "cl",
+                "text": "Chile"
+              },
+              {
+                "value": "cn",
+                "text": "China"
+              },
+              {
+                "value": "cx",
+                "text": "Christmas Island"
+              },
+              {
+                "value": "cc",
+                "text": "Cocos (Keeling) Islands"
+              },
+              {
+                "value": "co",
+                "text": "Colombia"
+              },
+              {
+                "value": "km",
+                "text": "Comoros"
+              },
+              {
+                "value": "cg",
+                "text": "Congo - Brazzaville"
+              },
+              {
+                "value": "cd",
+                "text": "Congo - Kinshasa"
+              },
+              {
+                "value": "ck",
+                "text": "Cook Islands"
+              },
+              {
+                "value": "cr",
+                "text": "Costa Rica"
+              },
+              {
+                "value": "ci",
+                "text": "Côte d’Ivoire"
+              },
+              {
+                "value": "hr",
+                "text": "Croatia"
+              },
+              {
+                "value": "cu",
+                "text": "Cuba"
+              },
+              {
+                "value": "cw",
+                "text": "Curaçao"
+              },
+              {
+                "value": "cy",
+                "text": "Cyprus"
+              },
+              {
+                "value": "cz",
+                "text": "Czechia"
+              },
+              {
+                "value": "dk",
+                "text": "Denmark"
+              },
+              {
+                "value": "dj",
+                "text": "Djibouti"
+              },
+              {
+                "value": "dm",
+                "text": "Dominica"
+              },
+              {
+                "value": "do",
+                "text": "Dominican Republic"
+              },
+              {
+                "value": "ec",
+                "text": "Ecuador"
+              },
+              {
+                "value": "eg",
+                "text": "Egypt"
+              },
+              {
+                "value": "sv",
+                "text": "El Salvador"
+              },
+              {
+                "value": "gq",
+                "text": "Equatorial Guinea"
+              },
+              {
+                "value": "er",
+                "text": "Eritrea"
+              },
+              {
+                "value": "ee",
+                "text": "Estonia"
+              },
+              {
+                "value": "sz",
+                "text": "Eswatini"
+              },
+              {
+                "value": "et",
+                "text": "Ethiopia"
+              },
+              {
+                "value": "fk",
+                "text": "Falkland Islands"
+              },
+              {
+                "value": "fo",
+                "text": "Faroe Islands"
+              },
+              {
+                "value": "fj",
+                "text": "Fiji"
+              },
+              {
+                "value": "fi",
+                "text": "Finland"
+              },
+              {
+                "value": "fr",
+                "text": "France"
+              },
+              {
+                "value": "gf",
+                "text": "French Guiana"
+              },
+              {
+                "value": "pf",
+                "text": "French Polynesia"
+              },
+              {
+                "value": "tf",
+                "text": "French Southern Territories"
+              },
+              {
+                "value": "ga",
+                "text": "Gabon"
+              },
+              {
+                "value": "gm",
+                "text": "Gambia"
+              },
+              {
+                "value": "ge",
+                "text": "Georgia"
+              },
+              {
+                "value": "de",
+                "text": "Germany"
+              },
+              {
+                "value": "gh",
+                "text": "Ghana"
+              },
+              {
+                "value": "gi",
+                "text": "Gibraltar"
+              },
+              {
+                "value": "gr",
+                "text": "Greece"
+              },
+              {
+                "value": "gl",
+                "text": "Greenland"
+              },
+              {
+                "value": "gd",
+                "text": "Grenada"
+              },
+              {
+                "value": "gp",
+                "text": "Guadeloupe"
+              },
+              {
+                "value": "gu",
+                "text": "Guam"
+              },
+              {
+                "value": "gt",
+                "text": "Guatemala"
+              },
+              {
+                "value": "gg",
+                "text": "Guernsey"
+              },
+              {
+                "value": "gn",
+                "text": "Guinea"
+              },
+              {
+                "value": "gw",
+                "text": "Guinea-Bissau"
+              },
+              {
+                "value": "gy",
+                "text": "Guyana"
+              },
+              {
+                "value": "ht",
+                "text": "Haiti"
+              },
+              {
+                "value": "hm",
+                "text": "Heard & McDonald Islands"
+              },
+              {
+                "value": "hn",
+                "text": "Honduras"
+              },
+              {
+                "value": "hk",
+                "text": "Hong Kong SAR China"
+              },
+              {
+                "value": "hu",
+                "text": "Hungary"
+              },
+              {
+                "value": "is",
+                "text": "Iceland"
+              },
+              {
+                "value": "in",
+                "text": "India"
+              },
+              {
+                "value": "id",
+                "text": "Indonesia"
+              },
+              {
+                "value": "ir",
+                "text": "Iran"
+              },
+              {
+                "value": "iq",
+                "text": "Iraq"
+              },
+              {
+                "value": "ie",
+                "text": "Ireland"
+              },
+              {
+                "value": "im",
+                "text": "Isle of Man"
+              },
+              {
+                "value": "il",
+                "text": "Israel"
+              },
+              {
+                "value": "it",
+                "text": "Italy"
+              },
+              {
+                "value": "jm",
+                "text": "Jamaica"
+              },
+              {
+                "value": "jp",
+                "text": "Japan"
+              },
+              {
+                "value": "je",
+                "text": "Jersey"
+              },
+              {
+                "value": "jo",
+                "text": "Jordan"
+              },
+              {
+                "value": "kz",
+                "text": "Kazakhstan"
+              },
+              {
+                "value": "ke",
+                "text": "Kenya"
+              },
+              {
+                "value": "ki",
+                "text": "Kiribati"
+              },
+              {
+                "value": "xk",
+                "text": "Kosovo"
+              },
+              {
+                "value": "kw",
+                "text": "Kuwait"
+              },
+              {
+                "value": "kg",
+                "text": "Kyrgyzstan"
+              },
+              {
+                "value": "la",
+                "text": "Laos"
+              },
+              {
+                "value": "lv",
+                "text": "Latvia"
+              },
+              {
+                "value": "lb",
+                "text": "Lebanon"
+              },
+              {
+                "value": "ls",
+                "text": "Lesotho"
+              },
+              {
+                "value": "lr",
+                "text": "Liberia"
+              },
+              {
+                "value": "ly",
+                "text": "Libya"
+              },
+              {
+                "value": "li",
+                "text": "Liechtenstein"
+              },
+              {
+                "value": "lt",
+                "text": "Lithuania"
+              },
+              {
+                "value": "lu",
+                "text": "Luxembourg"
+              },
+              {
+                "value": "mo",
+                "text": "Macao SAR China"
+              },
+              {
+                "value": "mg",
+                "text": "Madagascar"
+              },
+              {
+                "value": "mw",
+                "text": "Malawi"
+              },
+              {
+                "value": "my",
+                "text": "Malaysia"
+              },
+              {
+                "value": "mv",
+                "text": "Maldives"
+              },
+              {
+                "value": "ml",
+                "text": "Mali"
+              },
+              {
+                "value": "mt",
+                "text": "Malta"
+              },
+              {
+                "value": "mh",
+                "text": "Marshall Islands"
+              },
+              {
+                "value": "mq",
+                "text": "Martinique"
+              },
+              {
+                "value": "mr",
+                "text": "Mauritania"
+              },
+              {
+                "value": "mu",
+                "text": "Mauritius"
+              },
+              {
+                "value": "yt",
+                "text": "Mayotte"
+              },
+              {
+                "value": "mx",
+                "text": "Mexico"
+              },
+              {
+                "value": "fm",
+                "text": "Micronesia"
+              },
+              {
+                "value": "md",
+                "text": "Moldova"
+              },
+              {
+                "value": "mc",
+                "text": "Monaco"
+              },
+              {
+                "value": "mn",
+                "text": "Mongolia"
+              },
+              {
+                "value": "me",
+                "text": "Montenegro"
+              },
+              {
+                "value": "ms",
+                "text": "Montserrat"
+              },
+              {
+                "value": "ma",
+                "text": "Morocco"
+              },
+              {
+                "value": "mz",
+                "text": "Mozambique"
+              },
+              {
+                "value": "mm",
+                "text": "Myanmar (Burma)"
+              },
+              {
+                "value": "na",
+                "text": "Namibia"
+              },
+              {
+                "value": "nr",
+                "text": "Nauru"
+              },
+              {
+                "value": "np",
+                "text": "Nepal"
+              },
+              {
+                "value": "nl",
+                "text": "Netherlands"
+              },
+              {
+                "value": "nc",
+                "text": "New Caledonia"
+              },
+              {
+                "value": "nz",
+                "text": "New Zealand"
+              },
+              {
+                "value": "ni",
+                "text": "Nicaragua"
+              },
+              {
+                "value": "ne",
+                "text": "Niger"
+              },
+              {
+                "value": "ng",
+                "text": "Nigeria"
+              },
+              {
+                "value": "nu",
+                "text": "Niue"
+              },
+              {
+                "value": "nf",
+                "text": "Norfolk Island"
+              },
+              {
+                "value": "kp",
+                "text": "North Korea"
+              },
+              {
+                "value": "mk",
+                "text": "North Macedonia"
+              },
+              {
+                "value": "mp",
+                "text": "Northern Mariana Islands"
+              },
+              {
+                "value": "no",
+                "text": "Norway"
+              },
+              {
+                "value": "om",
+                "text": "Oman"
+              },
+              {
+                "value": "pk",
+                "text": "Pakistan"
+              },
+              {
+                "value": "pw",
+                "text": "Palau"
+              },
+              {
+                "value": "ps",
+                "text": "Palestinian Territories"
+              },
+              {
+                "value": "pa",
+                "text": "Panama"
+              },
+              {
+                "value": "pg",
+                "text": "Papua New Guinea"
+              },
+              {
+                "value": "py",
+                "text": "Paraguay"
+              },
+              {
+                "value": "pe",
+                "text": "Peru"
+              },
+              {
+                "value": "ph",
+                "text": "Philippines"
+              },
+              {
+                "value": "pn",
+                "text": "Pitcairn Islands"
+              },
+              {
+                "value": "pl",
+                "text": "Poland"
+              },
+              {
+                "value": "pt",
+                "text": "Portugal"
+              },
+              {
+                "value": "pr",
+                "text": "Puerto Rico"
+              },
+              {
+                "value": "qa",
+                "text": "Qatar"
+              },
+              {
+                "value": "re",
+                "text": "Réunion"
+              },
+              {
+                "value": "ro",
+                "text": "Romania"
+              },
+              {
+                "value": "ru",
+                "text": "Russia"
+              },
+              {
+                "value": "rw",
+                "text": "Rwanda"
+              },
+              {
+                "value": "ws",
+                "text": "Samoa"
+              },
+              {
+                "value": "sm",
+                "text": "San Marino"
+              },
+              {
+                "value": "st",
+                "text": "São Tomé & Príncipe"
+              },
+              {
+                "value": "sa",
+                "text": "Saudi Arabia"
+              },
+              {
+                "value": "sn",
+                "text": "Senegal"
+              },
+              {
+                "value": "rs",
+                "text": "Serbia"
+              },
+              {
+                "value": "sc",
+                "text": "Seychelles"
+              },
+              {
+                "value": "sl",
+                "text": "Sierra Leone"
+              },
+              {
+                "value": "sg",
+                "text": "Singapore"
+              },
+              {
+                "value": "sx",
+                "text": "Sint Maarten"
+              },
+              {
+                "value": "sk",
+                "text": "Slovakia"
+              },
+              {
+                "value": "si",
+                "text": "Slovenia"
+              },
+              {
+                "value": "sb",
+                "text": "Solomon Islands"
+              },
+              {
+                "value": "so",
+                "text": "Somalia"
+              },
+              {
+                "value": "za",
+                "text": "South Africa"
+              },
+              {
+                "value": "gs",
+                "text": "South Georgia & South Sandwich Islands"
+              },
+              {
+                "value": "kr",
+                "text": "South Korea"
+              },
+              {
+                "value": "ss",
+                "text": "South Sudan"
+              },
+              {
+                "value": "es",
+                "text": "Spain"
+              },
+              {
+                "value": "lk",
+                "text": "Sri Lanka"
+              },
+              {
+                "value": "bl",
+                "text": "St. Barthélemy"
+              },
+              {
+                "value": "sh",
+                "text": "St. Helena"
+              },
+              {
+                "value": "kn",
+                "text": "St. Kitts & Nevis"
+              },
+              {
+                "value": "lc",
+                "text": "St. Lucia"
+              },
+              {
+                "value": "mf",
+                "text": "St. Martin"
+              },
+              {
+                "value": "pm",
+                "text": "St. Pierre & Miquelon"
+              },
+              {
+                "value": "vc",
+                "text": "St. Vincent & Grenadines"
+              },
+              {
+                "value": "sd",
+                "text": "Sudan"
+              },
+              {
+                "value": "sr",
+                "text": "Suriname"
+              },
+              {
+                "value": "sj",
+                "text": "Svalbard & Jan Mayen"
+              },
+              {
+                "value": "se",
+                "text": "Sweden"
+              },
+              {
+                "value": "ch",
+                "text": "Switzerland"
+              },
+              {
+                "value": "sy",
+                "text": "Syria"
+              },
+              {
+                "value": "tw",
+                "text": "Taiwan"
+              },
+              {
+                "value": "tj",
+                "text": "Tajikistan"
+              },
+              {
+                "value": "tz",
+                "text": "Tanzania"
+              },
+              {
+                "value": "th",
+                "text": "Thailand"
+              },
+              {
+                "value": "tl",
+                "text": "Timor-Leste"
+              },
+              {
+                "value": "tg",
+                "text": "Togo"
+              },
+              {
+                "value": "tk",
+                "text": "Tokelau"
+              },
+              {
+                "value": "to",
+                "text": "Tonga"
+              },
+              {
+                "value": "tt",
+                "text": "Trinidad & Tobago"
+              },
+              {
+                "value": "tn",
+                "text": "Tunisia"
+              },
+              {
+                "value": "tr",
+                "text": "Türkiye"
+              },
+              {
+                "value": "tm",
+                "text": "Turkmenistan"
+              },
+              {
+                "value": "tc",
+                "text": "Turks & Caicos Islands"
+              },
+              {
+                "value": "tv",
+                "text": "Tuvalu"
+              },
+              {
+                "value": "um",
+                "text": "U.S. Outlying Islands"
+              },
+              {
+                "value": "vi",
+                "text": "U.S. Virgin Islands"
+              },
+              {
+                "value": "ug",
+                "text": "Uganda"
+              },
+              {
+                "value": "ua",
+                "text": "Ukraine"
+              },
+              {
+                "value": "ae",
+                "text": "United Arab Emirates"
+              },
+              {
+                "value": "gb",
+                "text": "United Kingdom"
+              },
+              {
+                "value": "us",
+                "text": "United States"
+              },
+              {
+                "value": "uy",
+                "text": "Uruguay"
+              },
+              {
+                "value": "uz",
+                "text": "Uzbekistan"
+              },
+              {
+                "value": "vu",
+                "text": "Vanuatu"
+              },
+              {
+                "value": "va",
+                "text": "Vatican City"
+              },
+              {
+                "value": "ve",
+                "text": "Venezuela"
+              },
+              {
+                "value": "vn",
+                "text": "Vietnam"
+              },
+              {
+                "value": "wf",
+                "text": "Wallis & Futuna"
+              },
+              {
+                "value": "eh",
+                "text": "Western Sahara"
+              },
+              {
+                "value": "ye",
+                "text": "Yemen"
+              },
+              {
+                "value": "zm",
+                "text": "Zambia"
+              },
+              {
+                "value": "zw",
+                "text": "Zimbabwe"
+              }
+            ]
+          },
+          {
+            "type": "radiogroup",
+            "name": "q1_3",
+            "title": "How long have you used PyPSA?",
+            "choices": [
+              {
+                "value": "not_used",
+                "text": "I have not used it, but I evaluated it or plan to"
+              },
+              {
+                "value": "lt_1y",
+                "text": "Less than 1 year"
+              },
+              {
+                "value": "1_5y",
+                "text": "1 to 5 years"
+              },
+              {
+                "value": "gt_5y",
+                "text": "More than 5 years"
+              }
+            ]
+          },
+          {
+            "type": "radiogroup",
+            "name": "q1_4",
+            "title": "How would you describe your seniority level?",
+            "choices": [
+              {
+                "value": "junior",
+                "text": "Junior Modeller / PhD Student"
+              },
+              {
+                "value": "senior",
+                "text": "Senior Modeller / Postdoc"
+              },
+              {
+                "value": "lead",
+                "text": "Team Lead / Professor"
+              },
+              {
+                "value": "management",
+                "text": "Management"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "part2",
+        "title": "Part 2: How you use PyPSA",
+        "elements": [
+          {
+            "type": "checkbox",
+            "name": "q2_1",
+            "title": "What do you use PyPSA for?",
+            "choicesOrder": "random",
+            "showOtherItem": true,
+            "otherText": "Other:",
+            "choices": [
+              {
+                "value": "capacity_expansion",
+                "text": "Planning future generation, storage and grid capacity (capacity expansion)"
+              },
+              {
+                "value": "pathways",
+                "text": "Designing transition pathways across several investment years"
+              },
+              {
+                "value": "dispatch",
+                "text": "Simulating dispatch, prices and unit commitment with fixed capacities"
+              },
+              {
+                "value": "scheduling",
+                "text": "Scheduling storage, hydro or trading positions"
+              },
+              {
+                "value": "grid_security",
+                "text": "Assessing grid congestion, expansion needs or security (N-1)"
+              },
+              {
+                "value": "sector_coupling",
+                "text": "Analysing sector coupling (heat, hydrogen, transport, industry)"
+              },
+              {
+                "value": "projects",
+                "text": "Sizing and evaluating individual projects or industrial sites"
+              },
+              {
+                "value": "adequacy",
+                "text": "Assessing resource adequacy and security of supply"
+              },
+              {
+                "value": "policy",
+                "text": "Evaluating policies and scenarios for decision makers"
+              },
+              {
+                "value": "method_dev",
+                "text": "Method development and benchmarking"
+              },
+              {
+                "value": "teaching",
+                "text": "Teaching"
+              }
+            ]
+          },
+          {
+            "type": "checkbox",
+            "name": "q2_2",
+            "title": "Which regions do your PyPSA models cover?",
+            "visibleIf": "{q1_3} != 'not_used'",
+            "choices": [
+              {
+                "value": "europe",
+                "text": "Europe"
+              },
+              {
+                "value": "north_america",
+                "text": "North America"
+              },
+              {
+                "value": "latin_america",
+                "text": "Latin America"
+              },
+              {
+                "value": "africa",
+                "text": "Africa"
+              },
+              {
+                "value": "middle_east",
+                "text": "Middle East"
+              },
+              {
+                "value": "asia",
+                "text": "Asia"
+              },
+              {
+                "value": "oceania",
+                "text": "Oceania"
+              },
+              {
+                "value": "global",
+                "text": "Global"
+              }
+            ]
+          },
+          {
+            "type": "checkbox",
+            "name": "q2_3",
+            "title": "How do you usually build your PyPSA models?",
+            "visibleIf": "{q1_3} != 'not_used'",
+            "choices": [
+              {
+                "value": "scratch",
+                "text": "From scratch in Python with my own data"
+              },
+              {
+                "value": "workflow",
+                "text": "With a PyPSA-based model workflow: PyPSA-Eur, PyPSA-Earth, PyPSA-USA, PyPSA-China or another:",
+                "showCommentArea": true
+              },
+              {
+                "value": "import",
+                "text": "By importing from other tools or formats:",
+                "showCommentArea": true
+              }
+            ]
+          },
+          {
+            "type": "checkbox",
+            "name": "q2_4",
+            "title": "Which tools from the PyPSA ecosystem do you use directly in your workflow?",
+            "visibleIf": "{q1_3} != 'not_used'",
+            "choices": [
+              {
+                "value": "atlite",
+                "text": "atlite"
+              },
+              {
+                "value": "powerplantmatching",
+                "text": "powerplantmatching"
+              },
+              {
+                "value": "technology_data",
+                "text": "technology-data"
+              },
+              {
+                "value": "linopy",
+                "text": "linopy"
+              }
+            ]
+          },
+          {
+            "type": "radiogroup",
+            "name": "q2_5",
+            "title": "How often do you add custom constraints to your models, for example via extra_functionality?",
+            "visibleIf": "{q1_3} != 'not_used'",
+            "choices": [
+              {
+                "value": "never",
+                "text": "Never"
+              },
+              {
+                "value": "occasionally",
+                "text": "Occasionally"
+              },
+              {
+                "value": "most_models",
+                "text": "In most models"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "q2_6",
+            "title": "How large are your typical models?",
+            "visibleIf": "{q1_3} != 'not_used'",
+            "elements": [
+              {
+                "type": "text",
+                "name": "q2_6_snapshots",
+                "title": "Number of snapshots",
+                "inputType": "number"
+              },
+              {
+                "type": "text",
+                "name": "q2_6_buses",
+                "title": "Number of buses (e.g. regions x carrier)",
+                "inputType": "number"
+              },
+              {
+                "type": "text",
+                "name": "q2_6_components",
+                "title": "Number of components (e.g. sum of generators, links, stores, etc.)",
+                "inputType": "number"
+              },
+              {
+                "type": "checkbox",
+                "name": "q2_6_scope",
+                "title": "Spatial scope",
+                "choices": [
+                  {
+                    "value": "site",
+                    "text": "One site or microgrid"
+                  },
+                  {
+                    "value": "city_region",
+                    "text": "City or region"
+                  },
+                  {
+                    "value": "country",
+                    "text": "Country"
+                  },
+                  {
+                    "value": "multi_country",
+                    "text": "Several countries or a continent"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "checkbox",
+            "name": "q2_7",
+            "title": "Which solvers do you use?",
+            "visibleIf": "{q1_3} != 'not_used'",
+            "choices": [
+              {
+                "value": "open_source",
+                "text": "open-source (HiGHS, SCIP, etc.)"
+              },
+              {
+                "value": "proprietary",
+                "text": "proprietary (Gurobi, COPT, Xpress, MOSEK, CPLEX, etc.)"
+              },
+              {
+                "value": "gpu",
+                "text": "GPU-based solvers (e.g. cuPDLPx, cuOpt or GPU functionality of other solvers)"
+              }
+            ]
+          },
+          {
+            "type": "radiogroup",
+            "name": "q2_8",
+            "title": "Which PyPSA version do you run most of the time?",
+            "visibleIf": "{q1_3} != 'not_used'",
+            "choices": [
+              {
+                "value": "latest",
+                "text": "The latest release (1.5)"
+              },
+              {
+                "value": "older_1x",
+                "text": "An older 1.x release"
+              },
+              {
+                "value": "pre_1",
+                "text": "A release before 1.0"
+              },
+              {
+                "value": "unknown",
+                "text": "I do not know"
+              }
+            ]
+          },
+          {
+            "type": "matrixdropdown",
+            "name": "q2_9",
+            "title": "Which features released in the last two years have you used, and which were most valuable?",
+            "description": "Tick what you have used. Then mark up to three features that made the biggest difference for your work. Tick \"New to me\" if you did not know a feature existed.",
+            "visibleIf": "{q1_3} != 'not_used'",
+            "rowOrder": "random",
+            "columns": [
+              {
+                "name": "used",
+                "title": "Used",
+                "cellType": "checkbox",
+                "choices": [
+                  {
+                    "value": "yes",
+                    "text": "Yes"
+                  }
+                ]
+              },
+              {
+                "name": "top3",
+                "title": "Top 3",
+                "cellType": "checkbox",
+                "choices": [
+                  {
+                    "value": "yes",
+                    "text": "Yes"
+                  }
+                ]
+              },
+              {
+                "name": "new",
+                "title": "New to me",
+                "cellType": "checkbox",
+                "choices": [
+                  {
+                    "value": "yes",
+                    "text": "Yes"
+                  }
+                ]
+              }
+            ],
+            "rows": [
+              {
+                "value": "stochastic",
+                "text": "Stochastic optimisation across weighted scenarios (v1.0)"
+              },
+              {
+                "value": "flow_based_coupling",
+                "text": "Flow-based market coupling (v1.5)"
+              },
+              {
+                "value": "cvar",
+                "text": "Risk-averse optimisation with Conditional Value at Risk (v1.0)"
+              },
+              {
+                "value": "directional_mga",
+                "text": "Directional modelling-to-generate-alternatives (v1.0)"
+              },
+              {
+                "value": "explore_maps",
+                "text": "Interactive maps with `n.explore()` (v1.0)"
+              },
+              {
+                "value": "statistics_plots",
+                "text": "Plots for every statistic, static and interactive (v0.34, v0.35)"
+              },
+              {
+                "value": "optimisation_expressions",
+                "text": "Optimisation expressions for custom constraints (v0.32)"
+              },
+              {
+                "value": "excel_io",
+                "text": "Excel import and export (v0.34)"
+              },
+              {
+                "value": "network_collection",
+                "text": "NetworkCollection to compare several networks (v0.35)"
+              },
+              {
+                "value": "temporal_clustering",
+                "text": "Temporal clustering into representative periods (v1.1)"
+              },
+              {
+                "value": "committable_extendable",
+                "text": "Assets that are committable and extendable at the same time (v1.1)"
+              },
+              {
+                "value": "process_component",
+                "text": "Process component with several inputs and outputs (v1.2)"
+              },
+              {
+                "value": "link_delays",
+                "text": "Time delays on links and processes (v1.2)"
+              },
+              {
+                "value": "piecewise_linear",
+                "text": "Piecewise-linear costs and efficiencies (v1.3)"
+              },
+              {
+                "value": "maintenance_scheduling",
+                "text": "Maintenance scheduling (v1.3)"
+              },
+              {
+                "value": "phase_shifting_transformers",
+                "text": "Optimisable phase-shifting transformers (v1.3)"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "p3_1",
+        "title": "Investment and pathway planning",
+        "description": "Deciding what to build, retire and keep, and when.",
+        "elements": [
+          {
+            "type": "matrix",
+            "name": "q3_1",
+            "title": "How important is this for your work in the next year?",
+            "rowOrder": "random",
+            "columns": [
+              {
+                "value": "1",
+                "text": "Not relevant"
+              },
+              {
+                "value": "2",
+                "text": "Low"
+              },
+              {
+                "value": "3",
+                "text": "Medium"
+              },
+              {
+                "value": "4",
+                "text": "High"
+              },
+              {
+                "value": "5",
+                "text": "Critical"
+              },
+              {
+                "value": "unclear",
+                "text": "Unclear what this means"
+              }
+            ],
+            "rows": [
+              {
+                "value": "early_retirement",
+                "text": "Let the model retire or retrofit assets early",
+                "description": "Economic phase-out and repowering decisions instead of fixed technical lifetimes."
+              },
+              {
+                "value": "endogenous_learning",
+                "text": "Technology costs that fall with deployment (endogenous learning)",
+                "description": "Learning curves inside the model, so early investment lowers later costs."
+              },
+              {
+                "value": "fixed_unit_cost",
+                "text": "Fixed cost per unit built",
+                "description": "A cost per installed unit, independent of its size, for discrete assets like transformers."
+              },
+              {
+                "value": "multi_objective",
+                "text": "Trade off several objectives (multi-objective optimisation)",
+                "description": "Explore the best trade-offs between cost, emissions, land use or import dependence."
+              },
+              {
+                "value": "build_rate_limits",
+                "text": "Limit how fast capacity can be built depending on what's built in earlier years",
+                "description": "Build-rate caps that depend on what was built in earlier years."
+              },
+              {
+                "value": "adaptive_investment",
+                "text": "Investments that adapt as uncertainty resolves",
+                "description": "Decide now, adjust later as costs or policies become known, for example a hydrogen pipeline built only if the carbon price rises."
+              },
+              {
+                "value": "sensitivity_analysis",
+                "text": "See which inputs drive your results (global sensitivity analysis)",
+                "description": "Sample uncertain inputs, run many networks with Monte Carlo and rank the inputs by their effect on the results."
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "name": "q3_1_other",
+            "title": "Anything missing in this area?"
+          }
+        ]
+      },
+      {
+        "name": "p3_2",
+        "title": "Operations, reliability and markets",
+        "description": "Running the system and keeping supply secure.",
+        "elements": [
+          {
+            "type": "matrix",
+            "name": "q3_2",
+            "title": "How important is this for your work in the next year?",
+            "rowOrder": "random",
+            "columns": [
+              {
+                "value": "1",
+                "text": "Not relevant"
+              },
+              {
+                "value": "2",
+                "text": "Low"
+              },
+              {
+                "value": "3",
+                "text": "Medium"
+              },
+              {
+                "value": "4",
+                "text": "High"
+              },
+              {
+                "value": "5",
+                "text": "Critical"
+              },
+              {
+                "value": "unclear",
+                "text": "Unclear what this means"
+              }
+            ],
+            "rows": [
+              {
+                "value": "richer_unit_commitment",
+                "text": "Richer unit commitment",
+                "description": "More operational constraints, for example start-up trajectories or ramping costs."
+              },
+              {
+                "value": "reserves",
+                "text": "Operating reserves and capacity margins",
+                "description": "Reserve requirements to which eligible assets contribute spare capacity."
+              },
+              {
+                "value": "ramping_costs",
+                "text": "Cost of changing dispatch (ramping costs)",
+                "description": "Penalise ramping between hours, for example for wear or balancing exposure."
+              },
+              {
+                "value": "soft_constraints",
+                "text": "Allow constraints to be violated at a price",
+                "description": "Penalties instead of an infeasible model."
+              },
+              {
+                "value": "lole_metrics",
+                "text": "Loss-of-load and unserved-energy metrics",
+                "description": "Probabilistic adequacy indicators from outage-sampled runs, including capacity credit."
+              },
+              {
+                "value": "strategic_bidding",
+                "text": "Strategic bidding of market players (Cournot)",
+                "description": "Markup or oligopoly behaviour instead of perfect competition."
+              },
+              {
+                "value": "orchestration",
+                "text": "Orchestration layer for connecting multiple PyPSA model instances",
+                "description": "For instance, pass capacities from a planning run to a weekly hydro or maintenance schedule and on to hourly dispatch with market stages. Or run day-ahead market followed by redispatch and congestion management."
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "name": "q3_2_other",
+            "title": "Anything missing in this area?"
+          }
+        ]
+      },
+      {
+        "name": "p3_3",
+        "title": "Grid physics and sector networks",
+        "description": "More realistic networks for electricity, gas, heat and water.",
+        "elements": [
+          {
+            "type": "matrix",
+            "name": "q3_3",
+            "title": "How important is this for your work in the next year?",
+            "rowOrder": "random",
+            "columns": [
+              {
+                "value": "1",
+                "text": "Not relevant"
+              },
+              {
+                "value": "2",
+                "text": "Low"
+              },
+              {
+                "value": "3",
+                "text": "Medium"
+              },
+              {
+                "value": "4",
+                "text": "High"
+              },
+              {
+                "value": "5",
+                "text": "Critical"
+              },
+              {
+                "value": "unclear",
+                "text": "Unclear what this means"
+              }
+            ],
+            "rows": [
+              {
+                "value": "distflow",
+                "text": "Voltage and losses in distribution grids (DistFlow)",
+                "description": "Linearised power flow for radial networks with PV, batteries, heat pumps and EV charging."
+              },
+              {
+                "value": "flow_controllers",
+                "text": "Devices that steer power flows (SSSC, UPFC)",
+                "description": "Series compensators and flow controllers as optimisable components."
+              },
+              {
+                "value": "reactive_power",
+                "text": "Reactive power and voltage limits in optimisation",
+                "description": "Convex relaxation of AC power flow in addition to today's DC approximation."
+              },
+              {
+                "value": "powerflow_export",
+                "text": "Hand results to power flow tools (pandapower, PowSyBl)",
+                "description": "Export optimised networks for AC, short-circuit and dynamic checks."
+              },
+              {
+                "value": "gas_pressure",
+                "text": "Pressure-driven gas pipeline flow (Weymouth)",
+                "description": "Linearised pipeline physics with nodal pressures and linepack storage."
+              },
+              {
+                "value": "heat_temperatures",
+                "text": "Temperature levels in heat networks",
+                "description": "District heating with supply and return temperatures as model states."
+              },
+              {
+                "value": "hydro_cascades",
+                "text": "Hydro cascades with water travel times and reservoir head",
+                "description": "Linked reservoirs with delays, spillage and fill-level dependent efficiency."
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "name": "q3_3_other",
+            "title": "Anything missing in this area?"
+          }
+        ]
+      },
+      {
+        "name": "p3_4",
+        "title": "Analysing and presenting results",
+        "description": "From a solved network to a figure, a table or a decision.",
+        "elements": [
+          {
+            "type": "matrix",
+            "name": "q3_4",
+            "title": "How important is this for your work in the next year?",
+            "rowOrder": "random",
+            "columns": [
+              {
+                "value": "1",
+                "text": "Not relevant"
+              },
+              {
+                "value": "2",
+                "text": "Low"
+              },
+              {
+                "value": "3",
+                "text": "Medium"
+              },
+              {
+                "value": "4",
+                "text": "High"
+              },
+              {
+                "value": "5",
+                "text": "Critical"
+              },
+              {
+                "value": "unclear",
+                "text": "Unclear what this means"
+              }
+            ],
+            "rows": [
+              {
+                "value": "dashboard",
+                "text": "Explore a solved network in a dashboard",
+                "description": "Launch a local app with statistics, plots and maps."
+              },
+              {
+                "value": "market_statistics",
+                "text": "Market statistics out of the box",
+                "description": "Price duration curves, congestion rents, market values and asset revenues."
+              },
+              {
+                "value": "financial_metrics",
+                "text": "Financial metrics per asset",
+                "description": "Net present value, levelised cost and payback."
+              },
+              {
+                "value": "disaggregation",
+                "text": "Map results back to the original grid (disaggregation)",
+                "description": "Disaggregate clustered results to the original nodes and assets."
+              },
+              {
+                "value": "compare_scenarios",
+                "text": "Compare scenarios side by side",
+                "description": "Load several runs and difference them in statistics and plots."
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "name": "q3_4_other",
+            "title": "Anything missing in this area?"
+          }
+        ]
+      },
+      {
+        "name": "p3_5",
+        "title": "Data, input and output",
+        "description": "Getting models in and out of PyPSA.",
+        "elements": [
+          {
+            "type": "matrix",
+            "name": "q3_5",
+            "title": "How important is this for your work in the next year?",
+            "rowOrder": "random",
+            "columns": [
+              {
+                "value": "1",
+                "text": "Not relevant"
+              },
+              {
+                "value": "2",
+                "text": "Low"
+              },
+              {
+                "value": "3",
+                "text": "Medium"
+              },
+              {
+                "value": "4",
+                "text": "High"
+              },
+              {
+                "value": "5",
+                "text": "Critical"
+              },
+              {
+                "value": "unclear",
+                "text": "Unclear what this means"
+              }
+            ],
+            "rows": [
+              {
+                "value": "equations_as_text",
+                "text": "Read and write model equations as text",
+                "description": "Declare custom constraints without code and export the full formulation as readable maths for papers and audits."
+              },
+              {
+                "value": "lazy_loading",
+                "text": "Open large networks faster",
+                "description": "Load lazily only the parts of a network you need, also from cloud storage, instead of the whole file."
+              },
+              {
+                "value": "industry_formats",
+                "text": "Import grid models from industry formats",
+                "description": "Read these files directly from CIM-CGMES, MATPOWER, or PSS/E."
+              },
+              {
+                "value": "neutral_format",
+                "text": "Store and exchange models in a tool-neutral format",
+                "description": "A declared schema that other frameworks and databases can read, with scenario variants that store only their differences, and nothing lost on save and reload."
+              },
+              {
+                "value": "input_validation",
+                "text": "Catch input errors before solving (validation)",
+                "description": "Stricter checks with clear messages on what is inconsistent and where."
+              },
+              {
+                "value": "units",
+                "text": "Units on buses and attributes",
+                "description": "Declare units once and have them checked and carried through to results."
+              },
+              {
+                "value": "custom_components",
+                "text": "Define your own component types and properties",
+                "description": "Add components and shared properties, such as carriers, next to the built-in ones."
+              },
+              {
+                "value": "adjacent_tools_data",
+                "text": "Directly access data from adjacent tools",
+                "description": "More heavy data integration of cost assumptions from technology-data, renewable time series from atlite, power plants from powerplantmatching."
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "name": "q3_5_other",
+            "title": "Anything missing in this area?"
+          }
+        ]
+      },
+      {
+        "name": "p3_6",
+        "title": "Speed and scale",
+        "description": "Where your models hit their limits.",
+        "elements": [
+          {
+            "type": "checkbox",
+            "name": "q3_6_1",
+            "title": "Have you hit computational limits with PyPSA in the last year?",
+            "visibleIf": "{q1_3} != 'not_used'",
+            "choices": [
+              {
+                "value": "solve_time",
+                "text": "Solving took too long"
+              },
+              {
+                "value": "build_time",
+                "text": "Building the model took too long"
+              },
+              {
+                "value": "memory",
+                "text": "Memory ran out"
+              },
+              {
+                "value": "numerics",
+                "text": "The solver struggled numerically, for example slow convergence or spurious infeasibility"
+              },
+              {
+                "value": "no",
+                "text": "No"
+              }
+            ]
+          },
+          {
+            "type": "checkbox",
+            "name": "q3_6_2",
+            "title": "What did you do about it?",
+            "visibleIf": "{q1_3} != 'not_used' and {q3_6_1} notcontains 'no'",
+            "choices": [
+              {
+                "value": "reduce_spatial",
+                "text": "Reduced spatial resolution, for example by clustering"
+              },
+              {
+                "value": "reduce_temporal",
+                "text": "Reduced temporal resolution or used representative periods"
+              },
+              {
+                "value": "split_horizon",
+                "text": "Split the horizon, for example rolling horizon"
+              },
+              {
+                "value": "fewer_scenarios",
+                "text": "Ran fewer scenarios or sensitivities"
+              },
+              {
+                "value": "bigger_machine",
+                "text": "Used a bigger machine or a cluster"
+              },
+              {
+                "value": "commercial_solver",
+                "text": "Switched to a commercial solver"
+              },
+              {
+                "value": "gave_up",
+                "text": "Gave up on that model"
+              },
+              {
+                "value": "nothing",
+                "text": "Nothing, the limits were acceptable"
+              }
+            ]
+          },
+          {
+            "type": "radiogroup",
+            "name": "q3_6_3",
+            "title": "How much larger would you like your models to be than what you run today, for example in buses, snapshots or scenarios?",
+            "visibleIf": "{q1_3} != 'not_used'",
+            "choices": [
+              {
+                "value": "same",
+                "text": "About the same"
+              },
+              {
+                "value": "2_5x",
+                "text": "2 to 5 times"
+              },
+              {
+                "value": "10x",
+                "text": "About 10 times"
+              },
+              {
+                "value": "100x",
+                "text": "100 times or more"
+              }
+            ]
+          },
+          {
+            "type": "matrix",
+            "name": "q3_6",
+            "title": "How important is this for your work in the next year?",
+            "rowOrder": "random",
+            "columns": [
+              {
+                "value": "1",
+                "text": "Not relevant"
+              },
+              {
+                "value": "2",
+                "text": "Low"
+              },
+              {
+                "value": "3",
+                "text": "Medium"
+              },
+              {
+                "value": "4",
+                "text": "High"
+              },
+              {
+                "value": "5",
+                "text": "Critical"
+              },
+              {
+                "value": "unclear",
+                "text": "Unclear what this means"
+              }
+            ],
+            "rows": [
+              {
+                "value": "decomposition",
+                "text": "Solve models too large for one solve (decomposition)",
+                "description": "Split into coordinated subproblems, for example Benders for investment and dispatch or SDDP for long storage horizons."
+              },
+              {
+                "value": "mixed_resolution",
+                "text": "Mix time resolutions in one model",
+                "description": "Hourly where it matters, coarser elsewhere, per bus or carrier."
+              },
+              {
+                "value": "scenario_reduction",
+                "text": "Reduce many scenarios to a few",
+                "description": "Generate and reduce scenario sets from weather years, outages or price paths."
+              },
+              {
+                "value": "parallel_scenarios",
+                "text": "Run many scenarios in parallel",
+                "description": "Launch and collect a batch of runs locally or on a cluster from one call."
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "name": "q3_6_other",
+            "title": "Anything missing in this area?"
+          }
+        ]
+      },
+      {
+        "name": "p3_7",
+        "title": "Your top 3",
+        "elements": [
+          {
+            "type": "checkbox",
+            "name": "q3_7",
+            "title": "Of all the roadmap features, which three would help your work most?",
+            "choicesOrder": "random",
+            "maxSelectedChoices": 3,
+            "choices": [
+              {
+                "value": "early_retirement",
+                "text": "Let the model retire or retrofit assets early"
+              },
+              {
+                "value": "endogenous_learning",
+                "text": "Technology costs that fall with deployment (endogenous learning)"
+              },
+              {
+                "value": "fixed_unit_cost",
+                "text": "Fixed cost per unit built"
+              },
+              {
+                "value": "multi_objective",
+                "text": "Trade off several objectives (multi-objective optimisation)"
+              },
+              {
+                "value": "build_rate_limits",
+                "text": "Limit how fast capacity can be built depending on what's built in earlier years"
+              },
+              {
+                "value": "adaptive_investment",
+                "text": "Investments that adapt as uncertainty resolves"
+              },
+              {
+                "value": "sensitivity_analysis",
+                "text": "See which inputs drive your results (global sensitivity analysis)"
+              },
+              {
+                "value": "richer_unit_commitment",
+                "text": "Richer unit commitment"
+              },
+              {
+                "value": "reserves",
+                "text": "Operating reserves and capacity margins"
+              },
+              {
+                "value": "ramping_costs",
+                "text": "Cost of changing dispatch (ramping costs)"
+              },
+              {
+                "value": "soft_constraints",
+                "text": "Allow constraints to be violated at a price"
+              },
+              {
+                "value": "lole_metrics",
+                "text": "Loss-of-load and unserved-energy metrics"
+              },
+              {
+                "value": "strategic_bidding",
+                "text": "Strategic bidding of market players (Cournot)"
+              },
+              {
+                "value": "orchestration",
+                "text": "Orchestration layer for connecting multiple PyPSA model instances"
+              },
+              {
+                "value": "distflow",
+                "text": "Voltage and losses in distribution grids (DistFlow)"
+              },
+              {
+                "value": "flow_controllers",
+                "text": "Devices that steer power flows (SSSC, UPFC)"
+              },
+              {
+                "value": "reactive_power",
+                "text": "Reactive power and voltage limits in optimisation"
+              },
+              {
+                "value": "powerflow_export",
+                "text": "Hand results to power flow tools (pandapower, PowSyBl)"
+              },
+              {
+                "value": "gas_pressure",
+                "text": "Pressure-driven gas pipeline flow (Weymouth)"
+              },
+              {
+                "value": "heat_temperatures",
+                "text": "Temperature levels in heat networks"
+              },
+              {
+                "value": "hydro_cascades",
+                "text": "Hydro cascades with water travel times and reservoir head"
+              },
+              {
+                "value": "dashboard",
+                "text": "Explore a solved network in a dashboard"
+              },
+              {
+                "value": "market_statistics",
+                "text": "Market statistics out of the box"
+              },
+              {
+                "value": "financial_metrics",
+                "text": "Financial metrics per asset"
+              },
+              {
+                "value": "disaggregation",
+                "text": "Map results back to the original grid (disaggregation)"
+              },
+              {
+                "value": "compare_scenarios",
+                "text": "Compare scenarios side by side"
+              },
+              {
+                "value": "equations_as_text",
+                "text": "Read and write model equations as text"
+              },
+              {
+                "value": "lazy_loading",
+                "text": "Open large networks faster"
+              },
+              {
+                "value": "industry_formats",
+                "text": "Import grid models from industry formats"
+              },
+              {
+                "value": "neutral_format",
+                "text": "Store and exchange models in a tool-neutral format"
+              },
+              {
+                "value": "input_validation",
+                "text": "Catch input errors before solving (validation)"
+              },
+              {
+                "value": "units",
+                "text": "Units on buses and attributes"
+              },
+              {
+                "value": "custom_components",
+                "text": "Define your own component types and properties"
+              },
+              {
+                "value": "adjacent_tools_data",
+                "text": "Directly access data from adjacent tools"
+              },
+              {
+                "value": "decomposition",
+                "text": "Solve models too large for one solve (decomposition)"
+              },
+              {
+                "value": "mixed_resolution",
+                "text": "Mix time resolutions in one model"
+              },
+              {
+                "value": "scenario_reduction",
+                "text": "Reduce many scenarios to a few"
+              },
+              {
+                "value": "parallel_scenarios",
+                "text": "Run many scenarios in parallel"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "part4",
+        "title": "Part 4: Gaps and your work",
+        "elements": [
+          {
+            "type": "comment",
+            "name": "q4_1",
+            "title": "What slows you down when you work with PyPSA, and what is missing?",
+            "description": "Anything counts: installation, learning, documentation, error messages, debugging infeasible models, build or solve time, memory, changes between versions, custom constraints, data preparation, analysis, lack of graphical user interface, finding help, or a feature that was not on the list. Be concrete about what you were trying to do."
+          },
+          {
+            "type": "comment",
+            "name": "q4_2",
+            "title": "Share links to your PyPSA papers, models, reports or projects.",
+            "description": "We collect them for the PyPSA website and for the results report. Public links only."
+          },
+          {
+            "type": "comment",
+            "name": "q4_3",
+            "title": "Anything else you want to tell us?"
+          },
+          {
+            "type": "text",
+            "name": "q4_4",
+            "title": "Which organisation do you work for?",
+            "description": "Optional, but please tell us: it shows how many organisations rely on PyPSA. We never publish individual answers or answers that identify your organisation."
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+import { describe, expect, it } from "vitest";
+import {
+  HONEYPOT,
+  allowedAnswerKeys,
+  isOpen,
+  placeholders,
+  waves,
+} from "../../src/lib/survey/wave";
+
+const def = waves["2026-h2"];
+
+describe("isOpen", () => {
+  it("is closed before the window opens", () => {
+    expect(isOpen(def, new Date("2026-11-17T22:59:59Z"))).toBe(false);
+  });
+  it("is open from the opening instant", () => {
+    expect(isOpen(def, new Date("2026-11-17T23:00:00Z"))).toBe(true);
+  });
+  it("is open inside the window, including the last day", () => {
+    expect(isOpen(def, new Date("2026-12-01T12:00:00Z"))).toBe(true);
+    expect(isOpen(def, new Date("2026-12-13T22:59:59Z"))).toBe(true);
+  });
+  it("is closed from the closing instant (end of 13 December, CET)", () => {
+    expect(isOpen(def, new Date("2026-12-13T23:00:00Z"))).toBe(false);
+    expect(isOpen(def, new Date("2027-01-01T00:00:00Z"))).toBe(false);
+  });
+});
+
+describe("allowedAnswerKeys", () => {
+  const keys = allowedAnswerKeys(def);
+  it("contains question names, including those nested in panels", () => {
+    for (const k of [
+      "q1_1",
+      "q1_4",
+      "q2_9",
+      "q2_6_snapshots",
+      "q2_6_scope",
+      "q3_1",
+      "q3_6_3",
+      "q3_7",
+      "q4_4",
+    ]) {
+      expect(keys.has(k)).toBe(true);
+    }
+  });
+  it("adds -Comment keys for Other choices but not for plain questions", () => {
+    expect(keys.has("q1_1-Comment")).toBe(true);
+    expect(keys.has("q2_1-Comment")).toBe(true);
+    expect(keys.has("q1_3-Comment")).toBe(false);
+  });
+  it("excludes the honeypot and panel names", () => {
+    expect(HONEYPOT).toBe("website");
+    expect(keys.has(HONEYPOT)).toBe(false);
+    expect(keys.has("q2_6")).toBe(false);
+  });
+  it("contains the free-text follow-ups of every rating section", () => {
+    for (let i = 1; i <= 6; i++) expect(keys.has(`q3_${i}_other`)).toBe(true);
+  });
+});
+
+describe("placeholders", () => {
+  it("lists opens and retention with their provisional values", () => {
+    expect(placeholders(def)).toEqual([
+      { name: "opens", value: "2026-11-18T00:00:00+01:00" },
+      {
+        name: "retention",
+        value:
+          "Raw responses are deleted 12 months after the survey closes; aggregated results are kept.",
+      },
+    ]);
+  });
+});
+
+describe("2.6 size questions", () => {
+  const all: El[] = [];
+  type El = { type: string; name: string; inputType?: unknown; min?: unknown; elements?: El[] };
+  const walk = (els: El[]) => els.forEach((e) => (all.push(e), e.elements && walk(e.elements)));
+  for (const page of def.survey.pages) walk(page.elements);
+
+  it("are number text questions whose range lives only in the sliders map", () => {
+    for (const name of Object.keys(def.sliders)) {
+      const q = all.find((e) => e.name === name);
+      expect(q?.type).toBe("text");
+      expect(q?.inputType).toBe("number");
+      expect(q?.min).toBeUndefined();
+    }
+    expect(Object.keys(def.sliders)).toEqual(["q2_6_snapshots", "q2_6_buses", "q2_6_components"]);
+  });
+});
+
+describe("q2_3 per-choice comments", () => {
+  it("have no -Comment key; answers are objects inside q2_3", () => {
+    const keys = allowedAnswerKeys(def);
+    expect(keys.has("q2_3")).toBe(true);
+    expect(keys.has("q2_3-Comment")).toBe(false);
+  });
+});
