@@ -11,6 +11,16 @@
 
   import { contributorsData, dataTimestamp } from "$lib/data/contributors";
   import { browser } from "$app/environment";
+  import {
+    categoryForRepo,
+    filterByRepo,
+    pageCount,
+    pageSize,
+    repoFromFilterParam,
+    sortContributors,
+    wrapPage,
+    type RepoName,
+  } from "$lib/data/community";
 
   // Props
   interface Props {
@@ -31,50 +41,17 @@
     embedMode = false,
   }: Props = $props();
 
-  // Sort contributors by total contributions (descending), but always put Tom Brown first
-  const sortedByContributions = [...contributorsData].sort((a, b) => {
-    // Always put Tom Brown first
-    if (a.firstName === "Tom" && a.lastName === "Brown") return -1;
-    if (b.firstName === "Tom" && b.lastName === "Brown") return 1;
-
-    const aTotal = a.totalContributions || 0;
-    const bTotal = b.totalContributions || 0;
-    return bTotal - aTotal;
-  });
+  // Tom Brown first, then by total contributions (descending)
+  const sortedByContributions = sortContributors(contributorsData);
 
   // Responsive contributors per page
   let windowWidth = typeof window !== "undefined" ? window.innerWidth : 1024;
-  let contributorsPerPage = embedMode ? 40 : 32; // Embed: 10 columns × 4 rows, Normal: 8 columns × 4 rows
+  let contributorsPerPage = embedMode ? 40 : 32;
 
   function updateContributorsPerPage() {
     if (typeof window === "undefined") return;
     windowWidth = window.innerWidth;
-
-    if (embedMode) {
-      // Embed mode: 10 columns × 4 rows
-      if (windowWidth < 640) {
-        contributorsPerPage = 20; // Mobile: 5 columns × 4 rows
-      } else if (windowWidth < 1024) {
-        contributorsPerPage = 32; // Tablet: 8 columns × 4 rows
-      } else {
-        contributorsPerPage = 40; // Desktop: 10 columns × 4 rows
-      }
-    } else {
-      // Normal mode
-      if (windowWidth < 640) {
-        // Mobile (1 card): 4 columns × 3 rows
-        contributorsPerPage = 12;
-      } else if (windowWidth < 1024) {
-        // Tablet (2 cards): 6 columns × 4 rows
-        contributorsPerPage = 24;
-      } else if (windowWidth < 1280) {
-        // Small desktop (3 cards): 8 columns × 4 rows
-        contributorsPerPage = 32;
-      } else {
-        // Large desktop (3 cards): 8 columns × 4 rows
-        contributorsPerPage = 32;
-      }
-    }
+    contributorsPerPage = pageSize(windowWidth, embedMode);
   }
 
   // Initialize on mount
@@ -85,24 +62,16 @@
     // Check URL for filter parameter
     if (browser) {
       const urlParams = new URLSearchParams(window.location.search);
-      const filterParam = urlParams.get("filter");
-      if (filterParam && repoMap[filterParam]) {
+      const filterParam = repoFromFilterParam(urlParams.get("filter"));
+      if (filterParam) {
         selectedRepo = filterParam;
 
         // Expand the appropriate category
-        const frameworkRepos = [
-          "PyPSA",
-          "atlite",
-          "linopy",
-          "powerplantmatching",
-          "technology-data",
-        ];
-        const modelRepos = ["PyPSA-Eur", "PyPSA-Earth", "PyPSA-USA", "PyPSA-DE"];
-
-        if (frameworkRepos.includes(filterParam)) {
+        const category = categoryForRepo(filterParam);
+        if (category === "framework") {
           frameworkExpanded = true;
           modelsExpanded = false;
-        } else if (modelRepos.includes(filterParam)) {
+        } else if (category === "models") {
           modelsExpanded = true;
           frameworkExpanded = false;
         }
@@ -120,20 +89,7 @@
   // Filter expansion state
   let frameworkExpanded = $state(false);
   let modelsExpanded = $state(false);
-  let selectedRepo = $state<string | null>(null); // null means all projects
-
-  // Repository mapping - maps display name to repo path in data
-  const repoMap: Record<string, string> = {
-    PyPSA: "PyPSA/PyPSA",
-    atlite: "PyPSA/atlite",
-    linopy: "PyPSA/linopy",
-    powerplantmatching: "PyPSA/powerplantmatching",
-    "technology-data": "PyPSA/technology-data",
-    "PyPSA-Eur": "PyPSA/pypsa-eur",
-    "PyPSA-Earth": "pypsa-meets-earth/pypsa-earth",
-    "PyPSA-USA": "PyPSA/pypsa-usa",
-    "PyPSA-DE": "PyPSA/pypsa-de",
-  };
+  let selectedRepo = $state<RepoName | null>(null); // null means "All Projects"
 
   function toggleFrameworkExpanded() {
     frameworkExpanded = !frameworkExpanded;
@@ -145,7 +101,7 @@
     frameworkExpanded = false;
   }
 
-  function selectRepo(repoName: string) {
+  function selectRepo(repoName: RepoName) {
     selectedRepo = repoName;
     currentPage = 0; // Reset to first page when filtering
     // Don't close the expanded category when selecting a sub-option
@@ -158,48 +114,12 @@
 
   // Filter and sort contributors based on selected repository
   const filteredList = $derived(
-    selectedRepo
-      ? contributorsData
-          .filter((c) => {
-            const repoPath = repoMap[selectedRepo as string];
-            return (
-              c.repoContributions &&
-              (c.repoContributions as Record<string, number | undefined>)[repoPath]! > 0
-            );
-          })
-          .map((c) => {
-            const repoPath = repoMap[selectedRepo as string];
-            const repoContribs =
-              (c.repoContributions as Record<string, number | undefined>)[repoPath] || 0;
-            const repoPrs = (c.repoPrs as Record<string, number> | undefined)?.[repoPath] || 0;
-            const repoIssues =
-              (c.repoIssues as Record<string, number> | undefined)?.[repoPath] || 0;
-            const repoRevs = (c.repoReviews as Record<string, number> | undefined)?.[repoPath] || 0;
-            return {
-              ...c,
-              // Override stats with repo-specific data
-              totalContributions: repoContribs,
-              totalMergedPrs: repoPrs,
-              totalIssuesCreated: repoIssues,
-              totalReviews: repoRevs,
-              displayRepoOnly: true,
-            };
-          })
-          .sort((a, b) => {
-            // Keep Tom Brown first for PyPSA repository only
-            if (selectedRepo === "PyPSA") {
-              if (a.firstName === "Tom" && a.lastName === "Brown") return -1;
-              if (b.firstName === "Tom" && b.lastName === "Brown") return 1;
-            }
-            // Otherwise sort by contributions
-            return b.totalContributions - a.totalContributions;
-          })
-      : sortedByContributions
+    selectedRepo ? filterByRepo(contributorsData, selectedRepo) : sortedByContributions
   );
 
   const teamList = $derived(filteredList);
 
-  const totalPages = $derived(Math.ceil(teamList.length / contributorsPerPage));
+  const totalPages = $derived(pageCount(teamList.length, contributorsPerPage));
 
   const currentContributors = $derived(
     teamList.slice(currentPage * contributorsPerPage, (currentPage + 1) * contributorsPerPage)
@@ -209,7 +129,7 @@
     if (isTransitioning) return;
     isTransitioning = true;
     setTimeout(() => {
-      currentPage = (currentPage + 1) % totalPages;
+      currentPage = wrapPage(currentPage, 1, totalPages);
       isTransitioning = false;
     }, 50);
   }
@@ -218,7 +138,7 @@
     if (isTransitioning) return;
     isTransitioning = true;
     setTimeout(() => {
-      currentPage = (currentPage - 1 + totalPages) % totalPages;
+      currentPage = wrapPage(currentPage, -1, totalPages);
       isTransitioning = false;
     }, 50);
   }
