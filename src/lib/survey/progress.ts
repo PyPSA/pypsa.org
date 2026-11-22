@@ -10,8 +10,10 @@ export interface SurveyStorage {
 export interface SavedProgress {
   data: Record<string, unknown>;
   currentPageNo: number;
-  order: string[];
-  startedAt: number;
+  /** uint32 that drives every random order, so a reload keeps them. */
+  seed: number;
+  /** Milliseconds the tab was visible, from Start. */
+  activeMs: number;
 }
 
 export const storageKey = (def: Pick<WaveDefinition, "wave">) => `pypsa-survey:${def.wave}`;
@@ -33,13 +35,10 @@ export function load(def: WaveDefinition, storage: SurveyStorage): SavedProgress
   } catch (cause) {
     throw new SavedProgressError("Saved survey progress is not valid JSON.", { cause });
   }
-  const ids = def.sections.map((s) => s.id);
-  const validOrder =
-    !!saved &&
-    Array.isArray(saved.order) &&
-    saved.order.length === ids.length &&
-    ids.every((id) => saved!.order.includes(id));
-  if (!saved || typeof saved.data !== "object" || saved.data === null || !validOrder)
+  const validSeed =
+    !!saved && Number.isInteger(saved.seed) && saved.seed >= 0 && saved.seed <= 0xffffffff;
+  const validActive = !!saved && Number.isFinite(saved.activeMs);
+  if (!saved || typeof saved.data !== "object" || saved.data === null || !validSeed || !validActive)
     throw new SavedProgressError("Saved survey progress has an unexpected shape.");
   return saved;
 }

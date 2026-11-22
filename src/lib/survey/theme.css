@@ -323,3 +323,40 @@
   background: var(--sv-background);
   border-color: var(--survey-control-border);
 }
+
+/* Counter sits beside the question title; the description keeps its own line. */
+.survey-host .sd-question__header:has(> .survey-top3-counter) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.75rem;
+}
+.survey-host .sd-question__header > .survey-top3-counter + .sd-question__description {
+  flex-basis: 100%;
+}
+.survey-host .survey-top3-counter {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--sv-muted-foreground);
+}
+/* Locked picks dim the box itself, never the label text, to stay at the 4.5:1 contrast floor. */
+.survey-host .is-full {
+  color: var(--sv-muted-foreground);
+  cursor: not-allowed;
+}
+.survey-host .is-full label {
+  cursor: not-allowed;
+}
+.survey-host .is-full .sd-item__decorator {
+  opacity: 0.4;
+}
+
+/* Keeps a scrolled-to error clear of the navbar and the sticky section dropdown. */
+.survey-host .sd-question--error {
+  scroll-margin-top: 11rem;
+}
+@media (min-width: 1024px) {
+  .survey-host .sd-question--error {
+    scroll-margin-top: 8rem;
+  }
+}

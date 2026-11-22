@@ -4,20 +4,22 @@
   import Navbar from "$lib/components/Navbar.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import { Button } from "$lib/components/ui/button";
-  import { isOpen } from "$lib/survey/wave";
-  import { surveyWave } from "$lib/survey/current";
+  import { isOpen, waves } from "$lib/survey/wave";
+  import { surveyMeta } from "$lib/survey/current";
   import { formatDay as day } from "$lib/survey/format";
   import { hasSavedProgress, resetProgress } from "$lib/survey/progress";
+  import { openStorage } from "$lib/survey/storage";
   import type { MountedSurvey, NavState, SubmitState } from "$lib/survey/mount";
   import { outline } from "$lib/survey/outline";
   import SurveyNav from "$lib/components/SurveyNav.svelte";
   import SurveyStrip from "$lib/components/SurveyStrip.svelte";
 
-  const def = surveyWave;
+  const def = waves[surveyMeta.wave];
   const w = def.welcome;
 
   type Phase =
     | "loading"
+    | "starting"
     | "before"
     | "closed"
     | "welcome"
@@ -27,7 +29,15 @@
     | "loadFailed";
   let phase = $state<Phase>("loading");
   let submit = $state<SubmitState>({ kind: "idle" });
-  let saveFailed = $state(false);
+  // One never-throwing storage instance shared by the page and the mounted survey.
+  const opened = openStorage(() => localStorage);
+  let welcome = $state<HTMLElement>();
+  let skeletonHeight = $state(0);
+  type SurveyState = "open" | "before" | "closed" | "resume" | "nostorage";
+  // Mirrors the html attribute the pre-paint script set, so the CSS follows the page.
+  const setState = (s: SurveyState) =>
+    document.documentElement.setAttribute("data-survey-state", s);
+  opened.onFallback(() => setState("nostorage"));
   let copied = $state(false);
   let copyFailed = $state(false);
   let container = $state<HTMLElement>();
@@ -44,10 +54,63 @@
     parts.find((p) => p.pages.length > 1 && p.pages.some((q) => q.index === nav?.current))
   );
 
-  function goTo(index: number) {
-    mounted?.goTo(index);
+  // Polite live region, text swapped in so screen readers announce it.
+  let announcement = $state("");
+
+  // Only the latest showPage run applies.
+  let showRun = 0;
+  let errorsPending = false;
+
+  // The one path after any page change, scrolling, focusing the title or first error, and announcing.
+  async function showPage(withErrors = false) {
+    if (withErrors) errorsPending = true;
+    const run = ++showRun;
+    await tick();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    if (run !== showRun) return;
     top?.scrollIntoView({ block: "start" });
+    const error = errorsPending
+      ? container?.querySelector<HTMLElement>(".sd-question--error")
+      : null;
+    errorsPending = false;
+    const title =
+      phase === "completed"
+        ? document.querySelector<HTMLElement>("[data-survey-thanks]")
+        : container?.querySelector<HTMLElement>(".sd-page__title");
+    if (error) {
+      error.scrollIntoView({ block: "start" });
+      const target = error.querySelector<HTMLElement>("input, select, textarea, button") ?? error;
+      if (target === error) error.tabIndex = -1;
+      target.focus({ preventScroll: true });
+    } else if (title) {
+      title.tabIndex = -1;
+      title.focus({ preventScroll: true });
+    }
+    if (phase === "completed") announcement = "Thank you";
+    else if (nav)
+      announcement = `Page ${nav.current + 1} of ${nav.titles.length}: ${nav.titles[nav.current]}`;
   }
+
+  // After a failed validation: show the page, then bring the first error into view.
+  function showErrors() {
+    return showPage(true);
+  }
+
+  function goTo(index: number) {
+    if (mounted && !mounted.goTo(index)) void showErrors();
+  }
+
+  // Seconds until a rate limited submit can be retried.
+  let countdown = $state(0);
+  $effect(() => {
+    if (submit.kind !== "rateLimited") return;
+    countdown = submit.retryAfter;
+    const timer = setInterval(() => {
+      countdown = Math.max(0, countdown - 1);
+      if (countdown === 0) clearInterval(timer);
+    }, 1000);
+    return () => clearInterval(timer);
+  });
 
   function measureInset() {
     const content = container?.querySelector<HTMLElement>(".sd-page__content");
@@ -73,9 +136,22 @@
 
   let lastFresh = false;
 
+  // Fetch the survey chunk ahead of Start; the import is cached for the real one.
+  const prefetch = () => void import("$lib/survey/mount").catch(() => {});
+  $effect(() => {
+    if (phase !== "welcome") return;
+    if (typeof requestIdleCallback === "function") {
+      const id = requestIdleCallback(prefetch);
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(prefetch, 1500);
+    return () => clearTimeout(id);
+  });
+
   async function start(fresh: boolean) {
     lastFresh = fresh;
-    phase = "loading";
+    skeletonHeight = welcome?.offsetHeight ?? skeletonHeight;
+    phase = "starting";
     let mod: typeof import("$lib/survey/mount");
     try {
       // SurveyJS stays out of the page bundle and loads only when the survey starts.
@@ -98,38 +174,55 @@
           mounted?.destroy();
           mounted = undefined;
           phase = "completed";
+          void showPage();
         },
-        onSaveError: () => (saveFailed = true),
-        onNav: async (s) => {
+        onInvalid: () => void showErrors(),
+        onSaveError: () => setState("nostorage"),
+        onPage: async (s) => {
           nav = s;
           await tick();
           measureInset();
+          void showPage();
         },
       },
-      { fresh }
+      { fresh, opened }
     );
   }
 
+  const openState = (): SurveyState => (opened.persistent() ? "open" : "nostorage");
+
   function decide() {
     try {
-      if (hasSavedProgress(def, localStorage)) void start(false);
-      else phase = "welcome";
+      if (hasSavedProgress(def, opened.storage)) {
+        setState("resume");
+        void start(false);
+      } else {
+        setState(openState());
+        phase = "welcome";
+      }
     } catch (e) {
-      if (e instanceof Error && e.name === "SavedProgressError") phase = "corrupt";
-      else throw e;
+      if (e instanceof Error && e.name === "SavedProgressError") {
+        setState(openState());
+        phase = "corrupt";
+      } else throw e;
     }
   }
 
   function startOver() {
-    resetProgress(def, localStorage);
+    resetProgress(def, opened.storage);
+    setState(openState());
     phase = "welcome";
   }
 
   onMount(() => {
     const now = new Date();
-    if (now.getTime() >= Date.parse(def.closes)) phase = "closed";
-    else if (!isOpen(def, now)) phase = "before";
-    else decide();
+    if (now.getTime() >= Date.parse(def.closes)) {
+      setState("closed");
+      phase = "closed";
+    } else if (!isOpen(def, now)) {
+      setState("before");
+      phase = "before";
+    } else decide();
     return () => mounted?.destroy();
   });
 
@@ -150,25 +243,35 @@
 <svelte:window onresize={measureInset} />
 
 <Navbar />
+<div class="sr-only" aria-live="polite" data-survey-announce>{announcement}</div>
 <main>
   <section class="container py-24 sm:py-32">
     <p class="text-lg text-primary text-center mb-2 tracking-wider">Get involved</p>
-    <h1 class="text-3xl md:text-4xl text-center font-bold mb-4">PyPSA User Survey 2026</h1>
+    <h1 class="text-3xl md:text-4xl text-center font-bold mb-4">{def.title}</h1>
     <p class="text-center text-muted-foreground text-balance mb-12">
-      {#if phase === "welcome" || phase === "survey" || phase === "loading" || phase === "loadFailed"}
-        Your answers are kept in this browser until you submit
-      {/if}
+      <span data-survey-subtitle="default"
+        >Your answers are kept in this browser until you submit</span
+      >
+      <span data-survey-subtitle="nostorage"
+        >Your browser blocks storage, so answers are kept only until you leave this page.</span
+      >
+      <span data-survey-subtitle="closed">Thank you to everyone who took part</span>
     </p>
 
-    {#if phase === "closed"}
-      <div class="mx-auto max-w-3xl text-center" data-survey-state="closed">
+    {#if phase === "closed" || phase === "loading"}
+      <div
+        class="mx-auto max-w-3xl text-center"
+        class:survey-closed-prepaint={phase === "loading"}
+        data-survey-state="closed"
+      >
         <h2 class="text-2xl font-semibold mb-3">The survey is closed</h2>
         <p class="text-lg text-muted-foreground">
           Thank you to everyone who took part. We will publish the results on pypsa.org and announce
           them on the mailing list, Discord and GitHub.
         </p>
       </div>
-    {:else if phase === "corrupt"}
+    {/if}
+    {#if phase === "corrupt"}
       <div class="mx-auto max-w-3xl" role="alert" data-survey-state="corrupt">
         <h2 class="text-2xl font-semibold mb-3">We could not read your saved answers</h2>
         <p class="text-muted-foreground mb-6">
@@ -179,7 +282,7 @@
       </div>
     {:else if phase === "completed"}
       <div class="mx-auto max-w-3xl" data-survey-state="completed">
-        <h2 class="text-2xl font-semibold mb-3">Thank you</h2>
+        <h2 class="text-2xl font-semibold mb-3" data-survey-thanks>Thank you</h2>
         <p class="text-lg text-muted-foreground mb-6">{def.thankYou.text}</p>
         <p class="flex flex-wrap items-center gap-3">
           <span
@@ -191,11 +294,13 @@
           <Button variant="outline" class="h-11 sm:h-10" onclick={copyLink}>
             {copied ? "Copied" : def.thankYou.copyLabel}
           </Button>
-          {#if copyFailed}
-            <span class="text-sm text-muted-foreground" role="status">
-              Copy failed. Please copy the link above.
-            </span>
-          {/if}
+          <span class="text-sm text-muted-foreground" role="status"
+            >{copied
+              ? "Copied"
+              : copyFailed
+                ? "Copy failed. Please copy the link above."
+                : ""}</span
+          >
         </p>
       </div>
     {:else if phase === "loadFailed"}
@@ -208,16 +313,6 @@
       </div>
     {:else if phase === "survey"}
       <div class="mx-auto max-w-6xl" data-survey-state="survey">
-        {#if saveFailed}
-          <p
-            role="alert"
-            class="mb-4 rounded-md border border-destructive p-3 text-sm"
-            data-survey-save-error
-          >
-            Your answers could not be saved in this browser. If you reload or close this page they
-            will be lost.
-          </p>
-        {/if}
         <div bind:this={top} class="scroll-mt-28 mb-6">
           {#if nav}
             <SurveyStrip {parts} current={nav.current} reached={nav.reached} />
@@ -242,33 +337,64 @@
               </div>
             {/if}
             <div class="survey-host" bind:this={container}></div>
-            {#if submit.kind === "retry" || submit.kind === "rejected"}
-              <div
-                style:margin-left="{inset.left}px"
-                style:margin-right="{inset.right}px"
-                role="alert"
-                class="mt-4 flex flex-wrap items-center gap-3 rounded-md border border-destructive p-3"
-                data-survey-submit-error
-              >
-                <span>{submit.message}</span>
-                {#if submit.kind === "retry"}
-                  <Button class="h-11" onclick={() => mounted?.retry()}>Retry</Button>
-                {/if}
-              </div>
-            {:else if submit.kind === "sending"}
-              <p
-                style:margin-left="{inset.left}px"
-                class="mt-4 text-sm text-muted-foreground"
-                role="status"
-              >
-                Sending your answers…
-              </p>
-            {/if}
+            <div
+              style:margin-left="{inset.left}px"
+              style:margin-right="{inset.right}px"
+              role="alert"
+              data-survey-submit-error
+            >
+              {#if submit.kind === "retry" || submit.kind === "rateLimited" || submit.kind === "rejected"}
+                <div
+                  class="mt-4 flex flex-wrap items-center gap-3 rounded-md border border-destructive p-3"
+                >
+                  <span>{submit.message}</span>
+                  {#if submit.kind === "retry"}
+                    <Button class="h-11" onclick={() => mounted?.retry()}>Retry</Button>
+                  {:else if submit.kind === "rateLimited"}
+                    <Button
+                      class="h-11 disabled:border disabled:bg-muted disabled:text-foreground disabled:opacity-100"
+                      disabled={countdown > 0}
+                      onclick={() => mounted?.retry()}
+                    >
+                      {countdown > 0 ? `Retry in ${countdown}s` : "Retry"}
+                    </Button>
+                  {/if}
+                </div>
+              {/if}
+            </div>
+            <p
+              style:margin-left="{inset.left}px"
+              class="text-sm text-muted-foreground {submit.kind === 'sending' ? 'mt-4' : ''}"
+              role="status"
+            >
+              {submit.kind === "sending" ? "Sending your answers…" : ""}
+            </p>
           </div>
         </div>
       </div>
-    {:else}
-      <div class="mx-auto max-w-3xl" data-survey-state={phase}>
+    {:else if phase === "starting"}
+      <div
+        class="survey-skeleton mx-auto max-w-3xl"
+        style:min-height={skeletonHeight ? `${skeletonHeight}px` : undefined}
+        role="status"
+        aria-busy="true"
+        data-survey-state="starting"
+      >
+        <Button size="lg" disabled>Loading…</Button>
+      </div>
+    {:else if phase === "welcome" || phase === "before" || phase === "loading"}
+      {#if phase === "loading"}
+        <div
+          class="survey-skeleton survey-skeleton-prepaint mx-auto max-w-3xl"
+          aria-hidden="true"
+        ></div>
+      {/if}
+      <div
+        class="mx-auto max-w-3xl"
+        bind:this={welcome}
+        data-survey-welcome
+        data-survey-state={phase}
+      >
         <h2 class="text-2xl font-semibold mb-3">{w.title}</h2>
         {#each w.intro as paragraph (paragraph)}
           <p class="text-lg text-muted-foreground mb-4">{paragraph}</p>
@@ -294,7 +420,9 @@
         {#if phase === "before"}
           <p class="font-semibold" data-survey-opens>The survey opens on {day(def.opens)}.</p>
         {:else if phase === "welcome"}
-          <Button size="lg" onclick={() => start(true)}>{w.startLabel}</Button>
+          <Button size="lg" onclick={() => start(true)} onpointerenter={prefetch} onfocus={prefetch}
+            >{w.startLabel}</Button
+          >
         {/if}
       </div>
     {/if}

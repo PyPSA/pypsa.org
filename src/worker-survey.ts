@@ -1,6 +1,13 @@
 /** `POST /api/survey`: validates a survey response and stores it in D1. */
 // Wrangler bundles this outside SvelteKit, so imports stay relative.
-import { HONEYPOT, allowedAnswerKeys, isOpen, waves } from "./lib/survey/wave";
+import {
+  HONEYPOT,
+  isOpen,
+  isRecord,
+  validateResponse,
+  waves,
+  type ErrorCode,
+} from "./lib/survey/wave";
 
 export interface SurveyEnv {
   SURVEY_DB: {
@@ -9,13 +16,27 @@ export interface SurveyEnv {
   SURVEY_RATE_LIMIT: { limit(options: { key: string }): Promise<{ success: boolean }> };
 }
 
-export const MAX_BODY_BYTES = 64 * 1024;
+export const MAX_BODY_BYTES = 256 * 1024;
 
-const json = (status: number, error?: string, headers?: Record<string, string>) =>
-  new Response(error ? JSON.stringify({ error }) : JSON.stringify({ ok: true }), {
+const STATUS: Partial<Record<ErrorCode, number>> = {
+  unsupported_media_type: 415,
+  method_not_allowed: 405,
+  rate_limited: 429,
+  payload_too_large: 413,
+  wave_closed: 403,
+  storage_failed: 500,
+};
+
+const reply = (status: number, headers?: Record<string, string>, body: unknown = { ok: true }) =>
+  new Response(JSON.stringify(body), {
     status,
     headers: { "Content-Type": "application/json", ...headers },
   });
+
+const fail = (code: ErrorCode, headers?: Record<string, string>) =>
+  reply(STATUS[code] ?? 400, headers, { error: code });
+
+const JSON_TYPE = /^application\/json(\s*;\s*charset=[\w-]+)?$/i;
 
 /** Body text, or null once it exceeds the cap. Works without a Content-Length header. */
 async function readCapped(request: Request): Promise<string | null> {
@@ -44,49 +65,39 @@ async function readCapped(request: Request): Promise<string | null> {
   return new TextDecoder().decode(all);
 }
 
-const isRecord = (v: unknown): v is Record<string, unknown> =>
-  typeof v === "object" && v !== null && !Array.isArray(v);
-
 export async function handleSurvey(
   request: Request,
   env: SurveyEnv,
   now: Date = new Date()
 ): Promise<Response> {
-  if (request.method !== "POST") return json(405, "method not allowed", { Allow: "POST" });
-  if (!(request.headers.get("Content-Type") ?? "").toLowerCase().startsWith("application/json"))
-    return json(415, "expected application/json");
+  if (request.method !== "POST") return fail("method_not_allowed", { Allow: "POST" });
+  if (!JSON_TYPE.test(request.headers.get("Content-Type") ?? ""))
+    return fail("unsupported_media_type");
 
   const { success } = await env.SURVEY_RATE_LIMIT.limit({
     key: request.headers.get("CF-Connecting-IP") ?? "unknown",
   });
-  if (!success) return json(429, "too many requests", { "Retry-After": "60" });
+  if (!success) return fail("rate_limited", { "Retry-After": "60" });
 
   const text = await readCapped(request);
-  if (text === null) return json(413, "payload too large");
+  if (text === null) return fail("payload_too_large");
 
   let body: unknown;
   try {
     body = JSON.parse(text);
   } catch {
-    return json(400, "malformed JSON");
+    return fail("malformed_json");
   }
-  if (!isRecord(body)) return json(400, "expected a JSON object");
+  if (!isRecord(body)) return fail("not_object");
 
-  if (body[HONEYPOT]) return json(400, "rejected");
+  // A bot filled the hidden field: pretend success and store nothing.
+  if (body[HONEYPOT]) return reply(201);
 
   const def = typeof body.wave === "string" ? waves[body.wave] : undefined;
-  if (!def) return json(400, "unknown wave");
-  if (!isOpen(def, now)) return json(403, "wave closed");
-  if (body.version !== def.version) return json(400, "wrong version");
-
-  const { seconds, section_order: sectionOrder, answers } = body;
-  if (seconds !== null && !(Number.isInteger(seconds) && (seconds as number) >= 0))
-    return json(400, "invalid seconds");
-  if (!Array.isArray(sectionOrder) || !sectionOrder.every((s) => typeof s === "string"))
-    return json(400, "invalid section_order");
-  if (!isRecord(answers)) return json(400, "invalid answers");
-  const allowed = allowedAnswerKeys(def);
-  if (Object.keys(answers).some((k) => !allowed.has(k))) return json(400, "unknown answer key");
+  if (!def) return fail("unknown_wave");
+  if (!isOpen(def, now)) return fail("wave_closed");
+  const checked = validateResponse(def, body);
+  if (!checked.ok) return fail(checked.code);
 
   try {
     await env.SURVEY_DB.prepare(
@@ -97,14 +108,14 @@ export async function handleSurvey(
         def.wave,
         def.version,
         now.toISOString(),
-        seconds,
-        JSON.stringify(sectionOrder),
-        JSON.stringify(answers)
+        body.seconds,
+        JSON.stringify(body.section_order),
+        JSON.stringify(body.answers)
       )
       .run();
   } catch (error) {
     console.error("survey: D1 insert failed", error);
-    return json(500, "storage failed");
+    return fail("storage_failed");
   }
-  return json(201);
+  return reply(201);
 }

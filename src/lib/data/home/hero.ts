@@ -1,4 +1,5 @@
 import { DOCS_BASE_URL } from "../../config";
+import { surveyMeta } from "$lib/survey/current";
 
 export const hero = {
   event: {
@@ -8,7 +9,7 @@ export const hero = {
   },
   survey: {
     label: "Survey",
-    text: "PyPSA User Survey 2026: 10 minutes to shape our roadmap",
+    text: surveyMeta.pill,
     href: "/survey",
   },
   headline: {

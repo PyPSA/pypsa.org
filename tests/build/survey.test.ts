@@ -15,6 +15,19 @@ describe("/survey", () => {
     expect(text).toContain("10 to 15 minutes");
   });
 
+  it("keeps the welcome marker and a non-empty subtitle in the prerender", () => {
+    const root = parse(html());
+    const welcome = root.querySelector("[data-survey-welcome]");
+    expect(welcome?.text).toContain("Help shape the next year of PyPSA");
+    const subtitles = root.querySelectorAll("[data-survey-subtitle]");
+    expect(subtitles.map((e) => e.getAttribute("data-survey-subtitle"))).toEqual([
+      "default",
+      "nostorage",
+      "closed",
+    ]);
+    expect(subtitles.every((e) => norm(e.text).length > 0)).toBe(true);
+  });
+
   it("has a Markdown mirror with the welcome copy and the privacy link", () => {
     const md = readBuilt("survey.md");
     expect(md).toMatch(/^# PyPSA User Survey 2026/);
@@ -56,7 +69,7 @@ describe("survey entry points", () => {
 });
 
 describe("SurveyJS bundle isolation", () => {
-  const SURVEY_MARKER = /survey-core has version|SurveyModel/;
+  const SURVEY_MARKER = /survey-core has version|SurveyModel|q3_6_other/;
   const surveyChunks = new Set(appJsFiles().filter((f) => SURVEY_MARKER.test(readBuilt(f))));
 
   /** Static imports of a built JS file; dynamic `import(...)` calls are not followed. */
@@ -93,5 +106,23 @@ describe("SurveyJS bundle isolation", () => {
 
   it("the reachability walk is not vacuous", () => {
     expect(reachable("index.html").size).toBeGreaterThan(3);
+  });
+});
+
+describe("site chrome", () => {
+  it.each(["privacy", "contact", "legal", "404"])("%s.html has a <main>", (page) => {
+    expect(parse(readBuilt(`${page}.html`)).querySelector("main")).not.toBeNull();
+  });
+
+  it("wraps the banner in a labelled region", () => {
+    const region = parse(readBuilt("index.html")).querySelector('section[aria-label="User survey"]');
+    expect(region?.querySelector("#survey-banner")).not.toBeNull();
+  });
+
+  it("does not load the gurubase script on /survey", () => {
+    const srcs = parse(readBuilt("survey.html"))
+      .querySelectorAll("script")
+      .map((s) => s.getAttribute("src") ?? "");
+    expect(srcs.some((s) => s.includes("gurubase"))).toBe(false);
   });
 });

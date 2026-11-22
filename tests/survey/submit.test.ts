@@ -1,6 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { submitResponse } from "../../src/lib/survey/submit";
+import type { ErrorCode } from "../../src/lib/survey/wave";
+import { errorCopy, submitResponse } from "../../src/lib/survey/submit";
 
+const CODES: ErrorCode[] = [
+  "unsupported_media_type",
+  "method_not_allowed",
+  "rate_limited",
+  "payload_too_large",
+  "malformed_json",
+  "not_object",
+  "unknown_wave",
+  "wave_closed",
+  "wrong_version",
+  "invalid_seconds",
+  "invalid_section_order",
+  "invalid_answers",
+  "unknown_answer_key",
+  "invalid_choice",
+  "invalid_matrix_cell",
+  "invalid_number",
+  "text_too_long",
+  "missing_required",
+  "too_many_top3",
+  "too_many_picks",
+  "storage_failed",
+];
 const payload = { wave: "w" };
 const respond =
   (status: number, body: unknown = {}) =>
@@ -35,18 +59,49 @@ describe("submitResponse", () => {
     expect((await submitResponse(payload, respond(503, "<html>"))).kind).toBe("retry");
   });
 
-  it("shows the Worker error text for 429 and other 4xx", async () => {
-    expect(await submitResponse(payload, respond(429, { error: "too many requests" }))).toEqual({
-      kind: "rejected",
-      message: "too many requests",
-    });
-    const closed = await submitResponse(payload, respond(403, { error: "wave closed" }));
-    expect(closed).toMatchObject({ kind: "rejected", message: "wave closed" });
+  it("maps each error code to copy that differs from the code", () => {
+    for (const code of CODES) {
+      const copy = errorCopy(code);
+      expect(copy).not.toBe(code);
+      expect(copy).not.toContain("_");
+    }
   });
 
-  it("falls back to a generic message when a 4xx body is not JSON", async () => {
+  it("gives generic copy with the contact address for an unknown code", () => {
+    expect(errorCopy("nope")).toBe(
+      "The survey could not be submitted. Please contact contact@pypsa.org."
+    );
+  });
+
+  it("maps a 4xx Worker code to friendly copy", async () => {
+    const r = await submitResponse(payload, respond(403, { error: "wave_closed" }));
+    expect(r).toEqual({ kind: "rejected", message: errorCopy("wave_closed") });
+  });
+
+  it("returns rateLimited with retryAfter from the header", async () => {
+    const res = async () =>
+      new Response('{"error":"rate_limited"}', { status: 429, headers: { "Retry-After": "30" } });
+    expect(await submitResponse(payload, res)).toEqual({
+      kind: "rateLimited",
+      message: "Too many submissions from your network, try again in a minute.",
+      retryAfter: 30,
+    });
+  });
+
+  it("defaults retryAfter to 60 and clamps it to 1..600", async () => {
+    const at = async (h?: string) =>
+      (await submitResponse(
+        payload,
+        async () => new Response("{}", { status: 429, headers: h ? { "Retry-After": h } : {} })
+      )) as { retryAfter: number };
+    expect((await at()).retryAfter).toBe(60);
+    expect((await at("abc")).retryAfter).toBe(60);
+    expect((await at("0")).retryAfter).toBe(1);
+    expect((await at("9999")).retryAfter).toBe(600);
+  });
+
+  it("falls back to generic copy when a 4xx body is not JSON", async () => {
     const r = await submitResponse(payload, respond(400, "nope"));
-    expect(r.kind).toBe("rejected");
-    expect((r as { message: string }).message).toMatch(/400/);
+    expect(r).toEqual({ kind: "rejected", message: errorCopy("nope") });
   });
 });

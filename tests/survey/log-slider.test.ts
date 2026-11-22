@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { Model } from "survey-core";
 import { waves } from "../../src/lib/survey/wave";
 import { registerLogSlider } from "../../src/lib/survey/log-slider";
+import { logStep } from "../../src/lib/survey/log-slider-math";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const def = waves["2026-h2"];
@@ -60,5 +61,29 @@ describe("log slider widget", () => {
     widget.willUnmount(question);
     question.value = cfg.min;
     expect(Number(range.value)).toBe(1000);
+  });
+});
+
+describe("logStep", () => {
+  const r = { min: 1, max: 10000 };
+  it("moves a decade in 20 notches", () => {
+    expect(logStep(1, r, 20)).toBe(10);
+    expect(logStep(10, r, 20)).toBe(100);
+    expect(logStep(100, r, -20)).toBe(10);
+    expect(logStep(10, r, -20)).toBe(1);
+  });
+  it("always moves at least one whole number", () => {
+    expect(logStep(1, r, 1)).toBe(2);
+    expect(logStep(2, r, -1)).toBe(1);
+  });
+  it("clamps at min and max", () => {
+    expect(logStep(1, r, -1)).toBe(1);
+    expect(logStep(10000, r, 1)).toBe(10000);
+    expect(logStep(5000, r, 40)).toBe(10000);
+  });
+  it("treats 0 as below the range", () => {
+    expect(logStep(0, r, 1)).toBe(1);
+    expect(logStep(0, r, -1)).toBe(1);
+    expect(logStep(0, { min: 10, max: 1000 }, 21)).toBe(100);
   });
 });

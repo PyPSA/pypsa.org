@@ -1,6 +1,7 @@
 // Browser-only, call once before the survey renders.
-import { CustomWidgetCollection, type Question } from "survey-core";
-import { logToValue, valueToLog } from "./log-slider-math";
+import { CustomWidgetCollection, type Model, type Question } from "survey-core";
+import { NOTCHES_PER_DECADE, logStep, logToValue, valueToLog } from "./log-slider-math";
+import { holdSaves } from "./model";
 import type { WaveDefinition } from "./wave";
 
 const STEPS = 1000;
@@ -46,6 +47,34 @@ export function registerLogSlider(def: Pick<WaveDefinition, "sliders">): void {
       range.addEventListener("input", () => {
         question.value = logToValue(Number(range.value) / STEPS, cfg);
       });
+      // One notch per arrow press, a decade per PageUp/PageDown, instead of 1/1000th of the track.
+      const KEY_NOTCHES: Record<string, number> = {
+        ArrowUp: 1,
+        ArrowRight: 1,
+        ArrowDown: -1,
+        ArrowLeft: -1,
+        PageUp: NOTCHES_PER_DECADE,
+        PageDown: -NOTCHES_PER_DECADE,
+      };
+      range.addEventListener("keydown", (e) => {
+        if (e.altKey || e.ctrlKey || e.metaKey) return;
+        let next: number;
+        if (e.key === "Home") next = cfg.min;
+        else if (e.key === "End") next = cfg.max;
+        else if (e.key in KEY_NOTCHES)
+          next = logStep(Number(question.value), cfg, KEY_NOTCHES[e.key]);
+        else return;
+        e.preventDefault();
+        question.value = next;
+      });
+      // A drag fires many input events, so saving waits for its end.
+      const model = question.survey as Model;
+      const hold = (on: boolean) => () => model && holdSaves(model, on);
+      range.addEventListener("pointerdown", hold(true));
+      range.addEventListener("pointerup", hold(false));
+      range.addEventListener("pointercancel", hold(false));
+      range.addEventListener("lostpointercapture", hold(false));
+      range.addEventListener("change", hold(false));
       host.parentElement.insertBefore(wrap, host);
       wrap.append(range, label);
       sync();

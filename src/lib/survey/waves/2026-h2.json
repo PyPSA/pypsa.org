@@ -1,11 +1,4 @@
 {
-  "wave": "2026-h2",
-  "version": 1,
-  "opens": "2026-11-18T00:00:00+01:00",
-  "closes": "2026-12-14T00:00:00+01:00",
-  "contact": "contact@pypsa.org",
-  "retention": "Raw responses are deleted 12 months after the survey closes; aggregated results are kept.",
-  "placeholders": ["opens", "retention"],
   "welcome": {
     "title": "Help shape the next year of PyPSA",
     "intro": [
@@ -41,7 +34,7 @@
       ],
       [
         {
-          "text": "The survey closes on 13 December 2026."
+          "text": "The survey closes on {closes}."
         }
       ]
     ],
@@ -117,7 +110,6 @@
     }
   },
   "survey": {
-    "title": "PyPSA User Survey 2026",
     "showTitle": false,
     "firstPageIsStartPage": false,
     "showQuestionNumbers": "off",
@@ -1246,7 +1238,6 @@
             "type": "checkbox",
             "name": "q2_1",
             "title": "What do you use PyPSA for?",
-            "choicesOrder": "random",
             "showOtherItem": true,
             "otherText": "Other:",
             "choices": [
@@ -1501,7 +1492,6 @@
             "title": "Which features released in the last two years have you used, and which were most valuable?",
             "description": "Tick what you have used. Then mark up to three features that made the biggest difference for your work. Tick \"New to me\" if you did not know a feature existed.",
             "visibleIf": "{q1_3} != 'not_used'",
-            "rowOrder": "random",
             "columns": [
               {
                 "name": "used",
@@ -1615,7 +1605,6 @@
             "type": "matrix",
             "name": "q3_1",
             "title": "How important is this for your work in the next year?",
-            "rowOrder": "random",
             "columns": [
               {
                 "value": "1",
@@ -1696,7 +1685,6 @@
             "type": "matrix",
             "name": "q3_2",
             "title": "How important is this for your work in the next year?",
-            "rowOrder": "random",
             "columns": [
               {
                 "value": "1",
@@ -1777,7 +1765,6 @@
             "type": "matrix",
             "name": "q3_3",
             "title": "How important is this for your work in the next year?",
-            "rowOrder": "random",
             "columns": [
               {
                 "value": "1",
@@ -1858,7 +1845,6 @@
             "type": "matrix",
             "name": "q3_4",
             "title": "How important is this for your work in the next year?",
-            "rowOrder": "random",
             "columns": [
               {
                 "value": "1",
@@ -1929,7 +1915,6 @@
             "type": "matrix",
             "name": "q3_5",
             "title": "How important is this for your work in the next year?",
-            "rowOrder": "random",
             "columns": [
               {
                 "value": "1",
@@ -2035,7 +2020,8 @@
               },
               {
                 "value": "no",
-                "text": "No"
+                "text": "No",
+                "isExclusive": true
               }
             ]
           },
@@ -2107,7 +2093,6 @@
             "type": "matrix",
             "name": "q3_6",
             "title": "How important is this for your work in the next year?",
-            "rowOrder": "random",
             "columns": [
               {
                 "value": "1",
@@ -2172,7 +2157,6 @@
             "type": "checkbox",
             "name": "q3_7",
             "title": "Of all the roadmap features, which three would help your work most?",
-            "choicesOrder": "random",
             "maxSelectedChoices": 3,
             "choices": [
               {

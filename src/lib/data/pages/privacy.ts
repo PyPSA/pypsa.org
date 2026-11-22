@@ -1,5 +1,6 @@
 import type { PageData } from "./types";
-import { surveyWave } from "../../survey/current";
+import { surveyMeta } from "$lib/survey/current";
+import { lastOpenDay } from "$lib/survey/format";
 
 const email = { label: "contact@pypsa.org", href: "mailto:contact@pypsa.org" };
 
@@ -51,7 +52,7 @@ export const privacyPage: PageData = {
       paragraphs: [
         [
           { strong: "Purpose:" },
-          " the PyPSA User Survey helps us prioritise development. Taking part is voluntary, and you can skip any question.",
+          ` the ${surveyMeta.title} helps us prioritise development. Taking part is voluntary, and you can skip any question. The survey is open until ${lastOpenDay(surveyMeta.closes)}.`,
         ],
         [
           { strong: "What is collected:" },
@@ -61,12 +62,12 @@ export const privacyPage: PageData = {
           { strong: "Where it is stored:" },
           " answers are stored in Cloudflare D1, with EU jurisdiction. Cloudflare processes them on our behalf as a processor.",
         ],
-        [{ strong: "Retention:" }, ` ${surveyWave.retention}`],
+        [{ strong: "Retention:" }, ` ${surveyMeta.retention}`],
         [
           { strong: "Publication:" },
           " we publish results only in aggregate, never individual responses.",
         ],
-        [{ strong: "Contact:" }, " ", { label: surveyWave.contact, href: `mailto:${surveyWave.contact}` }, "."],
+        [{ strong: "Contact:" }, " ", { label: surveyMeta.contact, href: `mailto:${surveyMeta.contact}` }, "."],
       ],
     },
     {

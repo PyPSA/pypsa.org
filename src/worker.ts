@@ -64,7 +64,7 @@ async function markdown(request: Request, env: Env, url: URL): Promise<Response>
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
-    if (url.pathname === "/api/survey")
+    if (/^\/api\/survey\/?$/.test(url.pathname))
       return finish(await handleSurvey(request, env), url.pathname);
     const negotiable =
       (request.method === "GET" || request.method === "HEAD") && !hasExtension(url.pathname);

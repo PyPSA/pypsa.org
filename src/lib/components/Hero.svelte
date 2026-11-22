@@ -18,8 +18,7 @@
             <span class="mr-2">
               <Badge class="pointer-events-none bg-[#c30944] text-white">{hero.survey.label}</Badge>
             </span>
-            <span class="text-left">{hero.survey.text}</span>
-            <Icon name="arrow-right" class="size-4 ml-2 shrink-0" />
+            <span class="text-left">{hero.survey.text} →</span>
           </Badge>
         </a>
         <a href={hero.event.href} class="no-underline event-pill" data-event-pill>

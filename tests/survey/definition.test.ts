@@ -99,10 +99,31 @@ describe("definition lint", () => {
     expect(def.survey).not.toHaveProperty("showTOC");
     expect(def.survey).not.toHaveProperty("showProgressBar");
     expect(byName("q3_7").maxSelectedChoices).toBe(3);
-    expect(byName("q2_1").choicesOrder).toBe("random");
-    expect(byName("q2_9").rowOrder).toBe("random");
+    expect(byName("q2_1")).not.toHaveProperty("choicesOrder");
+    expect(byName("q2_9")).not.toHaveProperty("rowOrder");
     expect(byName("q1_1").isRequired).toBe(true);
     expect(byName("q1_2").isRequired).toBe(true);
+  });
+});
+
+describe("3.x rows match the questionnaire as title and explanation pairs", () => {
+  const rows = new Set<string>();
+  for (const line of readFileSync(
+    new URL("./questionnaire-2026-h2.md", import.meta.url),
+    "utf8"
+  ).split("\n")) {
+    const cells = line
+      .split("|")
+      .slice(1, -1)
+      .map((c) => c.trim());
+    if (line.startsWith("|") && cells.length === 2) rows.add(`${cells[0]}\u0000${cells[1]}`);
+  }
+  it("has every row as a {text, description} pair in the fixture", () => {
+    const bad: string[] = [];
+    for (let i = 1; i <= 6; i++)
+      for (const r of byName(`q3_${i}`).rows)
+        if (!rows.has(`${r.text}\u0000${r.description}`)) bad.push(r.value);
+    expect(bad).toEqual([]);
   });
 });
 

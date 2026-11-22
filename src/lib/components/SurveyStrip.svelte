@@ -21,9 +21,9 @@
       {#each part.pages as page (page.index)}
         <span
           class="h-1 flex-1 rounded-full {page.index === current
-            ? 'bg-primary/40'
+            ? 'bg-primary ring-2 ring-primary/40 ring-offset-1 ring-offset-background'
             : page.index <= reached
-              ? 'bg-primary'
+              ? 'bg-primary/60'
               : 'bg-border'}"
         ></span>
       {/each}

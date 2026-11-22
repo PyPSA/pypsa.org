@@ -15,7 +15,8 @@ import { privacyPage } from "$lib/data/pages/privacy";
 import { legalPage } from "$lib/data/pages/legal";
 import { notFoundPage } from "$lib/data/pages/notFound";
 import type { Inline, PageData } from "$lib/data/pages/types";
-import { surveyWave } from "$lib/survey/current";
+import { surveyMeta } from "$lib/survey/current";
+import { waves } from "$lib/survey/wave";
 import { formatDay as day } from "$lib/survey/format";
 import { dateRange } from "./dates";
 import { getRoute } from "./routes";
@@ -314,7 +315,7 @@ function eventMarkdown(e: EventData): string {
 
 function surveyMarkdown(): string {
   const route = getRoute("/survey")!;
-  const def = surveyWave;
+  const def = waves[surveyMeta.wave];
   const w = def.welcome;
   const segments = (parts: { text: string; href?: string }[]) =>
     parts.map((p) => (p.href ? `[${p.text}](${abs(p.href)})` : p.text)).join("");

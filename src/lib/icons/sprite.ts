@@ -102,6 +102,8 @@ export const icons: Record<string, IconDef> = {
     '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>'
   ),
   menu: lucide('<path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/>'),
+  check: lucide('<path d="M20 6 9 17l-5-5"/>'),
+  "chevron-down": lucide('<path d="m6 9 6 6 6-6"/>'),
   x: lucide('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),
   "external-link": lucide(
     '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'

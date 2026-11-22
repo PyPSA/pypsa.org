@@ -1,7 +1,5 @@
 <script lang="ts">
-  import Check from "lucide-svelte/icons/check";
-  import ChevronDown from "lucide-svelte/icons/chevron-down";
-  import X from "lucide-svelte/icons/x";
+  import Icon from "$lib/components/Icon.svelte";
   import type { OutlinePage, OutlinePart } from "$lib/survey/outline";
 
   const {
@@ -15,6 +13,14 @@
   let dialog = $state<HTMLDialogElement>();
   const here = $derived(parts.find((p) => p.pages.some((q) => q.index === current)));
   const herePage = $derived(here?.pages.find((q) => q.index === current));
+
+  // The sheet is hidden from lg up, so close it when the viewport grows past that.
+  $effect(() => {
+    const mq = window.matchMedia("(min-width:1024px)");
+    const onChange = () => mq.matches && dialog?.open && dialog.close();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  });
 
   function go(index: number) {
     dialog?.close();
@@ -39,14 +45,19 @@
   >
     <span>
       {#if part}
-        <span class="block text-[11px] font-normal uppercase tracking-wider text-muted-foreground"
+        <span class="block text-xs font-normal uppercase tracking-wider text-muted-foreground"
           >{part}</span
         >
       {/if}
       {page.title}
     </span>
     {#if state === "done"}
-      <Check class="ml-auto size-3.5 shrink-0 text-muted-foreground" aria-label="done" />
+      <Icon
+        name="check"
+        class="ml-auto size-3.5 shrink-0 text-muted-foreground"
+        aria-hidden="true"
+      />
+      <span class="sr-only">done</span>
     {/if}
   </button>
 {/snippet}
@@ -60,10 +71,10 @@
         {:else}
           <div
             class="border-l-2 border-border px-2.5 pb-1.5 pt-3.5 {part.pages[0].index > reached
-              ? 'opacity-60'
+              ? 'text-muted-foreground'
               : ''}"
           >
-            <span class="block text-[11px] uppercase tracking-wider text-muted-foreground"
+            <span class="block text-xs uppercase tracking-wider text-muted-foreground"
               >Part {part.n}</span
             >
             <span class="font-semibold">{part.title}</span>
@@ -97,7 +108,7 @@
       <span class="min-w-0 flex-1 truncate font-semibold"
         >{here.pages.length > 1 ? herePage?.title : here.title}</span
       >
-      <ChevronDown class="size-4 shrink-0" />
+      <Icon name="chevron-down" class="size-4 shrink-0" />
     </button>
   </div>
 {/if}
@@ -116,9 +127,9 @@
         type="button"
         onclick={() => dialog?.close()}
         aria-label="Close"
-        class="-m-2 p-2 text-muted-foreground"
+        class="-m-2 inline-flex size-11 items-center justify-center text-muted-foreground"
       >
-        <X class="size-5" />
+        <Icon name="x" class="size-5" />
       </button>
     </div>
     {@render list()}

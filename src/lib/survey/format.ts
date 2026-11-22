@@ -11,3 +11,7 @@ export const formatDay = (iso: string | number | Date): string => dayFormat.form
 
 /** The last day the survey is open: `closes` is exclusive, so the day before it starts. */
 export const lastOpenDay = (closes: string): string => formatDay(Date.parse(closes) - 1);
+
+/** Replaces every `{closes}` token with the last open day. */
+export const fillCloses = (text: string, closes: string): string =>
+  text.replaceAll("{closes}", lastOpenDay(closes));

@@ -7,7 +7,24 @@ import {
   waves,
 } from "../../src/lib/survey/wave";
 
+import { surveyMeta } from "../../src/lib/survey/current";
+
 const def = waves["2026-h2"];
+
+describe("single source of truth", () => {
+  it("states the last open day in the closing welcome bullet", () => {
+    const last = def.welcome.bullets
+      .at(-1)!
+      .map((s) => s.text)
+      .join("");
+    expect(last).toBe("The survey closes on 13 December 2026.");
+    expect(JSON.stringify(def.welcome)).not.toContain("{closes}");
+  });
+  it("takes the survey title from the metadata", () => {
+    expect(def.survey.title).toBe(surveyMeta.title);
+    expect(def.title).toBe(surveyMeta.title);
+  });
+});
 
 describe("isOpen", () => {
   it("is closed before the window opens", () => {
@@ -49,7 +66,7 @@ describe("allowedAnswerKeys", () => {
     expect(keys.has("q1_3-Comment")).toBe(false);
   });
   it("excludes the honeypot and panel names", () => {
-    expect(HONEYPOT).toBe("website");
+    expect(HONEYPOT).toBe("hp_field");
     expect(keys.has(HONEYPOT)).toBe(false);
     expect(keys.has("q2_6")).toBe(false);
   });
