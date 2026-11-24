@@ -68,7 +68,9 @@
     await tick();
     await new Promise((resolve) => requestAnimationFrame(resolve));
     if (run !== showRun) return;
-    top?.scrollIntoView({ block: "start" });
+    // The thank-you screen replaces the survey, so it starts from the top of the page.
+    if (phase === "completed") window.scrollTo({ top: 0 });
+    else top?.scrollIntoView({ block: "start" });
     const error = errorsPending
       ? container?.querySelector<HTMLElement>(".sd-question--error")
       : null;
@@ -244,7 +246,7 @@
   <section class="container py-24 sm:py-32">
     <p class="text-lg text-primary text-center mb-2 tracking-wider">Get involved</p>
     <h1 class="text-3xl md:text-4xl text-center font-bold mb-4">{def.title}</h1>
-    <p class="text-center text-muted-foreground text-balance mb-12">
+    <p class="text-center text-muted-foreground text-balance mb-12" hidden={phase === "completed"}>
       <span data-survey-subtitle="default"
         >Takes 10 to 15 minutes, open until {lastOpenDay(def.closes)}</span
       >
