@@ -281,7 +281,8 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0 0.5rem;
-  padding: 0.5rem 0;
+  /* Inset like the question title, the frame has no padding of its own here. */
+  padding: 0.5rem 1.5rem;
 }
 .survey-host .sd-root-modern--mobile [data-name="q2_9"] .sd-table__cell--row-text {
   flex: 0 0 100%;
@@ -294,7 +295,7 @@
   [data-name="q2_9"]
   .sd-table__cell:not(.sd-table__cell--row-text) {
   display: flex;
-  flex: 1 1 0;
+  flex: 1 1 auto;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
@@ -303,6 +304,7 @@
 }
 .survey-host .sd-root-modern--mobile [data-name="q2_9"] .sd-table__responsive-title {
   order: 2;
+  white-space: nowrap;
   font-size: 0.875rem;
   color: var(--sv-foreground);
 }
@@ -351,12 +353,18 @@
   opacity: 0.4;
 }
 
-/* Keeps a scrolled-to error clear of the navbar and the sticky section dropdown. */
+/* Keeps a scrolled-to error clear of the navbar, progress strip and section dropdown. */
 .survey-host .sd-question--error {
-  scroll-margin-top: 11rem;
+  scroll-margin-top: 12rem;
 }
 @media (min-width: 1024px) {
   .survey-host .sd-question--error {
     scroll-margin-top: 8rem;
   }
+}
+
+/* Headings get focus only from script, so a ring there reads as a stray box. */
+.survey-host .sd-page__title:focus,
+[data-survey-thanks]:focus {
+  outline: none;
 }

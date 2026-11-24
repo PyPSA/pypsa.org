@@ -233,7 +233,40 @@ export function createSurvey(def: WaveDefinition, opts: SurveyOptions): Model {
     // Scale columns read "1 Not relevant" to "5 Critical", the definition keeps the questionnaire's bare labels.
     const scale = columnNumbers.get(`${o.element?.name}\u0000${o.text}`);
     if (o.name === "text" && scale) o.html = `${scale} ${escapeHtml(o.text)}`;
+    // Plain text, since SurveyJS also puts this html into aria labels.
+    if (!o.html && o.text.includes("`")) o.html = escapeHtml(o.text.replaceAll("`", ""));
   });
+
+  // 3.7 offers only the features rated High or Critical, or all of them when none are.
+  const q37 = model.getQuestionByName("q3_7");
+  const highRated = () => {
+    const high = new Set<unknown>();
+    for (let i = 1; i <= 6; i++) {
+      const ratings = model.getValue(`q3_${i}`);
+      if (isRecord(ratings))
+        for (const [feature, r] of Object.entries(ratings))
+          if (r === "4" || r === "5") high.add(feature);
+    }
+    return high;
+  };
+  model.onShowingChoiceItem.add((_, o) => {
+    if (o.question.name !== "q3_7") return;
+    const high = highRated();
+    if (high.size) o.visible = high.has(o.item.value);
+  });
+  const syncQ37 = () => {
+    if (!q37 || model.currentPage?.name !== "p3_7") return;
+    const high = highRated();
+    q37.description = high.size
+      ? "From the features you rated High or Critical."
+      : "You rated no feature High or Critical, so all of them are listed.";
+    // Picks whose rating was lowered since are dropped.
+    if (high.size && Array.isArray(q37.value)) {
+      const kept = q37.value.filter((v: unknown) => high.has(v));
+      if (kept.length !== q37.value.length) q37.value = kept;
+    }
+  };
+  model.onCurrentPageChanged.add(syncQ37);
 
   // Once three rows are Top 3, the other rows' cells lock until one is unticked.
   const syncTop3 = () => {
@@ -314,6 +347,7 @@ export function createSurvey(def: WaveDefinition, opts: SurveyOptions): Model {
     save();
   });
   model.onCurrentPageChanged.add(save);
+  syncQ37();
 
   return model;
 }

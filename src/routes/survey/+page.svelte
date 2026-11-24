@@ -6,7 +6,7 @@
   import { Button } from "$lib/components/ui/button";
   import { isOpen, waves } from "$lib/survey/wave";
   import { surveyMeta } from "$lib/survey/current";
-  import { formatDay as day } from "$lib/survey/format";
+  import { formatDay as day, lastOpenDay } from "$lib/survey/format";
   import { hasSavedProgress, resetProgress } from "$lib/survey/progress";
   import { openStorage } from "$lib/survey/storage";
   import type { MountedSurvey, NavState, SubmitState } from "$lib/survey/mount";
@@ -250,7 +250,7 @@
     <h1 class="text-3xl md:text-4xl text-center font-bold mb-4">{def.title}</h1>
     <p class="text-center text-muted-foreground text-balance mb-12">
       <span data-survey-subtitle="default"
-        >Your answers are kept in this browser until you submit</span
+        >Takes 10 to 15 minutes, open until {lastOpenDay(def.closes)}</span
       >
       <span data-survey-subtitle="nostorage"
         >Your browser blocks storage, so answers are kept only until you leave this page.</span
@@ -313,12 +313,16 @@
       </div>
     {:else if phase === "survey"}
       <div class="mx-auto max-w-6xl" data-survey-state="survey">
-        <div bind:this={top} class="scroll-mt-28 mb-6">
+        <!-- Sticks at the viewport top so its background masks what scrolls behind the navbar. -->
+        <div class="sticky top-0 z-30 -mt-12 mb-3 bg-background pb-3 pt-[5.5rem]">
           {#if nav}
             <SurveyStrip {parts} current={nav.current} reached={nav.reached} />
           {/if}
         </div>
-        <div class="lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start lg:gap-8">
+        <div
+          bind:this={top}
+          class="scroll-mt-[6.5rem] lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start lg:gap-8"
+        >
           {#if nav}
             <SurveyNav {parts} current={nav.current} reached={nav.reached} onGo={goTo} />
           {/if}

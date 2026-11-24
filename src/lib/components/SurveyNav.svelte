@@ -90,12 +90,12 @@
   </ol>
 {/snippet}
 
-<nav aria-label="Survey sections" class="sticky top-28 hidden lg:block">
+<nav aria-label="Survey sections" class="sticky top-[7.5rem] hidden lg:block">
   {@render list()}
 </nav>
 
 {#if here}
-  <div class="sticky top-[5.5rem] z-10 -mt-2.5 mb-4 bg-background py-2.5 lg:hidden">
+  <div class="sticky top-[6.5rem] z-10 -mt-2.5 mb-4 bg-background py-2.5 lg:hidden">
     <button
       type="button"
       onclick={() => dialog?.showModal()}
