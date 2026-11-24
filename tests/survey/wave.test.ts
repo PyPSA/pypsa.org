@@ -82,7 +82,7 @@ describe("placeholders", () => {
       {
         name: "retention",
         value:
-          "Raw responses are deleted 12 months after the survey closes; aggregated results are kept.",
+          "raw responses are deleted 12 months after the survey closes, aggregated results are kept.",
       },
     ]);
   });

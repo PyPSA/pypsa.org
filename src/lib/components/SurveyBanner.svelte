@@ -34,7 +34,7 @@
         <span class="sm:hidden">{surveyMeta.banner.short} · </span>
         <a
           href="/survey"
-          class="font-semibold underline underline-offset-4 whitespace-nowrap sm:ml-1"
+          class="font-semibold underline underline-offset-4 whitespace-nowrap sm:ml-1 max-sm:inline-block max-sm:py-3"
         >
           <span class="sm:hidden">{surveyMeta.banner.cta} →</span>
           <span class="hidden sm:inline">Take the survey →</span>

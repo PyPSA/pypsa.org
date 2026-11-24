@@ -9,7 +9,7 @@ export const meta2026H2: WaveMeta = {
   closes: "2026-12-14T00:00:00+01:00",
   contact: "contact@pypsa.org",
   retention:
-    "Raw responses are deleted 12 months after the survey closes; aggregated results are kept.",
+    "raw responses are deleted 12 months after the survey closes, aggregated results are kept.",
   placeholders: ["opens", "retention"],
   banner: {
     full: "PyPSA User Survey 2026: help us decide what to build next. 10 to 15 minutes, open until {closes}.",

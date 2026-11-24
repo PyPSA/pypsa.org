@@ -25,7 +25,6 @@
     | "welcome"
     | "survey"
     | "completed"
-    | "corrupt"
     | "loadFailed";
   let phase = $state<Phase>("loading");
   let submit = $state<SubmitState>({ kind: "idle" });
@@ -192,26 +191,21 @@
   const openState = (): SurveyState => (opened.persistent() ? "open" : "nostorage");
 
   function decide() {
+    let resume = false;
     try {
-      if (hasSavedProgress(def, opened.storage)) {
-        setState("resume");
-        void start(false);
-      } else {
-        setState(openState());
-        phase = "welcome";
-      }
+      resume = hasSavedProgress(def, opened.storage);
     } catch (e) {
-      if (e instanceof Error && e.name === "SavedProgressError") {
-        setState(openState());
-        phase = "corrupt";
-      } else throw e;
+      if (!(e instanceof Error && e.name === "SavedProgressError")) throw e;
+      // Unreadable answers are of no use to anyone, so drop them and start fresh.
+      resetProgress(def, opened.storage);
     }
-  }
-
-  function startOver() {
-    resetProgress(def, opened.storage);
-    setState(openState());
-    phase = "welcome";
+    if (resume) {
+      setState("resume");
+      void start(false);
+    } else {
+      setState(openState());
+      phase = "welcome";
+    }
   }
 
   onMount(() => {
@@ -271,16 +265,7 @@
         </p>
       </div>
     {/if}
-    {#if phase === "corrupt"}
-      <div class="mx-auto max-w-3xl" role="alert" data-survey-state="corrupt">
-        <h2 class="text-2xl font-semibold mb-3">We could not read your saved answers</h2>
-        <p class="text-muted-foreground mb-6">
-          The answers saved in this browser are damaged. You can start the survey over; the damaged
-          answers will be discarded.
-        </p>
-        <Button class="h-11" onclick={startOver}>Start over</Button>
-      </div>
-    {:else if phase === "completed"}
+    {#if phase === "completed"}
       <div class="mx-auto max-w-3xl" data-survey-state="completed">
         <h2 class="text-2xl font-semibold mb-3" data-survey-thanks>Thank you</h2>
         <p class="text-lg text-muted-foreground mb-6">{def.thankYou.text}</p>
@@ -329,7 +314,8 @@
           <div>
             {#if multi}
               <div style:margin-left="{titleLeft}px" style:margin-right="{inset.right}px">
-                <p class="text-sm uppercase tracking-wider text-primary">
+                <!-- The section button names the part on mobile already. -->
+                <p class="text-sm uppercase tracking-wider text-primary max-lg:hidden">
                   Part {multi.n} · {multi.title}
                 </p>
                 {#if multi.pages[0].index === nav?.current}

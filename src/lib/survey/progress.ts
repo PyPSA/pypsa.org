@@ -18,7 +18,7 @@ export interface SavedProgress {
 
 export const storageKey = (def: Pick<WaveDefinition, "wave">) => `pypsa-survey:${def.wave}`;
 
-/** Thrown when the saved entry exists but cannot be used. The page offers a restart via `resetProgress`. */
+/** Thrown when the saved entry exists but cannot be used. The page discards it via `resetProgress`. */
 export class SavedProgressError extends Error {
   constructor(message: string, options?: { cause?: unknown }) {
     super(message, options);
