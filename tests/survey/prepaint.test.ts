@@ -9,7 +9,14 @@ const def = {
   closes: "2026-12-14T00:00:00+01:00",
 };
 
-function run(now: string, stored: string | null, throwing = false, path = "/", progress = false) {
+function run(
+  now: string,
+  stored: string | null,
+  throwing = false,
+  path = "/",
+  progress = false,
+  host = "www.pypsa.org"
+) {
   const attrs: Record<string, string> = {};
   const doc = { documentElement: { setAttribute: (k: string, v: string) => (attrs[k] = v) } };
   const ls = {
@@ -31,7 +38,7 @@ function run(now: string, stored: string | null, throwing = false, path = "/", p
   new Function("document", "localStorage", "location", "Date", prepaintScript(def))(
     doc,
     ls,
-    { pathname: path },
+    { pathname: path, hostname: host },
     FakeDate
   );
   return attrs;
@@ -69,6 +76,11 @@ describe("prepaintScript survey state", () => {
     expect(state(mid, true)).toBe("nostorage");
     expect(state("2026-11-17T00:00:00Z", true, "/survey", true)).toBe("before");
     expect(state("2026-12-14T00:00:00Z", true, "/survey", true)).toBe("closed");
+  });
+  it("ignores the dates off the live host", () => {
+    const early = run("2026-11-17T00:00:00Z", null, false, "/survey", false, "preview.workers.dev");
+    expect(early["data-survey-open"]).toBe("true");
+    expect(early["data-survey-state"]).toBe("open");
   });
   it("accepts a trailing slash", () => {
     expect(state("2026-12-01T10:00:00Z", false, "/survey/")).toBe("open");

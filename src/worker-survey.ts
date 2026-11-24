@@ -14,6 +14,8 @@ export interface SurveyEnv {
     prepare(sql: string): { bind(...values: unknown[]): { run(): Promise<unknown> } };
   };
   SURVEY_RATE_LIMIT: { limit(options: { key: string }): Promise<{ success: boolean }> };
+  /** "1" on preview deploys, which take responses outside the open window. */
+  SURVEY_TEST?: string;
 }
 
 export const MAX_BODY_BYTES = 256 * 1024;
@@ -95,7 +97,7 @@ export async function handleSurvey(
 
   const def = typeof body.wave === "string" ? waves[body.wave] : undefined;
   if (!def) return fail("unknown_wave");
-  if (!isOpen(def, now)) return fail("wave_closed");
+  if (env.SURVEY_TEST !== "1" && !isOpen(def, now)) return fail("wave_closed");
   const checked = validateResponse(def, body);
   if (!checked.ok) return fail(checked.code);
 

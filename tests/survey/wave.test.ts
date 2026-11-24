@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  HONEYPOT,
-  allowedAnswerKeys,
-  isOpen,
-  placeholders,
-  waves,
-} from "../../src/lib/survey/wave";
+import { HONEYPOT, allowedAnswerKeys, isOpen, waves } from "../../src/lib/survey/wave";
 
 import { surveyMeta } from "../../src/lib/survey/current";
 
@@ -28,10 +22,10 @@ describe("single source of truth", () => {
 
 describe("isOpen", () => {
   it("is closed before the window opens", () => {
-    expect(isOpen(def, new Date("2026-11-17T22:59:59Z"))).toBe(false);
+    expect(isOpen(def, new Date("2026-11-24T22:59:59Z"))).toBe(false);
   });
   it("is open from the opening instant", () => {
-    expect(isOpen(def, new Date("2026-11-17T23:00:00Z"))).toBe(true);
+    expect(isOpen(def, new Date("2026-11-24T23:00:00Z"))).toBe(true);
   });
   it("is open inside the window, including the last day", () => {
     expect(isOpen(def, new Date("2026-12-01T12:00:00Z"))).toBe(true);
@@ -72,19 +66,6 @@ describe("allowedAnswerKeys", () => {
   });
   it("contains the free-text follow-ups of every rating section", () => {
     for (let i = 1; i <= 6; i++) expect(keys.has(`q3_${i}_other`)).toBe(true);
-  });
-});
-
-describe("placeholders", () => {
-  it("lists opens and retention with their provisional values", () => {
-    expect(placeholders(def)).toEqual([
-      { name: "opens", value: "2026-11-18T00:00:00+01:00" },
-      {
-        name: "retention",
-        value:
-          "raw responses are deleted 12 months after the survey closes, aggregated results are kept.",
-      },
-    ]);
   });
 });
 

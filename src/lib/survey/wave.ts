@@ -104,11 +104,6 @@ export function allowedAnswerKeys(def: WaveDefinition): Set<string> {
   return keys;
 }
 
-/** The provisional values still to be confirmed before launch. */
-export function placeholders(def: WaveDefinition): { name: string; value: string }[] {
-  return def.placeholders.map((name) => ({ name, value: def[name] }));
-}
-
 export type ErrorCode =
   | "unsupported_media_type"
   | "method_not_allowed"

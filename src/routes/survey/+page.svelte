@@ -5,6 +5,7 @@
   import Footer from "$lib/components/Footer.svelte";
   import { Button } from "$lib/components/ui/button";
   import { isOpen, waves } from "$lib/survey/wave";
+  import { LIVE_HOST } from "$lib/survey/meta";
   import { surveyMeta } from "$lib/survey/current";
   import { formatDay as day, lastOpenDay } from "$lib/survey/format";
   import { hasSavedProgress, resetProgress } from "$lib/survey/progress";
@@ -210,7 +211,8 @@
 
   onMount(() => {
     const now = new Date();
-    if (now.getTime() >= Date.parse(def.closes)) {
+    if (!LIVE_HOST.test(location.hostname)) decide();
+    else if (now.getTime() >= Date.parse(def.closes)) {
       setState("closed");
       phase = "closed";
     } else if (!isOpen(def, now)) {

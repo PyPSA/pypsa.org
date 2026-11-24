@@ -449,6 +449,20 @@ describe("POST /api/survey", () => {
     expect(rows).toHaveLength(0);
   });
 
+  it("stores outside the open window on a preview deploy", async () => {
+    vi.setSystemTime(new Date("2026-11-20T00:00:00Z"));
+    const res = await worker.fetch(
+      new Request("https://preview.workers.dev/api/survey", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "CF-Connecting-IP": "1.2.3.4" },
+        body: JSON.stringify(valid()),
+      }),
+      { ...surveyEnv(), SURVEY_TEST: "1" }
+    );
+    expect(res.status).toBe(201);
+    expect(rows).toHaveLength(1);
+  });
+
   it("rejects malformed JSON", async () => {
     const res = await post("{not json");
     expect(res.status).toBe(400);
