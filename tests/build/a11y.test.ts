@@ -6,7 +6,7 @@ import { buildPath, builtHtmlFiles, parse, readBuilt } from "./helpers";
 const norm = (s: string) => s.replace(/\s+/g, " ").trim().toLowerCase();
 
 describe("landmarks", () => {
-  it.each(["index.html", "roadmap.html", "events.html", "embed/contributors.html"])(
+  it.each(["index.html", "roadmap.html", "events.html", "survey.html", "embed/contributors.html"])(
     "%s has exactly one main",
     (file) => {
       expect(readBuilt(file).match(/<main[\s>]/g) ?? []).toHaveLength(1);

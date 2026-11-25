@@ -15,6 +15,9 @@ import { privacyPage } from "$lib/data/pages/privacy";
 import { legalPage } from "$lib/data/pages/legal";
 import { notFoundPage } from "$lib/data/pages/notFound";
 import type { Inline, PageData } from "$lib/data/pages/types";
+import { surveyMeta } from "$lib/survey/current";
+import { waves } from "$lib/survey/wave";
+import { formatDay as day } from "$lib/survey/format";
 import { dateRange } from "./dates";
 import { getRoute } from "./routes";
 
@@ -61,7 +64,11 @@ function htmlToMd(html: string): string {
 }
 
 function inline(parts: Inline): string {
-  return parts.map((p) => (typeof p === "string" ? p : `[${p.label}](${abs(p.href)})`)).join("");
+  return parts
+    .map((p) =>
+      typeof p === "string" ? p : "strong" in p ? `**${p.strong}**` : `[${p.label}](${abs(p.href)})`
+    )
+    .join("");
 }
 
 function header(title: string, summary: string, path?: string): string {
@@ -306,6 +313,20 @@ function eventMarkdown(e: EventData): string {
   return joinBlocks(blocks);
 }
 
+function surveyMarkdown(): string {
+  const route = getRoute("/survey")!;
+  const def = waves[surveyMeta.wave];
+  const w = def.welcome;
+  const segments = (parts: { text: string; href?: string }[]) =>
+    parts.map((p) => (p.href ? `[${p.text}](${abs(p.href)})` : p.text)).join("");
+  const blocks = [header(route.title, route.description, "/survey")];
+  blocks.push(`## ${w.title}\n`, ...w.intro.map((p) => `${p}\n`));
+  blocks.push(bullets(w.bullets.map(segments)));
+  blocks.push(`The survey opens on ${day(def.opens)}; the closing date is in the list above.\n`);
+  blocks.push(`${w.support}\n`, `${w.contactLine} ${def.contact}.\n`);
+  return joinBlocks(blocks);
+}
+
 /** Markdown for a registry route; throws when `path` has no mirror so the build fails. */
 export function markdownFor(path: string): string {
   const route = getRoute(path);
@@ -313,6 +334,7 @@ export function markdownFor(path: string): string {
   if (path === "/") return homeMarkdown();
   if (path === "/roadmap") return roadmapMarkdown();
   if (path === "/events") return eventsIndexMarkdown();
+  if (path === "/survey") return surveyMarkdown();
   if (path === "/contact") return pageMarkdown(contactPage, path);
   if (path === "/privacy") return pageMarkdown(privacyPage, path);
   if (path === "/legal") return pageMarkdown(legalPage, path);

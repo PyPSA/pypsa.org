@@ -1,10 +1,16 @@
 import { DOCS_BASE_URL } from "../../config";
+import { surveyMeta } from "$lib/survey/current";
 
 export const hero = {
   event: {
     label: "Event",
     text: "PyPSA User Meeting on 29 June 2026",
     href: "/events/4th-user-meeting",
+  },
+  survey: {
+    label: "Survey",
+    text: surveyMeta.pill,
+    href: "/survey",
   },
   headline: {
     before: "Welcome to the",

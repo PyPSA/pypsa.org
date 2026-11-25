@@ -1,6 +1,7 @@
 import { eventsData } from "$lib/data/events";
 import { roadmapData } from "$lib/data/roadmap";
 import { siteConfig } from "$lib/config/meta";
+import { surveyMeta } from "$lib/survey/current";
 import { dateRange } from "./dates";
 import { mdPathOf } from "./md-path";
 
@@ -55,6 +56,13 @@ const base: Base[] = [
     ogImage: e.bannerImage ? siteConfig.url + e.bannerImage : undefined,
     lastmod: e.date,
   })),
+  {
+    path: "/survey",
+    title: surveyMeta.title + " — " + siteConfig.name,
+    description:
+      "Tell us how you use PyPSA and which features matter most to you. The survey takes 10 to 15 minutes.",
+    lastmod: buildDate,
+  },
   {
     path: "/contact",
     title: "Contact — " + siteConfig.name,

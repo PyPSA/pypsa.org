@@ -2,14 +2,46 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script>
+      // When the browser blocks storage, mode-watcher would throw and stop hydration. An in-memory localStorage
+      // keeps the site working, and still throws for the survey's own keys so the survey reports "nostorage".
+      (function () {
+        try {
+          localStorage.getItem("probe");
+          return;
+        } catch (e) {}
+        var m = {};
+        var own = function (k) {
+          if (String(k).indexOf("pypsa-survey") === 0) throw new Error("storage blocked");
+        };
+        var mem = {
+          getItem: function (k) {
+            own(k);
+            return Object.prototype.hasOwnProperty.call(m, k) ? m[k] : null;
+          },
+          setItem: function (k, v) {
+            own(k);
+            m[k] = String(v);
+          },
+          removeItem: function (k) {
+            own(k);
+            delete m[k];
+          },
+        };
+        try {
+          Object.defineProperty(window, "localStorage", {
+            configurable: true,
+            get: function () {
+              return mem;
+            },
+          });
+        } catch (e) {}
+      })();
+    </script>
     <meta name="author" content="PyPSA Community" />
 
     <!-- Favicon -->
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="/favicon.svg"
-    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="%sveltekit.assets%/favicon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -17,6 +49,13 @@
   </head>
   <body data-sveltekit-preload-data="hover">
     <div style="display: contents">%sveltekit.body%</div>
-    <script src="%sveltekit.assets%/js/gurubase-widget.js"></script>
+    <script>
+      // The Ask AI widget covers survey controls, so it is not loaded when the first page is /survey.
+      if (location.pathname.replace(/\/$/, "") !== "/survey") {
+        var guru = document.createElement("script");
+        guru.src = "%sveltekit.assets%/js/gurubase-widget.js";
+        document.body.appendChild(guru);
+      }
+    </script>
   </body>
 </html>

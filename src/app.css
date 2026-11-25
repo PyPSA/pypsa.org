@@ -176,3 +176,64 @@ html {
     @apply flex items-center gap-2 transition-opacity hover:opacity-70;
   }
 }
+
+/* Survey entry points, toggled by html attributes the pre-paint script sets. */
+.survey-banner,
+.survey-pill {
+  display: none;
+}
+html[data-survey-open="true"] .survey-pill {
+  display: inline;
+}
+html[data-survey-open="true"] .event-pill {
+  display: none;
+}
+html[data-survey-open="true"][data-survey-dismissed="false"] .survey-banner {
+  display: block;
+}
+
+/* The Ask AI widget covers the survey's mobile country dropdown. */
+html[data-route-survey] [id*="guru" i],
+html[data-route-survey] [class*="guru" i],
+html[data-route-survey] .chat-widget {
+  display: none !important;
+}
+
+/* /survey before paint, with data-survey-state set by the pre-paint script. */
+[data-survey-subtitle="nostorage"],
+[data-survey-subtitle="closed"],
+.survey-skeleton-prepaint,
+.survey-closed-prepaint {
+  display: none;
+}
+html[data-survey-state="nostorage"] [data-survey-subtitle="default"],
+html[data-survey-state="closed"] [data-survey-subtitle="default"] {
+  display: none;
+}
+html[data-survey-state="nostorage"] [data-survey-subtitle="nostorage"],
+html[data-survey-state="closed"] [data-survey-subtitle="closed"] {
+  display: inline;
+}
+html[data-survey-state="resume"] [data-survey-welcome],
+html[data-survey-state="closed"] [data-survey-welcome] {
+  display: none;
+}
+html[data-survey-state="resume"] .survey-skeleton-prepaint,
+html[data-survey-state="closed"] .survey-closed-prepaint {
+  display: block;
+}
+.survey-skeleton {
+  min-height: 28rem;
+  border-radius: var(--radius, 0.5rem);
+  background: hsl(var(--muted) / 0.5);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .survey-skeleton {
+    animation: survey-pulse 1.6s ease-in-out infinite;
+  }
+}
+@keyframes survey-pulse {
+  50% {
+    opacity: 0.6;
+  }
+}

@@ -2,8 +2,9 @@
 // Wrangler bundles this outside SvelteKit, so imports stay relative.
 import { mdPathOf } from "./lib/site/md-path";
 import { securityHeaders } from "./worker-headers";
+import { handleSurvey, type SurveyEnv } from "./worker-survey";
 
-interface Env {
+interface Env extends SurveyEnv {
   ASSETS: { fetch(req: Request): Promise<Response> };
 }
 
@@ -63,6 +64,8 @@ async function markdown(request: Request, env: Env, url: URL): Promise<Response>
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+    if (/^\/api\/survey\/?$/.test(url.pathname))
+      return finish(await handleSurvey(request, env), url.pathname);
     const negotiable =
       (request.method === "GET" || request.method === "HEAD") && !hasExtension(url.pathname);
     if (negotiable && wantsMarkdown(request)) return markdown(request, env, url);
