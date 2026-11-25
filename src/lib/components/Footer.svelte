@@ -4,8 +4,12 @@
   import LinkedInIcon from "$lib/icons/LinkedInIcon.svelte";
   import BlueskyIcon from "$lib/icons/BlueskyIcon.svelte";
   import { siteConfig } from "$lib/config/meta";
+  import NewsletterForm from "$lib/components/NewsletterForm.svelte";
   import MdiIcon from "$lib/components/MdiIcon.svelte";
+  import { page } from "$app/stores";
   import { mdiYoutube, mdiMastodon } from "@mdi/js";
+
+  const showSignup = $derived(!$page.url.pathname.startsWith("/newsletter"));
 </script>
 
 <footer id="footer" class="container py-24 pb-16 sm:py-32 sm:pb-24">
@@ -95,6 +99,12 @@
         </div>
       </div>
     </div>
+
+    {#if showSignup}
+      <div class="mt-8 flex justify-center md:justify-start">
+        <NewsletterForm compact />
+      </div>
+    {/if}
 
     <Separator class="my-6" />
 

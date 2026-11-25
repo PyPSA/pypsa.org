@@ -5,6 +5,7 @@ const MAPBOX = "https://api.tiles.mapbox.com";
 const CARTO = "https://basemaps.cartocdn.com https://*.basemaps.cartocdn.com";
 const JSDELIVR = "https://cdn.jsdelivr.net";
 const BOOTSTRAPCDN = "https://maxcdn.bootstrapcdn.com";
+const TURNSTILE = "https://challenges.cloudflare.com";
 // Gurubase loads highlight.js from here.
 const CDNJS = "https://cdnjs.cloudflare.com";
 
@@ -14,12 +15,12 @@ const isEmbed = (pathname: string) => pathname === "/embed" || pathname.startsWi
 function csp(embed: boolean): string {
   return [
     "default-src 'self'",
-    `script-src 'self' 'unsafe-inline' ${GURUBASE} ${MAPBOX} ${JSDELIVR} ${CDNJS}`,
+    `script-src 'self' 'unsafe-inline' ${GURUBASE} ${MAPBOX} ${JSDELIVR} ${CDNJS} ${TURNSTILE}`,
     `style-src 'self' 'unsafe-inline' ${GURUBASE} ${MAPBOX} ${JSDELIVR} ${BOOTSTRAPCDN} ${CDNJS}`,
     `font-src 'self' data: ${GURUBASE} ${BOOTSTRAPCDN}`,
     `img-src 'self' data: blob: ${GURUBASE} ${CARTO} https://avatars.githubusercontent.com`,
     `connect-src 'self' ${GURUBASE} ${MAPBOX} ${CARTO} ${CDNJS}`,
-    `frame-src 'self' https://www.youtube-nocookie.com ${GURUBASE}`,
+    `frame-src 'self' https://www.youtube-nocookie.com ${GURUBASE} ${TURNSTILE}`,
     "worker-src 'self' blob:",
     "object-src 'none'",
     "base-uri 'self'",

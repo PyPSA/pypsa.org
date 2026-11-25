@@ -2,7 +2,8 @@
   import type { Snippet } from "svelte";
   import type { Inline, PageData } from "$lib/data/pages/types";
 
-  const { page, actions }: { page: PageData; actions?: Snippet } = $props();
+  const { page, actions, children }: { page: PageData; actions?: Snippet; children?: Snippet } =
+    $props();
 
   const isExternal = (href: string) => /^https?:/.test(href);
 </script>
@@ -49,5 +50,6 @@
         {/if}
       </section>
     {/each}
+    {@render children?.()}
   </div>
 </article>

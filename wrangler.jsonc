@@ -30,9 +30,17 @@
       // Markdown mirrors requested by their own URL.
       "!/*.md",
       "!/events/*.md",
+      "!/newsletter/*.md",
       // Served by not_found_handling.
       "!/404.html",
     ],
+  },
+  // Replace the placeholders, since 0 makes the newsletter route answer 500.
+  // BREVO_API_KEY and TURNSTILE_SECRET_KEY are secrets set with `wrangler secret put`, never committed.
+  "vars": {
+    "BREVO_LIST_ID": "0",
+    "BREVO_DOI_TEMPLATE_ID": "0",
+    "BREVO_DOI_REDIRECT_URL": "https://pypsa.org/newsletter/confirmed",
   },
   // Required by `wrangler preview` (per-branch previews in Workers Builds).
   "previews": {},

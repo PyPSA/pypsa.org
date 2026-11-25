@@ -7,7 +7,7 @@ export const prerender = true;
 /** `index` is `/`, `404` is the 404 page, the rest are top-level registry paths. */
 export const entries: EntryGenerator = () =>
   [
-    ...routes.filter((r) => !r.path.startsWith("/events/")).map((r) => r.mdPath.slice(1, -3)),
+    ...routes.filter((r) => r.path.split("/").length === 2).map((r) => r.mdPath.slice(1, -3)),
     "404",
   ].map((page) => ({ page }));
 

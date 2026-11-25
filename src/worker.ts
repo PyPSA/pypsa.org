@@ -2,8 +2,9 @@
 // Wrangler bundles this outside SvelteKit, so imports stay relative.
 import { mdPathOf } from "./lib/site/md-path";
 import { securityHeaders } from "./worker-headers";
+import { handleNewsletter, type NewsletterEnv } from "./worker-newsletter";
 
-interface Env {
+interface Env extends NewsletterEnv {
   ASSETS: { fetch(req: Request): Promise<Response> };
 }
 
@@ -63,6 +64,13 @@ async function markdown(request: Request, env: Env, url: URL): Promise<Response>
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+    if (url.pathname === "/api/newsletter") {
+      if (request.method === "POST") return handleNewsletter(request, env);
+      return new Response("Method Not Allowed", {
+        status: 405,
+        headers: { ...securityHeaders(url.pathname), Allow: "POST", "Cache-Control": "no-store" },
+      });
+    }
     const negotiable =
       (request.method === "GET" || request.method === "HEAD") && !hasExtension(url.pathname);
     if (negotiable && wantsMarkdown(request)) return markdown(request, env, url);

@@ -25,7 +25,7 @@ export const privacyPage: PageData = {
       heading: "What this site collects",
       paragraphs: [
         [
-          "This site does not use analytics, advertising or tracking cookies, and it does not ask you to create an account. There is no contact form or newsletter. Pages are static files, so we do not store personal data about your visit ourselves, beyond what the hosting provider and the services below process technically.",
+          "This site does not use analytics, advertising or tracking cookies, and it does not ask you to create an account. Pages are static files, so we do not store personal data about your visit ourselves, beyond what the hosting provider and the services below process technically.",
         ],
         [
           "If you switch between light and dark mode, your choice is saved in your browser's local storage. It never leaves your device, and you can remove it by clearing your browser's site data.",
@@ -47,6 +47,26 @@ export const privacyPage: PageData = {
       paragraphs: [
         [
           "If you write to us by email, we use your address and message only to answer you. The legal basis is our legitimate interest in replying to your enquiry (Art. 6(1)(f) GDPR). We delete the correspondence once it is no longer needed, unless we are legally required to keep it.",
+        ],
+      ],
+    },
+    {
+      id: "newsletter",
+      heading: "Newsletter",
+      paragraphs: [
+        [
+          "If you subscribe to the newsletter, we use Brevo to send it. We use double opt-in: you are only added after you confirm your address through a link we send you, and we collect nothing but your email address. The legal basis is your consent (Art. 6(1)(a) GDPR). You can unsubscribe at any time through the link in any campaign or by writing to ",
+          email,
+          ".",
+        ],
+      ],
+    },
+    {
+      id: "turnstile",
+      heading: "Bot protection",
+      paragraphs: [
+        [
+          "The newsletter form uses Cloudflare Turnstile to tell humans from bots. Turnstile loads only after you focus a newsletter form, and Cloudflare then receives your IP address and browser data. The legal basis is our legitimate interest in protecting the form against abuse (Art. 6(1)(f) GDPR).",
         ],
       ],
     },

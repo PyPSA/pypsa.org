@@ -33,6 +33,9 @@ export const siteConfig = {
   ],
 };
 
+/** Cloudflare's always-pass Turnstile test key, replaced by the real site key in production. */
+export const TURNSTILE_SITE_KEY = "1x00000000000000000000AA";
+
 /** Production URL for a route path, where only `/` keeps its slash. */
 export const absoluteUrl = (path: string) =>
   path === "/" ? `${siteConfig.url}/` : siteConfig.url + path;

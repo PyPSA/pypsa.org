@@ -11,6 +11,7 @@ import { FAQList, faqSection } from "$lib/data/home/faq";
 import { communitySection } from "$lib/data/home/community";
 import { referencesSection } from "$lib/data/home/references";
 import { contactPage } from "$lib/data/pages/contact";
+import { newsletterPage, newsletterConfirmedPage } from "$lib/data/pages/newsletter";
 import { privacyPage } from "$lib/data/pages/privacy";
 import { legalPage } from "$lib/data/pages/legal";
 import { notFoundPage } from "$lib/data/pages/notFound";
@@ -314,6 +315,8 @@ export function markdownFor(path: string): string {
   if (path === "/roadmap") return roadmapMarkdown();
   if (path === "/events") return eventsIndexMarkdown();
   if (path === "/contact") return pageMarkdown(contactPage, path);
+  if (path === "/newsletter") return pageMarkdown(newsletterPage, path);
+  if (path === "/newsletter/confirmed") return pageMarkdown(newsletterConfirmedPage, path);
   if (path === "/privacy") return pageMarkdown(privacyPage, path);
   if (path === "/legal") return pageMarkdown(legalPage, path);
   const event = eventsData.find((e) => `/events/${e.slug}` === path);

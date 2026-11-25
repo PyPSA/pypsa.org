@@ -80,6 +80,20 @@ describe("footer on /", () => {
   });
 });
 
+describe("footer newsletter form on /", () => {
+  const html = readBuilt("index.html");
+
+  it("renders an email input inside a form pointing at /api/newsletter", () => {
+    const form = parse(html).querySelector("footer form")!;
+    expect(form.getAttribute("data-newsletter-endpoint")).toBe("/api/newsletter");
+    expect(form.querySelector('input[type="email"]')).not.toBeNull();
+  });
+
+  it("loads no Turnstile script until the input is focused", () => {
+    expect(html).not.toContain("challenges.cloudflare.com");
+  });
+});
+
 describe("404 page", () => {
   it("loads its assets from root-absolute paths so it works at any depth", () => {
     const html = readBuilt("404.html");

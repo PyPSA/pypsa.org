@@ -40,6 +40,11 @@ export const contactPage: PageData = {
           { label: "LinkedIn", href: siteConfig.social.linkedin },
           ".",
         ],
+        [
+          "Prefer email? Subscribe to our ",
+          { label: "newsletter", href: "/newsletter" },
+          " for releases, events and community news.",
+        ],
       ],
     },
     {

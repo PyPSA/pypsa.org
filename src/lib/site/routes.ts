@@ -63,6 +63,18 @@ const base: Base[] = [
     lastmod: buildDate,
   },
   {
+    path: "/newsletter",
+    title: "Newsletter — " + siteConfig.name,
+    description: "Subscribe to PyPSA news: releases, events and community updates.",
+    lastmod: buildDate,
+  },
+  {
+    path: "/newsletter/confirmed",
+    title: "Subscription confirmed — " + siteConfig.name,
+    description: "Your newsletter subscription is confirmed.",
+    lastmod: buildDate,
+  },
+  {
     path: "/privacy",
     title: "Privacy Policy — " + siteConfig.name,
     description: "How pypsa.org handles personal data, third-party services and cookies.",
