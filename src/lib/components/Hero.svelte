@@ -76,7 +76,7 @@
           <div class="flex items-center mb-4 border-b border-gray-700 pb-2">
             <div class="text-xs md:text-sm font-mono md:whitespace-nowrap">
               <span class="text-cyan-400">➜</span>
-              <span class="ml-1" style="color: hsl(341deg 91% 43%);">pypsa-demo</span>
+              <span class="ml-1" style="color: hsl(341deg 91% 58%);">pypsa-demo</span>
               <span class="text-gray-300 ml-1 md:ml-2">python example.py</span>
             </div>
           </div>
@@ -87,7 +87,7 @@
               >
             </div>
             <br />
-            <div class="text-gray-500 typing-animation" style="--delay: 1.5s;">
+            <div class="text-gray-400 typing-animation" style="--delay: 1.5s;">
               # Create a new network
             </div>
             <div class="typing-animation" style="--delay: 2s;">
@@ -96,40 +96,40 @@
               ><span class="text-white">()</span>
             </div>
             <br />
-            <div class="text-gray-500 typing-animation" style="--delay: 2.5s;">
+            <div class="text-gray-400 typing-animation" style="--delay: 2.5s;">
               # Add components
             </div>
             <div class="typing-animation" style="--delay: 3s;">
-              <span class="text-white">n.add(</span><span style="color: hsl(156deg 86% 28%);"
+              <span class="text-white">n.add(</span><span style="color: hsl(156deg 86% 34%);"
                 >"Bus"</span
-              ><span class="text-white">,&nbsp;</span><span style="color: hsl(156deg 86% 28%);"
+              ><span class="text-white">,&nbsp;</span><span style="color: hsl(156deg 86% 34%);"
                 >"mybus"</span
               ><span class="text-white">)</span>
             </div>
             <div class="typing-animation" style="--delay: 3.5s;">
-              <span class="text-white">n.add(</span><span style="color: hsl(156deg 86% 28%);"
+              <span class="text-white">n.add(</span><span style="color: hsl(156deg 86% 34%);"
                 >"Load"</span
-              ><span class="text-white">,&nbsp;</span><span style="color: hsl(156deg 86% 28%);"
+              ><span class="text-white">,&nbsp;</span><span style="color: hsl(156deg 86% 34%);"
                 >"myload"</span
-              ><span class="text-white">, bus=</span><span style="color: hsl(156deg 86% 28%);"
+              ><span class="text-white">, bus=</span><span style="color: hsl(156deg 86% 34%);"
                 >"mybus"</span
               ><span class="text-white">, p_set=</span><span class="text-purple-400">100</span><span
                 class="text-white">)</span
               >
             </div>
             <div class="typing-animation" style="--delay: 4s;">
-              <span class="text-white">n.add(</span><span style="color: hsl(156deg 86% 28%);"
+              <span class="text-white">n.add(</span><span style="color: hsl(156deg 86% 34%);"
                 >"Generator"</span
-              ><span class="text-white">,&nbsp;</span><span style="color: hsl(156deg 86% 28%);"
+              ><span class="text-white">,&nbsp;</span><span style="color: hsl(156deg 86% 34%);"
                 >"mygen"</span
-              ><span class="text-white">, bus=</span><span style="color: hsl(156deg 86% 28%);"
+              ><span class="text-white">, bus=</span><span style="color: hsl(156deg 86% 34%);"
                 >"mybus"</span
               ><span class="text-white">, p_nom=</span><span class="text-purple-400">100</span><span
                 class="text-white">, marginal_cost=</span
               ><span class="text-purple-400">20</span><span class="text-white">)</span>
             </div>
             <br />
-            <div class="text-gray-500 typing-animation" style="--delay: 4.5s;">
+            <div class="text-gray-400 typing-animation" style="--delay: 4.5s;">
               # Optimize the network
             </div>
             <div class="typing-animation" style="--delay: 5s;">
@@ -138,7 +138,7 @@
               ><span class="text-white">()</span>
             </div>
             <br />
-            <div class="text-gray-500 typing-animation" style="--delay: 5.5s;">
+            <div class="text-gray-400 typing-animation" style="--delay: 5.5s;">
               # Get statistics
             </div>
             <div class="typing-animation" style="--delay: 6s;">
@@ -152,7 +152,7 @@
               ><span class="text-white">()</span>
             </div>
             <br />
-            <div class="text-gray-500 typing-animation" style="--delay: 7s;"># Plot results</div>
+            <div class="text-gray-400 typing-animation" style="--delay: 7s;"># Plot results</div>
             <div class="typing-animation" style="--delay: 7.5s;">
               <span class="text-white">n.</span><span style="color: hsl(45deg 100% 50%);">plot</span
               ><span class="text-white">()</span>
@@ -163,7 +163,7 @@
               ><span class="text-white">()</span>
             </div>
             <br />
-            <div class="text-gray-500 typing-animation" style="--delay: 8.5s;">
+            <div class="text-gray-400 typing-animation" style="--delay: 8.5s;">
               # Start your journey here <span class="dots-animation"
                 ><span>.</span><span>.</span><span>.</span></span
               >

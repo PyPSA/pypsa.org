@@ -278,58 +278,43 @@
                   {#if project.docsUrl}
                     <div class="flex justify-center gap-2 mb-4">
                       <Button
-                        asChild
+                        href={project.docsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         variant="outline"
                         size="sm"
                         class="flex items-center gap-2 accent-hover-only"
                         style={accentStyle(project.name)}
                       >
-                        <a
-                          href={project.docsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="flex items-center gap-2 w-full h-full"
-                        >
-                          <Icon name="book-open" class="size-4" />
-                          Docs
-                        </a>
+                        <Icon name="book-open" class="size-4" />
+                        Docs
                       </Button>
                       <Button
-                        asChild
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         variant="outline"
                         size="sm"
                         class="flex items-center gap-2 accent-hover-only"
                         style={accentStyle(project.name)}
                       >
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="flex items-center gap-2 w-full h-full"
-                        >
-                          <GithubIcon class_="size-4" />
-                          GitHub
-                        </a>
+                        <GithubIcon class_="size-4" />
+                        GitHub
                       </Button>
                     </div>
                   {:else}
                     <div class="flex justify-center mb-4">
                       <Button
-                        asChild
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         variant="outline"
                         size="sm"
                         class="flex items-center gap-2 accent-hover-only"
                         style={accentStyle(project.name)}
                       >
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="flex items-center gap-2 w-full h-full"
-                        >
-                          <GithubIcon class_="size-4" />
-                          GitHub
-                        </a>
+                        <GithubIcon class_="size-4" />
+                        GitHub
                       </Button>
                     </div>
                   {/if}

@@ -44,7 +44,7 @@
 
   // Responsive contributors per page
   let windowWidth = typeof window !== "undefined" ? window.innerWidth : 1024;
-  let contributorsPerPage = embedMode ? 40 : 32; // Embed: 10 columns × 4 rows, Normal: 8 columns × 4 rows
+  let contributorsPerPage = $state(embedMode ? 40 : 32); // Embed: 10 columns × 4 rows, Normal: 8 columns × 4 rows
 
   function updateContributorsPerPage() {
     if (typeof window === "undefined") return;
@@ -53,7 +53,7 @@
     if (embedMode) {
       // Embed mode: 10 columns × 4 rows
       if (windowWidth < 640) {
-        contributorsPerPage = 20; // Mobile: 5 columns × 4 rows
+        contributorsPerPage = 12; // Mobile: 3 columns × 4 rows
       } else if (windowWidth < 1024) {
         contributorsPerPage = 32; // Tablet: 8 columns × 4 rows
       } else {
@@ -75,6 +75,7 @@
         contributorsPerPage = 32;
       }
     }
+    if (currentPage >= totalPages) currentPage = Math.max(0, totalPages - 1);
   }
 
   // Initialize on mount
@@ -434,7 +435,7 @@
                     </div>
                     <div role="heading" aria-level="3" class="contributor-title">
                       <span
-                        class="leading-tight"
+                        class="contributor-name"
                         class:text-xs={(firstName + " " + lastName).length > 20}
                       >
                         {firstName}
