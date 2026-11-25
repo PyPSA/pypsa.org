@@ -67,7 +67,7 @@
 
   @media (max-width: 640px) {
     :global(.embed-container section#contributors .grid) {
-      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     }
   }
 

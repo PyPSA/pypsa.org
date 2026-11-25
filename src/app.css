@@ -127,6 +127,9 @@ html {
   .contributor-title {
     @apply font-semibold tracking-tight text-sm flex min-h-[3rem] items-center justify-between px-3 py-2;
   }
+  .contributor-name {
+    @apply min-w-0 break-words hyphens-auto leading-tight;
+  }
   .contributor-badge {
     @apply ml-2 inline-flex cursor-help items-center justify-center rounded-full p-1 text-primary transition-colors hover:text-primary focus-visible:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
   }
