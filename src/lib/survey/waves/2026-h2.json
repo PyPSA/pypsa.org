@@ -1470,7 +1470,7 @@
             "choices": [
               {
                 "value": "latest",
-                "text": "The latest release (1.5)"
+                "text": "The latest release"
               },
               {
                 "value": "older_1x",
@@ -1531,10 +1531,6 @@
               {
                 "value": "stochastic",
                 "text": "Stochastic optimisation across weighted scenarios (v1.0)"
-              },
-              {
-                "value": "flow_based_coupling",
-                "text": "Flow-based market coupling (v1.5)"
               },
               {
                 "value": "cvar",
@@ -2146,172 +2142,6 @@
             "type": "text",
             "name": "q3_6_other",
             "title": "Anything missing in this area?"
-          }
-        ]
-      },
-      {
-        "name": "p3_7",
-        "title": "Your top 3",
-        "elements": [
-          {
-            "type": "checkbox",
-            "name": "q3_7",
-            "title": "Of all the roadmap features, which three would help your work most?",
-            "maxSelectedChoices": 3,
-            "choices": [
-              {
-                "value": "early_retirement",
-                "text": "Let the model retire or retrofit assets early"
-              },
-              {
-                "value": "endogenous_learning",
-                "text": "Technology costs that fall with deployment (endogenous learning)"
-              },
-              {
-                "value": "fixed_unit_cost",
-                "text": "Fixed cost per unit built"
-              },
-              {
-                "value": "multi_objective",
-                "text": "Trade off several objectives (multi-objective optimisation)"
-              },
-              {
-                "value": "build_rate_limits",
-                "text": "Limit how fast capacity can be built depending on what's built in earlier years"
-              },
-              {
-                "value": "adaptive_investment",
-                "text": "Investments that adapt as uncertainty resolves"
-              },
-              {
-                "value": "sensitivity_analysis",
-                "text": "See which inputs drive your results (global sensitivity analysis)"
-              },
-              {
-                "value": "richer_unit_commitment",
-                "text": "Richer unit commitment"
-              },
-              {
-                "value": "reserves",
-                "text": "Operating reserves and capacity margins"
-              },
-              {
-                "value": "ramping_costs",
-                "text": "Cost of changing dispatch (ramping costs)"
-              },
-              {
-                "value": "soft_constraints",
-                "text": "Allow constraints to be violated at a price"
-              },
-              {
-                "value": "lole_metrics",
-                "text": "Loss-of-load and unserved-energy metrics"
-              },
-              {
-                "value": "strategic_bidding",
-                "text": "Strategic bidding of market players (Cournot)"
-              },
-              {
-                "value": "orchestration",
-                "text": "Orchestration layer for connecting multiple PyPSA model instances"
-              },
-              {
-                "value": "distflow",
-                "text": "Voltage and losses in distribution grids (DistFlow)"
-              },
-              {
-                "value": "flow_controllers",
-                "text": "Devices that steer power flows (SSSC, UPFC)"
-              },
-              {
-                "value": "reactive_power",
-                "text": "Reactive power and voltage limits in optimisation"
-              },
-              {
-                "value": "powerflow_export",
-                "text": "Hand results to power flow tools (pandapower, PowSyBl)"
-              },
-              {
-                "value": "gas_pressure",
-                "text": "Pressure-driven gas pipeline flow (Weymouth)"
-              },
-              {
-                "value": "heat_temperatures",
-                "text": "Temperature levels in heat networks"
-              },
-              {
-                "value": "hydro_cascades",
-                "text": "Hydro cascades with water travel times and reservoir head"
-              },
-              {
-                "value": "dashboard",
-                "text": "Explore a solved network in a dashboard"
-              },
-              {
-                "value": "market_statistics",
-                "text": "Market statistics out of the box"
-              },
-              {
-                "value": "financial_metrics",
-                "text": "Financial metrics per asset"
-              },
-              {
-                "value": "disaggregation",
-                "text": "Map results back to the original grid (disaggregation)"
-              },
-              {
-                "value": "compare_scenarios",
-                "text": "Compare scenarios side by side"
-              },
-              {
-                "value": "equations_as_text",
-                "text": "Read and write model equations as text"
-              },
-              {
-                "value": "lazy_loading",
-                "text": "Open large networks faster"
-              },
-              {
-                "value": "industry_formats",
-                "text": "Import grid models from industry formats"
-              },
-              {
-                "value": "neutral_format",
-                "text": "Store and exchange models in a tool-neutral format"
-              },
-              {
-                "value": "input_validation",
-                "text": "Catch input errors before solving (validation)"
-              },
-              {
-                "value": "units",
-                "text": "Units on buses and attributes"
-              },
-              {
-                "value": "custom_components",
-                "text": "Define your own component types and properties"
-              },
-              {
-                "value": "adjacent_tools_data",
-                "text": "Directly access data from adjacent tools"
-              },
-              {
-                "value": "decomposition",
-                "text": "Solve models too large for one solve (decomposition)"
-              },
-              {
-                "value": "mixed_resolution",
-                "text": "Mix time resolutions in one model"
-              },
-              {
-                "value": "scenario_reduction",
-                "text": "Reduce many scenarios to a few"
-              },
-              {
-                "value": "parallel_scenarios",
-                "text": "Run many scenarios in parallel"
-              }
-            ]
           }
         ]
       },

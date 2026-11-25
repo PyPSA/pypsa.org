@@ -10,7 +10,7 @@ PyPSA is developed by a small team and a wide community. We want to spend our de
 - What do we use the results for? We publish the results on pypsa.org and use them to set the development priorities for the next year. We repeat the survey every six months, so you can see what changed.
 - We do not ask for your name. Organisation and links are optional and never published with your answers. We publish results only in aggregate.
 - Your answers are stored in the EU. Details are on our [privacy page](/privacy#user-survey).
-- The survey closes on 13 December 2026.
+- The survey closes on 20 December 2026.
 
 Resources for conducting this survey and for implementing its findings are supported by Breakthrough Energy GRIDS.
 
@@ -121,7 +121,7 @@ Spatial scope [multi]
 
 2.8 Which PyPSA version do you run most of the time? [single]
 
-- The latest release (1.5)
+- The latest release
 - An older 1.x release
 - A release before 1.0
 - I do not know
@@ -133,7 +133,6 @@ Tick what you have used. Then mark up to three features that made the biggest di
 | Feature (release) | Used | Top 3 | New to me |
 |---|---|---|---|
 | Stochastic optimisation across weighted scenarios (v1.0) | | | |
-| Flow-based market coupling (v1.5) | | | |
 | Risk-averse optimisation with Conditional Value at Risk (v1.0) | | | |
 | Directional modelling-to-generate-alternatives (v1.0) | | | |
 | Interactive maps with `n.explore()` (v1.0) | | | |
@@ -270,11 +269,6 @@ Where your models hit their limits.
 | Mix time resolutions in one model | Hourly where it matters, coarser elsewhere, per bus or carrier. |
 | Reduce many scenarios to a few | Generate and reduce scenario sets from weather years, outages or price paths. |
 | Run many scenarios in parallel | Launch and collect a batch of runs locally or on a cluster from one call. |
-
-#### 3.7 Your top 3
-
-3.7 Of all the roadmap features, which three would help your work most? [multi, at most 3]
-
 
 ### Part 4: Gaps and your work
 

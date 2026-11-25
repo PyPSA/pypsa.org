@@ -69,16 +69,6 @@ describe("definition lint", () => {
     expect(rows).toBe(38);
   });
 
-  it("offers exactly the 38 grid rows as the 3.7 choices", () => {
-    const grid = [1, 2, 3, 4, 5, 6].flatMap((i) =>
-      byName(`q3_${i}`).rows.map((r: any) => [r.value, r.text])
-    );
-    const top = byName("q3_7").choices.map((c: any) => [c.value, c.text]);
-    expect(top).toHaveLength(38);
-    expect(new Set(top.map((c: any) => c[0])).size).toBe(38);
-    expect(top).toEqual(grid);
-  });
-
   it("lists six Part 3 sections that point at existing pages with a rating grid", () => {
     expect(def.sections.map((s) => s.id)).toHaveLength(6);
     for (const [i, s] of def.sections.entries()) {
@@ -98,7 +88,6 @@ describe("definition lint", () => {
     // The page renders its own section list and progress strip.
     expect(def.survey).not.toHaveProperty("showTOC");
     expect(def.survey).not.toHaveProperty("showProgressBar");
-    expect(byName("q3_7").maxSelectedChoices).toBe(3);
     expect(byName("q2_1")).not.toHaveProperty("choicesOrder");
     expect(byName("q2_9")).not.toHaveProperty("rowOrder");
     expect(byName("q1_1").isRequired).toBe(true);

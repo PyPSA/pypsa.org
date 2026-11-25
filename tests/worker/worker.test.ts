@@ -183,7 +183,6 @@ describe("POST /api/survey", () => {
   };
   const q29Rows = find("q2_9").rows!.map((r) => r.value);
   const q31Rows = find("q3_1").rows!.map((r) => r.value);
-  const q37 = find("q3_7").choices!.map((c) => c.value);
   const OPEN = new Date("2026-12-01T12:00:00+01:00");
 
   let rows: unknown[][];
@@ -246,7 +245,6 @@ describe("POST /api/survey", () => {
       q2_9: { [q29Rows[0]]: { used: ["yes"], top3: ["yes"] }, [q29Rows[1]]: { new: ["yes"] } },
       q3_1: { [q31Rows[0]]: "3", [q31Rows[1]]: "unclear" },
       q3_6_1: ["no"],
-      q3_7: q37.slice(0, 3),
       q4_1: "Thanks",
       q4_4: "Acme",
     };
@@ -413,7 +411,6 @@ describe("POST /api/survey", () => {
       400,
       "too_many_top3",
     ],
-    ["four q3_7 picks", () => withAnswers({ q3_7: q37.slice(0, 4) }), 400, "too_many_picks"],
   ])("rejects %s and stores nothing", async (_name, payload, status, code) => {
     const res = await postJson(payload());
     expect(res.status).toBe(status);

@@ -5,3 +5,5 @@ package-lock.json
 bun.lockb
 static
 src/lib/data
+# Parsed by tests/survey, layout matters
+tests/survey/questionnaire-*.md

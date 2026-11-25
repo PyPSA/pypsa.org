@@ -89,17 +89,12 @@ export function mountSurvey(
   model.onCurrentPageChanged.add(emitNav);
   emitNav();
 
-  const counterText = {
-    q2_9: (n: number) => `Top 3: ${n} of 3`,
-    q3_7: (n: number) => `${n} of 3 picked`,
-  } as const;
-  // Writes the counter and dims the options that locked once three are picked.
-  const syncLimit = (name: "q2_9" | "q3_7") => {
-    const root = container.querySelector<HTMLElement>(`[data-name="${name}"]`);
+  // Writes the 2.9 counter and dims the options that locked once three are picked.
+  const syncLimit = () => {
+    const root = container.querySelector<HTMLElement>('[data-name="q2_9"]');
     if (!root) return;
-    const { picked } = top3State(model, name);
     const counter = root.querySelector(".survey-top3-counter");
-    if (counter) counter.textContent = counterText[name](picked);
+    if (counter) counter.textContent = `Top 3: ${top3State(model).picked} of 3`;
     root.querySelectorAll(".sd-selectbase__item").forEach((el) => {
       el.classList.toggle("is-full", !!el.querySelector("input:disabled"));
     });
@@ -113,20 +108,18 @@ export function mountSurvey(
     const heading = o.htmlElement.querySelector(".sd-question__title");
     heading?.setAttribute("role", "heading");
     heading?.setAttribute("aria-level", "3");
-    const name = o.question.name;
-    if (name !== "q2_9" && name !== "q3_7") return;
+    if (o.question.name !== "q2_9") return;
     const title = o.htmlElement.querySelector("h5, .sd-question__title");
     if (title && !o.htmlElement.querySelector(".survey-top3-counter")) {
       const counter = document.createElement("span");
       counter.className = "survey-top3-counter";
       title.after(counter);
     }
-    syncLimit(name);
+    syncLimit();
   });
   // The DOM updates after the value event, so refresh on the next frame.
   model.onValueChanged.add((_, o) => {
-    const name = o.name;
-    if (name === "q2_9" || name === "q3_7") requestAnimationFrame(() => syncLimit(name));
+    if (o.name === "q2_9") requestAnimationFrame(syncLimit);
   });
 
   renderSurvey(model, container);

@@ -116,12 +116,12 @@ describe("not used in 1.3", () => {
 describe("Part 3 pages", () => {
   const sectionPages = (m: any) =>
     m.pages.map((p: any) => p.name).filter((n: string) => /^p3_[1-6]$/.test(n));
-  it("shows all six sections to everyone, 3.7 last in Part 3", () => {
+  it("shows all six sections to everyone, then Part 4", () => {
     const { model } = make();
     model.setValue("q1_3", "not_used");
     const names = model.visiblePages.map((p: any) => p.name);
     expect(sectionPages(model).sort()).toEqual(def.sections.map((s) => s.page).sort());
-    expect(names.indexOf("p3_7")).toBe(
+    expect(names.indexOf("part4")).toBe(
       names.indexOf(names.filter((n: string) => /^p3_[1-6]$/.test(n)).pop()!) + 1
     );
     expect(names[names.length - 1]).toBe("part4");
@@ -158,7 +158,6 @@ describe("seeded random orders", () => {
     texts(m, "q2_1", "choices").join(),
     texts(m, "q2_9", "rows").join(),
     texts(m, "q3_1", "rows").join(),
-    texts(m, "q3_7", "choices").join(),
   ];
   it("gives identical section, row and choice orders for the same storage", () => {
     const storage = memoryStorage();
@@ -257,23 +256,6 @@ describe("validation", () => {
     model.setValue("q1_3", "lt_1y");
     model.setValue("q2_9", top3(3));
     expect(q(model, "q2_9").hasErrors()).toBe(false);
-  });
-  const picks = (n: number) =>
-    q(make().model, "q3_7")
-      .choices.slice(0, n)
-      .map((c: any) => c.value);
-  it("rejects a fourth pick in 3.7 with the exact text", () => {
-    const { model } = make();
-    model.setValue("q3_7", picks(4));
-    expect(q(model, "q3_7").hasErrors()).toBe(true);
-    expect(q(model, "q3_7").errors.map((e: any) => e.getText())).toContain(
-      "Pick at most three features (you picked 4)."
-    );
-  });
-  it("accepts three picks in 3.7", () => {
-    const { model } = make();
-    model.setValue("q3_7", picks(3));
-    expect(q(model, "q3_7").hasErrors()).toBe(false);
   });
 });
 
@@ -486,12 +468,9 @@ describe("top 3 limits and 3.6.1 exclusivity", () => {
   it("top3State counts rows with a Top 3 tick", () => {
     const { model } = make();
     model.setValue("q1_3", "lt_1y");
-    expect(top3State(model, "q2_9")).toEqual({ picked: 0, full: false });
+    expect(top3State(model)).toEqual({ picked: 0, full: false });
     model.setValue("q2_9", Object.fromEntries(rowsOf(3).map((r) => [r, { top3: ["yes"] }])));
-    expect(top3State(model, "q2_9")).toEqual({ picked: 3, full: true });
-    const choices = q(model, "q3_7").choices.map((c: any) => c.value);
-    model.setValue("q3_7", choices.slice(0, 2));
-    expect(top3State(model, "q3_7")).toEqual({ picked: 2, full: false });
+    expect(top3State(model)).toEqual({ picked: 3, full: true });
   });
 
   it("makes the other Top 3 cells read only at three, and frees them on untick", () => {

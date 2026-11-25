@@ -110,10 +110,9 @@ interface MatrixLike {
   }[];
 }
 
-/** How many Top 3 picks a question holds, and whether the limit of three is reached. */
-export function top3State(model: Model, name: "q2_9" | "q3_7"): { picked: number; full: boolean } {
-  const value = model.getValue(name);
-  const picked = name === "q2_9" ? countTop3(value) : Array.isArray(value) ? value.length : 0;
+/** How many Top 3 rows 2.9 holds, and whether the limit of three is reached. */
+export function top3State(model: Model): { picked: number; full: boolean } {
+  const picked = countTop3(model.getValue("q2_9"));
   return { picked, full: picked >= 3 };
 }
 
@@ -185,7 +184,6 @@ export function createSurvey(def: WaveDefinition, opts: SurveyOptions): Model {
   shuffleOf("q2_1", "choices");
   shuffleOf("q2_9", "rows");
   for (let i = 1; i <= 6; i++) shuffleOf(`q3_${i}`, "rows");
-  shuffleOf("q3_7", "choices");
   json.pages[0].elements.push({
     type: "text",
     name: HONEYPOT,
@@ -237,42 +235,11 @@ export function createSurvey(def: WaveDefinition, opts: SurveyOptions): Model {
     if (!o.html && o.text.includes("`")) o.html = escapeHtml(o.text.replaceAll("`", ""));
   });
 
-  // 3.7 offers only the features rated High or Critical, or all of them when none are.
-  const q37 = model.getQuestionByName("q3_7");
-  const highRated = () => {
-    const high = new Set<unknown>();
-    for (let i = 1; i <= 6; i++) {
-      const ratings = model.getValue(`q3_${i}`);
-      if (isRecord(ratings))
-        for (const [feature, r] of Object.entries(ratings))
-          if (r === "4" || r === "5") high.add(feature);
-    }
-    return high;
-  };
-  model.onShowingChoiceItem.add((_, o) => {
-    if (o.question.name !== "q3_7") return;
-    const high = highRated();
-    if (high.size) o.visible = high.has(o.item.value);
-  });
-  const syncQ37 = () => {
-    if (!q37 || model.currentPage?.name !== "p3_7") return;
-    const high = highRated();
-    q37.description = high.size
-      ? "From the features you rated High or Critical."
-      : "You rated no feature High or Critical, so all of them are listed.";
-    // Picks whose rating was lowered since are dropped.
-    if (high.size && Array.isArray(q37.value)) {
-      const kept = q37.value.filter((v: unknown) => high.has(v));
-      if (kept.length !== q37.value.length) q37.value = kept;
-    }
-  };
-  model.onCurrentPageChanged.add(syncQ37);
-
   // Once three rows are Top 3, the other rows' cells lock until one is unticked.
   const syncTop3 = () => {
     const matrix = model.getQuestionByName("q2_9") as unknown as MatrixLike | null;
     if (!matrix) return;
-    const full = top3State(model, "q2_9").full;
+    const full = top3State(model).full;
     for (const row of matrix.visibleRows ?? []) {
       const cell = row.cells.find((c) => c.column.name === "top3")?.question;
       if (!cell) continue;
@@ -292,9 +259,6 @@ export function createSurvey(def: WaveDefinition, opts: SurveyOptions): Model {
     if (o.name === "q2_9") {
       const n = countTop3(o.value);
       if (n > 3) o.error = `Mark at most three features as Top 3 (you marked ${n}).`;
-    } else if (o.name === "q3_7") {
-      const n = Array.isArray(o.value) ? o.value.length : 0;
-      if (n > 3) o.error = `Pick at most three features (you picked ${n}).`;
     }
     if (!o.error && freeTexts(model, o.name, o.value).some((t) => t.length > MAX_TEXT_LENGTH))
       o.error = `Keep this under ${MAX_TEXT_LENGTH.toLocaleString("en-US")} characters.`;
@@ -347,7 +311,6 @@ export function createSurvey(def: WaveDefinition, opts: SurveyOptions): Model {
     save();
   });
   model.onCurrentPageChanged.add(save);
-  syncQ37();
 
   return model;
 }

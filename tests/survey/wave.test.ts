@@ -11,7 +11,7 @@ describe("single source of truth", () => {
       .at(-1)!
       .map((s) => s.text)
       .join("");
-    expect(last).toBe("The survey closes on 13 December 2026.");
+    expect(last).toBe("The survey closes on 20 December 2026.");
     expect(JSON.stringify(def.welcome)).not.toContain("{closes}");
   });
   it("takes the survey title from the metadata", () => {
@@ -29,10 +29,10 @@ describe("isOpen", () => {
   });
   it("is open inside the window, including the last day", () => {
     expect(isOpen(def, new Date("2026-12-01T12:00:00Z"))).toBe(true);
-    expect(isOpen(def, new Date("2026-12-13T22:59:59Z"))).toBe(true);
+    expect(isOpen(def, new Date("2026-12-20T22:59:59Z"))).toBe(true);
   });
-  it("is closed from the closing instant (end of 13 December, CET)", () => {
-    expect(isOpen(def, new Date("2026-12-13T23:00:00Z"))).toBe(false);
+  it("is closed from the closing instant (end of 20 December, CET)", () => {
+    expect(isOpen(def, new Date("2026-12-20T23:00:00Z"))).toBe(false);
     expect(isOpen(def, new Date("2027-01-01T00:00:00Z"))).toBe(false);
   });
 });
@@ -48,7 +48,6 @@ describe("allowedAnswerKeys", () => {
       "q2_6_scope",
       "q3_1",
       "q3_6_3",
-      "q3_7",
       "q4_4",
     ]) {
       expect(keys.has(k)).toBe(true);
